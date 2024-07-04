@@ -1,0 +1,69 @@
+
+	var formData = {
+		"customerDetails":[],
+		"opponentIds":opponent.toString(),
+		"opponentLawyerIds":opponentLawyer.toString(),
+		"lawsuitTypeId":lawsuitsType.toString(),
+		"lawsuitSubject":$('#subjectLawsuit').val(),
+		"StageId":stage.toString(),
+		"stateId":state.toString(),
+		"lawsuitLoc":$('#lawsuitLocation').val(),
+		"createdAt":$('#createdAt').val(),
+		"amount":$('#amountContract').val(),
+		"tax":$('#contractAmountIncludingTax').val(),
+		"taxVal":$('#taxValue').val(),
+		"percent":$('#percent').val(),
+		"termAr":$('#txtEditor').val(),
+		"termEn":$('#txtEditor2').val(),
+		"note":$('#note').val()	
+	};
+	/*
+	var pushDetails=
+	{
+		"opponentIds":opponent.toString(),
+		"opponentLawyerIds":opponentLawyer.toString(),
+		"lawsuitTypeId":lawsuitsType.toString(),
+		"lawsuitSubject":$('#subjectLawsuit').val(),
+		"StageId":stage.toString(),
+		"stateId":state.toString(),
+		"lawsuitLoc":$('#lawsuitLocation').val(),
+		"createdAt":$('#createdAt').val(),
+		"amount":$('#amountContract').val(),
+		"tax":$('#contractAmountIncludingTax').val(),
+		"taxVal":$('#taxValue').val(),
+		"percent":$('#percent').val(),
+		"termAr":$('#txtEditor').val(),
+		"termEn":$('#txtEditor2').val(),
+		"note":$('#note').val()	
+	};
+	formData.details.push(pushDetails);	
+	
+	var pushList_CustomerData = {
+			"name": "", "type": "", "adjectives": "", "idCustImage":"", "natAddImage":"","idDefImage":""
+		};
+	*/
+	$('#customerTable tr').each(function (index, tr) {
+			//get td of each row and insert it into cols array
+			if(index>0)
+			{
+				var name; var type; var adjectives; var idCustomerImage; var nationalAddressImage; var idDefendantImage;
+				$(this).find('td').each(function (colIndex, c) {
+					
+					if(colIndex==1) name=c.textContent;
+					if(colIndex==2) type=c.textContent;
+					if(colIndex==3) adjectives=c.textContent;
+					if(colIndex==4 && c.textContent!="-") idCustomerImage=$('#idCustomerImage'+c.id)[0].files;
+					if(colIndex==4 && c.textContent!="-") nationalAddressImage=$('#nationalAddressImage'+c.id)[0].files;
+					///if(colIndex==4 && c.textContent!="-") idDefendantImage=$('#idDefendantImage'+c.id)[0].files;
+					if(colIndex==4 && c.textContent!="-") idDefendantImage=$('#idDefendantImage'+c.id).prop('files');
+					
+				});
+				var pushList_CustomerData = {
+						"name": name, "type": type, "adjectives": adjectives, "idCustImage": idCustomerImage , "natAddImage":nationalAddressImage,"idDefImage":idDefendantImage
+					};
+				formData.customerDetails.push(pushList_CustomerData);
+				var pushList_CustomerData = {
+					"name": "", "type": "", "adjectives": "", "idCustImage":"", "natAddImage":"","idDefImage":""
+				};
+			}
+	});

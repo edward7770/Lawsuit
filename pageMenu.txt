@@ -1,0 +1,8 @@
+
+
+Page Name			ID
+Customers			1
+Customers Types			2
+CustomerAdjectives		3
+Lawsuits Types			4
+LawsuitStates			5

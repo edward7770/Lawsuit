@@ -1,0 +1,30 @@
+function getData()
+		{
+			///$('.datatable').dataTable().fnDestroy();
+			///$('.datatable> tbody').empty();
+			var myTable = $('#setData').DataTable();
+		 	var rows = myTable.rows().remove().draw();
+			$.ajax({
+				type:"POST",
+				url: "CustomerAdjectivesData.php",
+				success: function (data) {
+						if (!$.trim(data) == '') {
+							data = data.replace(/^\s*|\s*$/g, '');
+							data = data.replace(/\\r\\n/gm, '');
+							var expr = "</tr>\\s*<tr";
+							var regEx = new RegExp(expr, "gm");
+							var newRows = data.replace(regEx, "</tr><tr");
+							$(".datatable").DataTable().rows.add($(newRows)).draw();
+						 }
+					/*
+					$('.datatable').find('tbody').append(data);
+					$('.datatable').DataTable().destroy();
+					$('.datatable').DataTable();
+					
+					$('.datatable').DataTable().destroy();
+					$('.datatable').find('tbody').append(data);
+					$('.datatable').DataTable().draw();
+					*/	
+				}
+			});
+		}
