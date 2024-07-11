@@ -166,6 +166,11 @@
 ?>
 
 <script src="js_custom/LawsuitReport.js"> </script>
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"> -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+<script src="js_custom/dataTableButtons.js"> </script>
 <script>
 	$( document ).ready(function() {
 		////$('#newStage_modal').modal('toggle');

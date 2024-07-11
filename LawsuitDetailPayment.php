@@ -110,7 +110,7 @@
 					</div>
 					
 					<div class="col-lg-4 col-sm-6 col-12">
-						
+
 						<div class="bg-warning-light">
 							<div class="card-body">
 								<div class="dash-widget-header">
@@ -134,23 +134,23 @@
 					include_once('loader.php'); 
 				?>
 				
-				<div class="row">
-					<div class="col-lg-3 col-sm-6 col-12">
-						<a class="btn btn-primary" id='addButton' ><i class="fa fa-plus-circle me-2" aria-hidden="true"></i> <?php echo set_value("addNewPayment"); ?></a>
+				<div class="row mt-3">
+					<div class="col-lg-4 col-sm-6 col-12">
+						<a class="btn btn-primary w-100" id='addButton' ><i class="fa fa-plus-circle me-2" aria-hidden="true"></i> <?php echo set_value("addNewPayment"); ?></a>
 					</div>
 					
 					
-					<div class="col-lg-3 col-sm-6 col-12">
-						<a class="btn btn-success" id='UpdatePayment' ><i class="fa fa-plus-circle me-2" aria-hidden="true"></i><?php echo set_value('addNewContractAmount'); ?></a>
+					<div class="col-lg-4 col-sm-6 col-12">
+						<a class="btn btn-success w-100" id='UpdatePayment' ><i class="fa fa-plus-circle me-2" aria-hidden="true"></i><?php echo set_value('addNewContractAmount'); ?></a>
 					</div>
 					
-					<div class="col-lg-3 col-sm-6 col-12">
-						<a class="btn btn-danger" id='DeleteLawsuit' ><i class="fa fa-plus-circle me-2" aria-hidden="true"></i><?php echo set_value('deleteLawsuit'); ?></a>
+					<div class="col-lg-4 col-sm-6 col-12">
+						<a class="btn btn-danger w-100" id='DeleteLawsuit' ><i class="fa fa-minus-circle me-2" aria-hidden="true"></i><?php echo set_value('deleteLawsuit'); ?></a>
 					</div>
 
-					<div class="col-lg-3 col-sm-6 col-12">
+					<!-- <div class="col-lg-3 col-sm-6 col-12">
 						<a class="btn btn-info" id='' ><i class="fa fa-plus-circle me-2" aria-hidden="true"></i><?php echo set_value('deleteLawsuit'); ?></a>
-					</div>
+					</div> -->
 					
 					<?php /*
 						<div class="col-lg-4 col-sm-6 col-12">
@@ -526,5 +526,6 @@
 <?php include_once('footer.php');
 	include_once('generateHTML_docZip.php');
 ?>
+<!-- <script src="js_custom/LawsuitDetailPaymentInvoice.js"></script> -->
 <script src="js_custom/LawsuitDetailPayment.js"></script>
 <script src="js_custom/imageupload.js"> </script>	

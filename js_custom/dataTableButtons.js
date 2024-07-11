@@ -8,17 +8,7 @@ $('.datatable').DataTable({
 	////dom: 'frtpB', //This changes the position to Bottom
     "ordering": true,
     "order": [],
-    "buttons": [
-                {
-			   extend: 'csv',
-			   charset: 'UTF-8',
-			   ///fieldSeparator: ';',
-			   bom: true,
-			   ///filename: 'CsvTest',
-			   ////title: 'CsvTest'
-			  },
-			  'copy', 'excel', 'pdf', 'print'
-		  ],
+
     "language": {
       search: '<i class="fas fa-search"></i>',
       searchPlaceholder: "Search",
@@ -31,9 +21,29 @@ $('.datatable').DataTable({
     initComplete: (settings, json) => {
       $('.dataTables_filter').appendTo('#tableSearch');
       $('.dataTables_filter').appendTo('.search-input');
+      $('.dt-buttons').css('display', 'none');
+      // $('.dt-buttons').css('float', 'left');
+      // $('.dt-buttons').css('marginBottom', '2px');
+      // $('.dt-button').addClass('table-btn-action-icon');
+      // $('.buttons-copy').html('<span><i class="fa fa-copy"></i></span>');
+      // $('.buttons-csv').html('<span><i class="fa fa-file-csv"></i></span>');
+      // $('.buttons-print').html('<span><i class="fa fa-print"></i></span>');
+      var type=$('#lawsuitsType').val();
+      var state=$('#state').val();
+      var stage=$('#stage').val();
+      var reportType=$('#reportType').val();
+
+      $('div.dataTables_filter').css('float', 'right');
+      $('div.dataTables_filter').css('margin-bottom', '3px');
+      // var copyButton = '<a href="#" class="table-btn-action-icon buttons-copy" onclick="printLawsuitReport();"><span><i class="fa fa-copy"></i></span></a>';
+      var csvButton = '<a href="LawsuitExcelPrint.php?type=' + type +'&stage=' + stage +'&reportType=' + reportType + '&state=' + state + '" class="table-btn-action-icon buttons-csv"><span><i class="fa fa-file-csv"></i></span></a>';
+      var printButton = '<a href="#" class="table-btn-action-icon buttons-print" onclick="printLawsuitReport();"><span><i class="fa fa-print"></i></span></a>';
+      $(printButton).insertAfter(".dataTables_filter");
+      $(csvButton).insertAfter(".dataTables_filter");
+      // $(copyButton).insertAfter(".dataTables_filter");
     },
 	
 });
-$(document).ready(function() {
-  $('.dt-buttons').css('float', 'right');
-});
+// $(document).ready(function() {
+//   $('.dt-buttons').css('float', 'right');
+// });

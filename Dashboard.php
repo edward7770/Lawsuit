@@ -1,62 +1,56 @@
 <?php if (session_status() === PHP_SESSION_NONE) {
 	session_start();
 }
-include_once('header.php'); 
-include_once('config/conn.php');
-$language=$_SESSION['lang'];
+include_once ('header.php');
+include_once ('config/conn.php');
+$language = $_SESSION['lang'];
 
-$totalLawsuits=0;
-$totalCustomers=0;
-$totalIncome=0;
-$totalDues=0;
+$totalLawsuits = 0;
+$totalCustomers = 0;
+$totalIncome = 0;
+$totalDues = 0;
 
 ////$qry=" CALL sp_get_DashboardBoxesData(".$_SESSION['gUserId'].",".$_SESSION['customerId'].",".$_SESSION['lawyerId'].")"; 
-$qry=" CALL sp_get_DashboardBoxesData(".$_SESSION['customerId'].")"; 
-$stmt=$dbo->prepare($qry);
-if($stmt->execute())
-{
+$qry = " CALL sp_get_DashboardBoxesData(" . $_SESSION['customerId'] . ")";
+$stmt = $dbo->prepare($qry);
+if ($stmt->execute()) {
 	$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	foreach($result as $val)
-	{
-		$totalLawsuits=$val['totalLawsuits'];
-		$totalCustomers=$val['totalCustomers'];;
-		$openCases=$val['openCases'];;
-		$closedCases=$val['closedCases'];;
+	foreach ($result as $val) {
+		$totalLawsuits = $val['totalLawsuits'];
+		$totalCustomers = $val['totalCustomers'];
+		;
+		$openCases = $val['openCases'];
+		;
+		$closedCases = $val['closedCases'];
+		;
 	}
-}
-else 
-{
+} else {
 	$errorInfo = $stmt->errorInfo();
-	exit($json =$errorInfo[2]);
-}	
+	exit($json = $errorInfo[2]);
+}
 
 $pageName = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
-$qry="SELECT l.`phrase`, $language AS VALUE FROM `language` l
+$qry = "SELECT l.`phrase`, $language AS VALUE FROM `language` l
 LEFT JOIN languagepageref r ON r.languageid=l.`id`
 INNER JOIN `tbl_pagemenu` m ON m.`pageId`=r.`menuId`
-WHERE m.`pageName`=:pageName"; 
-$stmt=$dbo->prepare($qry);
-$stmt->bindParam(":pageName",$pageName,PDO::PARAM_STR);
-if($stmt->execute())
-{
+WHERE m.`pageName`=:pageName";
+$stmt = $dbo->prepare($qry);
+$stmt->bindParam(":pageName", $pageName, PDO::PARAM_STR);
+if ($stmt->execute()) {
 	$resultLan = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	}
-	else 
-{
+} else {
 	$errorInfo = $stmt->errorInfo();
-	exit($json =$errorInfo[2]);
+	exit($json = $errorInfo[2]);
 }
 ////print_r($resultLan);
 function set_value($val)
 {
-	foreach($GLOBALS['resultLan'] as $value)
-	{
-		if(trim($value['phrase'])==trim($val))
-		{
+	foreach ($GLOBALS['resultLan'] as $value) {
+		if (trim($value['phrase']) == trim($val)) {
 			return $value['VALUE'];
 			break;
 		}
-		}
+	}
 }
 
 ?>
@@ -73,7 +67,7 @@ function set_value($val)
 	}
 	*/
 	.fc-basic-view .fc-body .fc-row {
-    min-height: 3em; /* or any desired height */
+	min-height: 3em; /* or any desired height */
 	}
 	
 	.fixTable{
@@ -101,20 +95,12 @@ function set_value($val)
 			<div class="col-lg-12 col-md-12">
 				<div class="card bg-white">
 					<div class="card-body">
-						
 						<div class="row">
-							
-							<div class="col-lg-8 col-sm-6 col-12">
-								<div id="calendar"></div>
-							</div>
-							
-							<div class="col-lg-4 col-sm-6 col-12">
-								<div style="padding-top:46px" class="row">
-									
-									<div class="col-lg-12 col-sm-6 col-12">
+							<div class="col-lg-12 col-sm-12 col-12">
+								<div style="padding-top:10px" class="row">
+									<div class="col-lg-3 col-sm-3 col-12">
 										<div class="bg-info-light">
 											<div class="">
-												
 												<div class="dash-widget-header" onclick="window.open('Lawsuit.php', '_blank'); return false;" style="cursor:pointer;">
 													<span class="inovices-widget-icon ">
 														<img src="assets/img/icons/receipt-item.svg" alt="">
@@ -132,7 +118,7 @@ function set_value($val)
 									</div>
 									
 									
-									<div class="col-lg-12 col-sm-6 col-12">
+									<div class="col-lg-3 col-sm-3 col-12">
 										<div class="bg-green-light">
 											<div class="">
 												<div class="dash-widget-header" onclick="window.open('Customer.php', '_blank'); return false;" style="cursor:pointer;">
@@ -150,7 +136,7 @@ function set_value($val)
 										</div>
 									</div>
 									<br>
-									<div class="col-lg-12 col-sm-6 col-12">
+									<div class="col-lg-3 col-sm-3 col-12">
 										
 										<div style="background-color:#fccaff" onclick="window.open('#', '_blank'); return false;" style="cursor:pointer;">
 											<div class="">
@@ -169,7 +155,7 @@ function set_value($val)
 										</div>
 									</div>
 									
-									<div class="col-lg-12 col-sm-6 col-12">
+									<div class="col-lg-3 col-sm-3 col-12">
 										
 										<div class="bg-warning-light" onclick="window.open('#', '_blank'); return false;" style="cursor:pointer;">
 											<div class="">
@@ -193,70 +179,63 @@ function set_value($val)
 								
 								
 							</div>
+						</div>
+						<div class="row mt-3">
 							
+							<div class="col-lg-12 col-sm-12 col-12">
+								<div id="calendar"></div>
+							</div>
 						</div>
 					</div>
 				</div>
 				
 			</div>
 			<?php
-				
-				$qry="CALL sp_dashboard_getLawsuitDetails('".$language."') ";
-				$stmt=$dbo->prepare($qry);
-				//$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
-				if($stmt->execute())
-				{
-					$resultLSDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				}
-				else 
-				{
-					$errorInfo = $stmt->errorInfo();
-					exit($json =$errorInfo[2]);
-				}
-				
-				
-				$qry="CALL sp_getSessionDetailDasbhoard() ";
-				$stmt=$dbo->prepare($qry);
-				//$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
-				if($stmt->execute())
-				{
-					$resultLSSessionDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				}
-				else 
-				{
-					$errorInfo = $stmt->errorInfo();
-					exit($json =$errorInfo[2]);
-				}
-				
-				$qry=" CALL sp_getTaskDetailsDasbhoard(); ";
-				$stmt=$dbo->prepare($qry);
-				//$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
-				if($stmt->execute())
-				{
-					$resultTaskDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				}
-				else 
-				{
-					$errorInfo = $stmt->errorInfo();
-					exit($json =$errorInfo[2]);
-				}
-				
-				$qry=" CALL sp_getConsultationDetailsDasbhoard(); ";
-				$stmt=$dbo->prepare($qry);
-				//$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
-				if($stmt->execute())
-				{
-					$resultConsultationDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				}
-				else 
-				{
-					$errorInfo = $stmt->errorInfo();
-					exit($json =$errorInfo[2]);
-				}
-				
-				
 
-				
+			$qry = "CALL sp_dashboard_getLawsuitDetails('" . $language . "') ";
+			$stmt = $dbo->prepare($qry);
+			//$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
+			if ($stmt->execute()) {
+				$resultLSDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			} else {
+				$errorInfo = $stmt->errorInfo();
+				exit($json = $errorInfo[2]);
+			}
+
+
+			$qry = "CALL sp_getSessionDetailDasbhoard() ";
+			$stmt = $dbo->prepare($qry);
+			//$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
+			if ($stmt->execute()) {
+				$resultLSSessionDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			} else {
+				$errorInfo = $stmt->errorInfo();
+				exit($json = $errorInfo[2]);
+			}
+
+			$qry = " CALL sp_getTaskDetailsDasbhoard(); ";
+			$stmt = $dbo->prepare($qry);
+			//$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
+			if ($stmt->execute()) {
+				$resultTaskDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			} else {
+				$errorInfo = $stmt->errorInfo();
+				exit($json = $errorInfo[2]);
+			}
+
+			$qry = " CALL sp_getConsultationDetailsDasbhoard(); ";
+			$stmt = $dbo->prepare($qry);
+			//$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
+			if ($stmt->execute()) {
+				$resultConsultationDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			} else {
+				$errorInfo = $stmt->errorInfo();
+				exit($json = $errorInfo[2]);
+			}
+
+
+
+
 			?>
 			
 			</div>	
@@ -285,19 +264,18 @@ function set_value($val)
 									</thead>
 									<tbody>
 										<?php
-											foreach($resultLSDetails as $row)
-											{?>
-											<tr>
-												<td><a href="javascript:viewLSDetails(<?php echo $row['lsMasterId'].",".$row['lsDetailsId']; ?>);" > <?php echo $row['ls_code']; ?></a></td>
-												<td> <?php echo $row['lsTypeName_'.$language]; ?></td>
-												<td> <?php echo $row['lsStagesName_'.$language]; ?></td>
-												<td> <?php echo $row['lsStateName_'.$language]; ?></td>
-												<td><?php echo $row['lsSubject']; ?></td>
+										foreach ($resultLSDetails as $row) { ?>
+												<tr>
+													<td><a href="javascript:viewLSDetails(<?php echo $row['lsMasterId'] . "," . $row['lsDetailsId']; ?>);" > <?php echo $row['ls_code']; ?></a></td>
+													<td> <?php echo $row['lsTypeName_' . $language]; ?></td>
+													<td> <?php echo $row['lsStagesName_' . $language]; ?></td>
+													<td> <?php echo $row['lsStateName_' . $language]; ?></td>
+													<td><?php echo $row['lsSubject']; ?></td>
 												
-											</tr>
+												</tr>
 											
-											<?php	
-											}
+											<?php
+										}
 										?>
 										
 									</tbody>
@@ -330,18 +308,17 @@ function set_value($val)
 									<tbody>
 										
 										<?php
-											foreach($resultLSSessionDetails as $row)
-											{?>
-											<tr>
-												<td><a href="javascript:viewLawsuitDetail(<?php echo $row['lsMId'].",".$row['lsDId'].",".$row['id']; ?>);"> <?php echo $row['ls_code']; ?></a></td>
-												<td> <?php echo $row['sessionDateNew']; ?></td>
-												<td> <?php echo $row['sessionName']; ?></td>
-												<td> <?php echo $row['sessionPlace']; ?></td>
+										foreach ($resultLSSessionDetails as $row) { ?>
+												<tr>
+													<td><a href="javascript:viewLawsuitDetail(<?php echo $row['lsMId'] . "," . $row['lsDId'] . "," . $row['id']; ?>);"> <?php echo $row['ls_code']; ?></a></td>
+													<td> <?php echo $row['sessionDateNew']; ?></td>
+													<td> <?php echo $row['sessionName']; ?></td>
+													<td> <?php echo $row['sessionPlace']; ?></td>
 												
-											</tr>
+												</tr>
 											
-											<?php	
-											}
+											<?php
+										}
 										?>
 										
 									</tbody>
@@ -378,17 +355,16 @@ function set_value($val)
 									</thead>
 									<tbody>
 										<?php
-											foreach($resultTaskDetails as $row)
-											{?>
-											<tr>
-												<td><a href="#"> <?php echo $row['taskName']; ?></a></td>
-												<td> <?php echo $row['taskPriority']; ?></td>
-												<td> <?php echo $row['taskStatus']; ?></td>
-												<td><?php echo $row['assignedTo']; ?></td>
-											</tr>
+										foreach ($resultTaskDetails as $row) { ?>
+												<tr>
+													<td><a href="#"> <?php echo $row['taskName']; ?></a></td>
+													<td> <?php echo $row['taskPriority']; ?></td>
+													<td> <?php echo $row['taskStatus']; ?></td>
+													<td><?php echo $row['assignedTo']; ?></td>
+												</tr>
 											
-											<?php	
-											}
+											<?php
+										}
 										?>
 										
 										
@@ -421,17 +397,16 @@ function set_value($val)
 									<tbody>
 									
 									<?php
-											foreach($resultConsultationDetails as $row)
-											{?>
-											<tr>
-												<td><a href="#"> <?php echo $row['contractDate']; ?></a></td>
-												<td> <?php echo $row['custName']; ?></td>
-												<td> <?php echo $row['title']; ?></td>
-											</tr>
+									foreach ($resultConsultationDetails as $row) { ?>
+												<tr>
+													<td><a href="#"> <?php echo $row['contractDate']; ?></a></td>
+													<td> <?php echo $row['custName']; ?></td>
+													<td> <?php echo $row['title']; ?></td>
+												</tr>
 											
-											<?php	
-											}
-										?>
+											<?php
+									}
+									?>
 										
 									</tbody>
 								</table>
@@ -445,6 +420,6 @@ function set_value($val)
 		</div>
 	</div>
 	<!-- /Page Wrapper -->
-	<?php include_once('footer.php'); ?>
+	<?php include_once ('footer.php'); ?>
 	<script src="js_custom/dashboard.js"></script>
 	<script src="js_custom/Lawsuit.js"> </script>

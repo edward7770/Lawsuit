@@ -1,0 +1,13 @@
+@media print {
+    .reference_no_record {
+        width: 50px !important;
+    }
+    
+    td, th {
+        width: 100px;
+    }
+}
+
+.reference_no_record {
+    width: 50px !important;
+}

@@ -16409,7 +16409,7 @@ li.previous {
   display: block;
 }
 .inv-content .invoice-header .inv-header-left img {
-  max-width: 200px;
+  max-width: 245px;
 }
 .inv-content .invoice-header .inv-header-left span {
   color: #95979b;
@@ -17963,3 +17963,27 @@ li.previous {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+
+/* custom css style */
+#example_filter {
+  float: right !important;
+}
+
+.table-btn-action-icon {
+  background: #F3F3F3;
+  color: #878A99;
+  padding: 10px;
+  margin-right: 5px;
+  border: none;
+  text-align: center;
+}
+
+.table-btn-action-icon i {
+  width: 18px;
+  height: 18px;
+}
+
+.table-btn-action-icon:hover {
+  color: #878A99;
+}

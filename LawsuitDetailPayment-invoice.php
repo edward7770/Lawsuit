@@ -26,7 +26,7 @@
 	if (session_status() === PHP_SESSION_NONE) {
 		session_start();
 	}
-	include_once('header.php'); 
+	// include_once('header.php'); 
 	include_once('config/conn.php');
 	$language=$_SESSION['lang'];
 	
@@ -40,13 +40,14 @@
 	if($stmt->execute())
 	{
 		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$stmt->closeCursor();
 	}
 	else 
 	{
 		$errorInfo = $stmt->errorInfo();
 		exit($json =$errorInfo[2]);
 	}
-	////print_r($result);
+
 	function set_value($val)
 	{
 		foreach($GLOBALS['result'] as $value)
@@ -59,16 +60,103 @@
 		}
 		
 	}
-	if(isset($_POST['id']))
-		$lsPaymentId=$_POST['id'];
-	else 
-		$lsPaymentId=12;
+	// if(isset($_POST['id']))
+	// 	$lsPaymentId=$_POST['id'];
+	// else 
+	// 	$lsPaymentId=12;
+
+	// $query = $con->query("SELECT lp.*, lm.*, c.*, ld.lsSubject, ld.lawsuitId FROM tbl_lawsuit_payment lp, tbl_lawsuit_master lm, tbl_lawsuit_details ld, tbl_lawsuit_customers lc, tbl_customers C WHERE lp.lsPaymentId = $lsPaymentId AND lp.lsMasterId = lm.lsMasterId AND lc.lsDetailsId = lm.lsDetailId AND lc.customerId = c.customerId AND ld.lsDetailsId = lm.lsDetailId AND lp.isActive='1'");
+	// $result = $query->fetch_assoc();
+	// print_r($result);
+
+	if(isset($_POST['lsDid']))
+	{
+		$query="call LawsuitDetailsData(:lsDetailId)"; 
+		$stmt_lawsuitdetails=$dbo->prepare($query);
+		$stmt_lawsuitdetails->bindParam(":lsDetailId",$_POST['lsDid'],PDO::PARAM_INT);
+		if($stmt_lawsuitdetails->execute())
+		{
+			$resultLawsuitDetails = $stmt_lawsuitdetails->fetchAll(PDO::FETCH_ASSOC);
+			$customerArray=explode (",", $resultLawsuitDetails[0]['custName']);
+			$opponentArray=explode (",", $resultLawsuitDetails[0]['OpponentsName']);
+			$stmt_lawsuitdetails->closeCursor();
+		}
+		else 
+		{
+			$errorInfo = $stmt_lawsuitdetails->errorInfo();
+			exit($json =$errorInfo[2]);
+		}
+	}
+
+	$min = 0;
+	$max = 500000;
+	$randomNumber = rand($min, $max);
+	$invoiceNumber = str_pad($randomNumber, 6, "0", STR_PAD_LEFT);
+	$invoiceDate = date('n/j/Y');
+
+	$serial=1;
+	$serial_contract=1;
+	if(isset($_POST['lsMId'])) {
+		$qry_getpaymentdata="SELECT lsPaymentId, m.`ls_code`, s.lsStagesName_$language as lsStagesName , d.`lawsuitId`,
+			DATE_FORMAT(paymentDate,'%d-%b-%y') paymentDate, pm.name_$language as paymentMode, amount, invoiceNumber, remarks,
+			(CASE WHEN IFNULL(m.`isPaidAll`,0)=0 THEN 'Current Stage' ELSE 'Full Stages' END) 
+				paymentStatus_en,
+			(CASE WHEN IFNULL(m.`isPaidAll`,0)=0 THEN 'مرحله واحده' ELSE 'مدفوع جميع المراحل' END) 
+				paymentStatus_ar 
+			FROM tbl_lawsuit_payment l 
+			LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=l.`lsMasterId`
+			LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=l.`lsStageId`
+			LEFT JOIN `tbl_lawsuit_details` d ON d.`lsMasterId`=m.`lsMasterId`
+			LEFT JOIN `tbl_payment_mode` pm ON pm.`paymentModeId`=l.`paymentMode`
+			WHERE l.isActive=1 AND m.`isActive`=1
+			AND d.`lsMasterId`=:lsMasterId GROUP BY l.`lsPaymentId` ";
+		$stmt_getpaymentdata=$dbo->prepare($qry_getpaymentdata);
+		$stmt_getpaymentdata->bindParam(":lsMasterId",$_POST['lsMId'],PDO::PARAM_INT);
+		if($stmt_getpaymentdata->execute())
+		{
+			$result_paymentdata = $stmt_getpaymentdata->fetchAll(PDO::FETCH_ASSOC);
+			$stmt_getpaymentdata->closeCursor();
+		}
+		else 
+		{
+			$errorInfo = $stmt_getpaymentdata->errorInfo();
+			exit($json =$errorInfo[2]);
+		}
 
 
-		echo $lsPaymentId.'HELLO 123';
+		$qry_getcontractdata="SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,`lsStageId`, s.lsStagesName_$language as lsStagesName,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractEn`, `contractAr`, `contractFilePath`, c.`isActive` FROM `tbl_lawsuit_contract` c 
+		LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=c.`lsMasterId`
+		LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=c.`lsStageId`
+		WHERE c.`isActive`=1 AND c.`lsMasterId`=:lsMasterId";
+		$stmt_getcontractdata=$dbo->prepare($qry_getcontractdata);
+		$stmt_getcontractdata->bindParam(":lsMasterId",$_POST['lsMId'],PDO::PARAM_INT);
+		if($stmt_getcontractdata->execute())
+		{
+			$result_contactdata = $stmt_getcontractdata->fetchAll(PDO::FETCH_ASSOC);
+			$stmt_getcontractdata->closeCursor();
+		}
+		else 
+		{
+			$errorInfo = $stmt_getcontractdata->errorInfo();
+			exit($json =$errorInfo[2]);
+		}
 
-		$query = 	$con->query("SELECT lp.*, lm.*, c.*, ld.lsSubject, ld.lawsuitId FROM tbl_lawsuit_payment lp, tbl_lawsuit_master lm, tbl_lawsuit_details ld, tbl_lawsuit_customers lc, tbl_customers C WHERE lp.lsPaymentId = $lsPaymentId AND lp.lsMasterId = lm.lsMasterId AND lc.lsDetailsId = lm.lsDetailId AND lc.customerId = c.customerId AND ld.lsDetailsId = lm.lsDetailId AND lp.isActive='1'");
-	$result = $query->fetch_assoc();
+		$qry_getlawyerdata ="SELECT m.`phoneNo`, m.`mobileNo`,m.`email`, m.empName_$language as empName FROM `tbl_lawsuit_lawyer` c 
+		LEFT JOIN `tbl_employees` m ON m.`empId`=c.`empId`
+		WHERE m.`isActive`=1 AND c.`lsDetailId`=:lsDetailId";
+		$stmt_getlawyerdata=$dbo->prepare($qry_getlawyerdata);
+		$stmt_getlawyerdata->bindParam(":lsDetailId",$_POST['lsDid'],PDO::PARAM_INT);
+		if($stmt_getlawyerdata->execute())
+		{
+			$result_lawyerdata = $stmt_getlawyerdata->fetchAll(PDO::FETCH_ASSOC);
+			$stmt_getlawyerdata->closeCursor();
+		}
+		else 
+		{
+			$errorInfo = $stmt_getlawyerdata->errorInfo();
+			exit($json =$errorInfo[2]);
+		}
+	}
 ?>
 
 <body>
@@ -84,97 +172,142 @@
 		                </div>
 		                <div class="inv-header-right">
 		                	<div class="invoice-title">
-								TAX INVOICE
+								<?php echo set_value('tax_invoice'); ?>
 							</div>
 			               	<div class="inv-details">
 			               		<div class="inv-date">
-									Date: <span>5/12/2022</span>
+								   <?php echo set_value('date'); ?>: <span><?php echo($invoiceDate) ?></span>
 								</div>
 								<div class="inv-date">
-									Invoice No: <span>00001</span>
+									<?php echo set_value('invoice_number'); ?>: <span><?php echo($invoiceNumber) ?></span>
 								</div>
 			               	</div>	
 		                </div>					    
 				    </div>
 				    <div class="invoice-address">
-				    	<div class="invoice-to">
-				    		<span>Invoice To:</span>
-				    		<div class="inv-to-address">
-				    			Walter Roberson<br>
-				    			299 Star Trek Drive, Panama City, <br>
-				    			Florida, 32405, USA.<br>
-				    			walter@example.com <br>
-				    			+45 5421 4523
+						<h6 class="company-name mt-3"><?php echo set_value('company_name'); ?></h6>
+						<!-- <h6 class="company-name mt-3"><?php echo($result_lawyerdata[0]['empName']) ?></h6> -->
+						<!-- <div class="company-details d-flex flex-wrap mt-2">
+							<div class="gst-details col-4 d-flex">
+								<b>Lawyer Email</b>: <span>&nbsp;<?php echo $result_lawyerdata[0]['email']; ?></span>
 				    		</div>
-				    	</div>
-				    	<div class="invoice-to">
-				    		<span>Pay To:</span>
-				    		<div class="inv-to-address">
-				    			Lowell H. Dominguez<br> 84 Spilman Street, London<br>
-				    			United King<br>
-				    			domlowell@example.com<br>
-				    			+45 5421 2154
+							<div class="gst-details col-4 d-flex">
+								<b>Phone No</b>: <span>&nbsp;<?php echo $result_lawyerdata[0]['phoneNo']; ?></span>
 				    		</div>
-				    	</div>
-				    	<div class="company-details">
-				    		<span class="company-name">Dreamguys</span>
-				    		<div class="gst-details">
-				    			GST IN: <span>22AABCU9603R1ZX</span>
+							<div class="gst-details col-4 d-flex">
+								<b>Mobile No</b>: <span>&nbsp;<?php echo $result_lawyerdata[0]['mobileNo']; ?></span>
 				    		</div>
-				    		<div class="gst-details">
-				    			Address: <span>5 Hodges Mews, High Wycombe HP12 3JL, United Kingdom</span>
+						</div> -->
+						<!-- <hr/> -->
+				    	<div class="company-details d-flex flex-wrap mt-4">
+							<div class="gst-details col-6 d-flex">
+				    			<b><?php echo set_value('lsMasterCode'); ?></b>: <span style="color: red;">&nbsp;<?php echo $resultLawsuitDetails[0]['ls_code']; ?></span>
 				    		</div>
-				    		<div class="gst-details mb-0">
-				    			Mobile: <span>+ 91 98765 43210</span>
+				    		<div class="gst-details col-6 d-flex">
+								<b><?php echo set_value('referenceNo'); ?></b>: <span>&nbsp;<?php if(empty($resultLawsuitDetails[0]['referenceNo'])) echo "-"; else echo $resultLawsuitDetails[0]['referenceNo']; ?></span>
+				    		</div>
+							<div class="gst-details col-6 d-flex">
+								<b><?php echo set_value('lawsuitId'); ?></b>: <span>&nbsp;<?php if(empty($resultLawsuitDetails[0]['lawsuitId'])) echo "-"; else echo $resultLawsuitDetails[0]['lawsuitId']; ?></span>
+				    		</div>
+				    		<div class="gst-details col-6 d-flex">
+								<b><?php echo set_value('type'); ?></b>: <span>&nbsp;<?php echo $resultLawsuitDetails[0]['lsTypeName_'.$language]; ?></span>
+				    		</div>
+							<!-- <div class="gst-details col-3 d-flex">
+								<b>State</b>: <span style="color:<?php echo $resultLawsuitDetails[0]['lsColor']; ?>">&nbsp;<?php echo $resultLawsuitDetails[0]['lsStateName_'.$language]; ?></span>
+				    		</div>
+							<div class="gst-details col-3 d-flex">
+								<b>Stage</b>: <span>&nbsp;<?php echo $resultLawsuitDetails[0]['lsStagesName_'.$language]; ?></span>
+				    		</div>
+							<div class="gst-details col-3 d-flex">
+								<b>Subject</b>: <span>&nbsp;<?php if(!empty($resultLawsuitDetails[0]['lsSubject'])) echo $resultLawsuitDetails[0]['lsSubject']; else echo '-'; ?></span>
+				    		</div> -->
+							<div class="gst-details col-6 mb-0 d-flex">
+								<b><?php echo set_value('customer'); ?></b>: &nbsp;<?php 
+									foreach($customerArray as $row)
+									{
+										echo '<span>'.$row.'</span><br>';
+									}
+								?></span>
+				    		</div>
+							<div class="gst-details col-6 mb-0 d-flex">
+								<b><?php echo set_value('opponent'); ?></b>:&nbsp;<?php 
+									foreach($opponentArray as $row)
+									{
+										echo '<span>'.$row.'</span><br>';
+									}
+								?>
 				    		</div>
 				    	</div>				    	
 				    </div>
-				    <div class="invoice-table">
+				    <div class="invoice-table mt-3">
+						<p class="mb-1"><?php echo set_value('paymentDetails'); ?></p>
 				    	<div class="table-responsive">
 			                <table>
 								<thead>
-										<tr>
-											<th class="table_width_1">#</th>
-											<th class="table_width_2">Item</th>
-											<th class="table_width_3">Tax Value</th>
-											<th class="table_width_1 text-center">Qty</th>
-											<th class="table_width_4 text-end">Price</th>
-											<th class="table_width_4 text-end">Total</th>
-										</tr>
+									<tr>
+										<th class="table_width_1">#</th>
+										<!-- <th><?php echo set_value('lsMasterCode'); ?></th> -->
+										<th><?php echo set_value('stage'); ?></th>
+										<!-- <th><?php echo set_value('invoiceNumber'); ?></th> -->
+										<th><?php echo set_value('paymentDate'); ?></th>
+										<th><?php echo set_value('paymentMode'); ?></th>												   
+										<th><?php echo set_value('paidAmount'); ?></th>
+										<th><?php echo set_value('remarks'); ?></th>
+										<th><?php echo set_value('paidStatus'); ?></th>
+									</tr>
 								</thead>
 			                  <tbody>
+									<?php 
+										foreach ($result_paymentdata as $value) {
+											?>
+												<tr>
+													<td> <?php echo $serial; ?> </td>
+													<!-- <td><?php echo $value['ls_code']; ?></td> -->
+													<td><?php echo $value['lsStagesName']; ?></td>
+													<!-- <td><?php echo $value['invoiceNumber']; ?></td> -->
+													<td><?php echo $value['paymentDate']; ?></td>
+													<td><?php echo $value['paymentMode']; ?></td>
+													<td><?php echo setAmountDecimal($value['amount']); ?></td>
+													<td><?php echo $value['remarks']; ?></td>
+													<td><?php echo $value['paymentStatus_'.$language]; ?></td>
+													
+												</tr>
+											<?php
+											$serial++;
+										}
+									?>
+			                  </tbody>
+			                </table>			               
+			            </div>
+				    </div>
+					<div class="invoice-table mt-3">
+						<p class="mb-1"><?php echo set_value('contractDetails'); ?></p>
+				    	<div class="table-responsive">
+			                <table>
+								<thead>
 									<tr>
-										<td>1</td>	
-										<td class=""> Website Design</td>
-										<td class="table-description">Four plus web pages design and two rivision</td>
-										<td class="text-center">1</td>
-										<td class="text-end">$350</td>
-										<td class="text-end">$350</td>
+										<th class="table_width_1">#</th>
+										<th><?php echo set_value('stage'); ?></th>
+										<th><?php echo set_value('paymentAmount'); ?></th>
+										<th><?php echo set_value('taxValueAmount'); ?></th>
+										<th><?php echo set_value('contractAmountIncludingTax'); ?></th>
 									</tr>
-									<tr>
-										<td>2</td>	
-										<td class="table-description">Web Development</td>
-										<td class="">Dynamic frontend design</td>
-										<td class="text-center">1</td>
-										<td class="text-end">$600</td>			                      
-										<td class="text-end">$600</td>
-									</tr>
-									<tr>
-										<td>3</td>	
-										<td class="">App Development</td>
-										<td class="table-description">Android and Ios App design</td>
-										<td class="text-center">2</td>
-										<td class="text-end">$200</td>			                      
-										<td class="text-end">$400</td>
-									</tr>
-									<tr>
-										<td>4</td>	
-										<td class="">Digital Marketing</td>
-										<td class="table-description">Facebook and instagram marketing</td>
-										<td class="text-center">3</td>
-										<td class="text-end">$100</td>			                      
-										<td class="text-end">$300</td>
-									</tr>
+								</thead>
+			                  <tbody>
+									<?php 
+										foreach ($result_contactdata as $value) {
+											?>
+												<tr>
+													<td> <?php echo $serial_contract; ?> </td>
+													<td><?php echo $value['lsStagesName']; ?></td>
+													<td><?php echo setAmountDecimal($value['amount']); ?></td>
+													<td><?php echo setAmountDecimal($value['taxAmount']); ?></td>
+													<td><?php echo setAmountDecimal($value['totalAmount']); ?></td>
+												</tr>
+											<?php
+											$serial_contract++;
+										}
+									?>
 			                  </tbody>
 			                </table>			               
 			            </div>
@@ -185,18 +318,18 @@
 			                <table>
 				                <tbody>
 				                   <tr>
-				                      <td>Taxable Amount</td>
-				                      <td>$1650</td>
+				                      <td style="'color: black !important; font-size: 16px;"><b><?php echo set_value('paidAmount'); ?></b>:</td>
+				                      <td style="'color: black;" id="paidAmount"></td>
 				                    </tr>
 				                    <tr>
-				                      <td>GST 18.0% </td>
-				                      <td>$165</td>
+				                      <td style="'color: black; font-size: 16px;"><b><?php echo set_value('dueAmount'); ?></b>:</td>
+				                      <td style="'color: black;" id="dueAmount"></td>
 				                    </tr>				                    
 				                </tbody>
 				            </table>
 			            </div> 
 				    </div>
-				    <div class="invoice-table-footer">
+				    <div class="invoice-table-footer mb-5">
 			            <div class="table-footer-left">       
                             <p class="total-info">Total Items / Qty : 4 / 4.00</p>
 			            </div>
@@ -204,17 +337,17 @@
                             <table class="totalamt-table">
 				                <tbody>
 				                   <tr>
-				                      <td>Total</td>
-				                      <td>$1650</td>
+				                      <td><?php echo set_value('totalAmount'); ?></td>
+				                      <td id="totalAmount"></td>
 				                    </tr>				                    				                    
 				                </tbody>
 				            </table>
 			            </div>			                           	
 			        </div>
-			        <div class="total-amountdetails">
+			        <!-- <div class="total-amountdetails">
 			        	<p>Total amount ( in words): <span>$  One Thousand Six Hundred Fifteen  Only.</span></p>
-			        </div>
-			        <div class="bank-details">
+			        </div> -->
+			        <!-- <div class="bank-details">
 			        	<div class="account-info">
 			        		<span class="bank-title">Bank Details</span>
 			        		<div class="account-details">
@@ -244,10 +377,12 @@
 					</div>	
 					<div class="thanks-msg text-center">
 						Thanks for your Business
-					</div>
+					</div> -->
 				</div>												
 		    </div>
 			<input type="hidden" value=<?php echo $language; ?> id="lang" />
+			<input type='hidden' id="lsDId" value="<?php echo $_POST['lsDId']; ?>" >
+			<input type='hidden' id="lsMId" value="<?php echo $_POST['lsMId']; ?>" >
 			<?php /*
 			<div class="file-link">
 				<button class="download_btn download-link">         
@@ -295,6 +430,7 @@ function lang(lang)
 	{
 		return false;
 	}
+
 	$.ajax({
 		type:"POST",
 		url: "config/config.php",
@@ -332,4 +468,6 @@ function lang(lang)
 		}
 	}); 
 }
+
 </script>
+<script src="js_custom/LawsuitDetailPaymentInvoice.js"></script>

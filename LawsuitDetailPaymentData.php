@@ -76,8 +76,8 @@
 			<td class="d-flex align-items-center">
 				<a href="#" class="btn-action-icon me-2" onclick="edit(<?php echo $value['lsPaymentId']; ?>);"><span><i class="fe fe-edit"></i></span></a>
 				<a href="#" class="btn-action-icon" onclick="delModal(<?php echo $value['lsPaymentId'].",'payment'"; ?>);"><span><i class="fe fe-trash-2"></i></span></a>
-				&nbsp; &nbsp; 
-				<a href="#" class="btn-action-icon" onclick="printInvoice(<?php echo $value['lsPaymentId']; ?>);"><span><i class="fa fa-print"></i></span></a>
+				<!-- &nbsp; &nbsp; 
+				<a href="#" class="btn-action-icon" onclick="printInvoice(<?php echo $value['lsPaymentId']; ?>);"><span><i class="fa fa-print"></i></span></a> -->
 
 			</td>
 			

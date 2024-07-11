@@ -6,7 +6,7 @@
 		exit('reportType');
 	}
 	
-if (session_status() === PHP_SESSION_NONE) {
+	if (session_status() === PHP_SESSION_NONE) {
 		session_start();
 	}
 	////$language=$_SESSION['lang'];
@@ -55,7 +55,7 @@ if (session_status() === PHP_SESSION_NONE) {
 				<th><?php echo set_value('referenceNo'); ?></th>
 				<th><?php echo set_value('lawsuitId'); ?></th>
 				<th><?php echo set_value('customer'); ?></th>
-				<th><?php echo set_value('opponentName'); ?></th>
+				<th><?php echo set_value('opponent'); ?></th>
 				<th><?php echo set_value('state'); ?></th>
 				<th><?php echo set_value('stage'); ?></th>
 				<th><?php echo set_value('lawsuitDate'); ?></th>
@@ -110,7 +110,7 @@ if (session_status() === PHP_SESSION_NONE) {
 					<td <?php if($rowspan>0) echo "rowspan='". $rowspan."'"; ?> > <?php echo $serial; ?> </td>
 					<td <?php if($rowspan>0) echo "rowspan='". $rowspan."'"; ?> ><?php echo $value['ls_code']; ?></td>
 					<td> <?php echo $value['empName_'.$language]; ?> </td>
-					<td> <?php echo $value['ls_code']; ?> </td>
+					<td> <?php echo $value['lawsuitId']; ?> </td>
 					<td> <?php echo $value['customerName']; ?> </td>
 					<td <?php if($rowspan>0) echo "rowspan='". $rowspan."'"; ?> > <?php echo $value['oppoName']; ?> </td>
 					<td <?php if($rowspan>0) echo "rowspan='". $rowspan."'"; ?> > <?php echo $value['lsStateName_'.$language]; ?> </td>
@@ -173,9 +173,9 @@ if (session_status() === PHP_SESSION_NONE) {
 		?>
 		</tbody>
 		</table>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"> -->
+<!-- <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script> -->
 <script src="js_custom/dataTableButtons.js"> </script>
 	
