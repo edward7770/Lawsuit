@@ -48,6 +48,7 @@ function filterData(&$str){
 $serial=1;
 $serial_contract=1;
 $lsDetailsId=0;
+$displayDate="displayDate_$language";
 
 $displayDate="displayDate_$language";
 // Excel file name for download 
@@ -110,7 +111,7 @@ if(isset($_GET['lsMId'])) {
 if(count($result_paymentdata) > 0){ 
     // Output each row of the data 
     foreach($result_paymentdata as $i=> $value) {
-        $lineData = array($serial, $value['ls_code'], $value['lsStagesName'], $value['invoiceNumber'], $value['paymentDate'], $value['paymentMode'], setAmountDecimal($value['amount']), $value['remarks'], $displayDate($value['paymentStatus_'.$language])); 
+        $lineData = array($serial, $value['ls_code'], $value['lsStagesName'], $value['invoiceNumber'], $displayDate($value['paymentDate']), $value['paymentMode'], setAmountDecimal($value['amount']), $value['remarks'], $displayDate($value['paymentStatus_'.$language])); 
         array_walk($lineData, 'filterData'); 
         $serial++;
         $excelData .= implode("\t", array_values($lineData)) . "\n"; 
