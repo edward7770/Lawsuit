@@ -52,7 +52,7 @@ $displayDate="displayDate_$language";
 
 $displayDate="displayDate_$language";
 // Excel file name for download 
-$fileName = "lawsuit_payment_" . date('Y-m-d') . ".xls"; 
+$fileName = "lawsuit_payment_" . date('Y-m-d') . ".xlsx"; 
  
 // Column names 
 $fields_payment = array('#', set_value('lsMasterCode'), set_value('stage'), set_value('invoiceNumber'), set_value('paymentDate'), set_value('paymentMode'), set_value('paidAmount'), set_value('remarks'), set_value('paidStatus')); 
