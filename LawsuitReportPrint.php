@@ -281,8 +281,6 @@
 				</div>												
 		    </div>
 			<input type="hidden" value=<?php echo $language; ?> id="lang" />
-			<input type='hidden' id="lsDId" value="<?php echo $_POST['lsDId']; ?>" >
-			<input type='hidden' id="lsMId" value="<?php echo $_POST['lsMId']; ?>" >
 			<?php /*
 			<div class="file-link">
 				<button class="download_btn download-link">         
