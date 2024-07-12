@@ -45,12 +45,16 @@ function filterData(&$str){
     if(strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"'; 
 } 
 
+function displayPaymentDate(&$date) {
+    $date = new DateTime($date);
+    $dateString = $date->format('Y-m-d');
+    return $dateString;
+}
+
 $serial=1;
 $serial_contract=1;
 $lsDetailsId=0;
-$displayDate="displayDate_$language";
 
-$displayDate="displayDate_$language";
 // Excel file name for download 
 $fileName = "lawsuit_payment_" . date('Y-m-d') . ".xls"; 
  
@@ -111,7 +115,9 @@ if(isset($_GET['lsMId'])) {
 if(count($result_paymentdata) > 0){ 
     // Output each row of the data 
     foreach($result_paymentdata as $i=> $value) {
-        $lineData = array($serial, $value['ls_code'], $value['lsStagesName'], $value['invoiceNumber'], $displayDate($value['paymentDate']), $value['paymentMode'], setAmountDecimal($value['amount']), $value['remarks'], $displayDate($value['paymentStatus_'.$language])); 
+        $temppaymentDate = new DateTime($value['paymentDate']);
+        $paymentDate = $temppaymentDate->format('Y-m-d');
+        $lineData = array($serial, $value['ls_code'], $value['lsStagesName'], $value['invoiceNumber'], $paymentDate, $value['paymentMode'], setAmountDecimal($value['amount']), $value['remarks'], $value['paymentStatus_'.$language]); 
         array_walk($lineData, 'filterData'); 
         $serial++;
         $excelData .= implode("\t", array_values($lineData)) . "\n"; 
@@ -128,7 +134,7 @@ $excelData .= implode("\t", array_values($field_contract)) . "\n";
 if(count($result_contactdata) > 0){ 
     foreach($result_contactdata as $i=> $value)
     {
-        $lineData1 = array($serial_contract, $value['lsStagesName'], $value['amount'], $value['taxAmount'], $value['totalAmount']); 
+        $lineData1 = array($serial_contract, $value['lsStagesName'], setAmountDecimal($value['amount']), setAmountDecimal($value['taxAmount']), setAmountDecimal($value['totalAmount'])); 
         array_walk($lineData1, 'filterData'); 
         $excelData .= implode("\t", array_values($lineData1)) . "\n"; 
         $serial_contract++;
