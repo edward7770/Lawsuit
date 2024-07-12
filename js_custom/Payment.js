@@ -288,16 +288,20 @@ function getPayment()
 			const jsonObject = JSON.parse(data);
 			if(jsonObject.status)
 			{
-				data_array = jsonObject['data'];
-				jQuery.each(data_array, function() {
-				$('#totalAmount').html(parseFloat(this.totalCasesAmount).toFixed(3)+" "+currency);
-				$('#paidAmount').html(parseFloat(this.totalPayment).toFixed(3)+" "+currency);
-				$('#dueAmount').html(parseFloat(this.outstandingAmount).toFixed(3)+" "+currency);
-				///$('#totalAmountMonthly').html(parseFloat(this.monthlyCasesAmount).toFixed(3)+" "+currency);
-				///$('#totalAmountToday').html(parseFloat(this.todayCasesAmount).toFixed(3)+" "+currency);
-				///$('#dueAmountMonthly').html(parseFloat(this.monthlyPayment).toFixed(3)+" "+currency);
-				///$('#dueAmountToday').html(parseFloat(this.dailyPayment).toFixed(3)+" "+currency);
-				});
+				// data_array = jsonObject['data'];
+				// console.log(data_array);
+				// jQuery.each(data_array, function() {
+				// $('#totalAmount').html(parseFloat(this.totalCasesAmount).toFixed(3)+" "+currency);
+				// $('#paidAmount').html(parseFloat(this.totalPayment).toFixed(3)+" "+currency);
+				// $('#dueAmount').html(parseFloat(this.outstandingAmount).toFixed(3)+" "+currency);
+				// ///$('#totalAmountMonthly').html(parseFloat(this.monthlyCasesAmount).toFixed(3)+" "+currency);
+				// ///$('#totalAmountToday').html(parseFloat(this.todayCasesAmount).toFixed(3)+" "+currency);
+				// ///$('#dueAmountMonthly').html(parseFloat(this.monthlyPayment).toFixed(3)+" "+currency);
+				// ///$('#dueAmountToday').html(parseFloat(this.dailyPayment).toFixed(3)+" "+currency);
+				// });
+				$('#totalAmount').html((jsonObject.totalCasesAmount).toFixed(3)+" "+currency);
+				$('#paidAmount').html((jsonObject.totalPayment).toFixed(3)+" "+currency);
+				$('#dueAmount').html((jsonObject.outstandingAmount).toFixed(3)+" "+currency);
 			}
 			else 
 			{

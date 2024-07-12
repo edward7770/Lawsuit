@@ -116,19 +116,51 @@ if(isset($_POST['getData']))
 }
 else if(isset($_POST['getPayment']))
 {
-	$stmt=$dbo->prepare("CALL sp_getPaymentDetails()");
+	// $stmt=$dbo->prepare("CALL sp_getPaymentDetails()");
+	// if($stmt->execute())
+	// {
+	// 	$result= $stmt->fetchAll(PDO::FETCH_ASSOC);
+	// }
+	// else 
+	// {
+	// 	$errorInfo = $stmt->errorInfo();
+	// 	exit($json =$errorInfo[2]);
+	// }
+	// if($result)
+	// 	echo json_encode(['status'=>true, 'data'=>$result],JSON_INVALID_UTF8_SUBSTITUTE);
+	// else 
+	// 	echo json_encode(['status'=>false],JSON_INVALID_UTF8_SUBSTITUTE);
+
+	if (session_status() === PHP_SESSION_NONE) {
+		session_start();
+	}
+	$language=$_SESSION['lang'];
+	
+	include_once('languageActions.php');
+	
+	$qry="CALL sp_getLawsuitDetails('".$language."',".$_SESSION['customerId'].",-1,-1,-1)";
+	$stmt=$dbo->prepare($qry);
+	////$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
 	if($stmt->execute())
 	{
-		$result= $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	else 
 	{
 		$errorInfo = $stmt->errorInfo();
 		exit($json =$errorInfo[2]);
 	}
-	if($result)
-		echo json_encode(['status'=>true, 'data'=>$result],JSON_INVALID_UTF8_SUBSTITUTE);
-	else 
-		echo json_encode(['status'=>false],JSON_INVALID_UTF8_SUBSTITUTE);
+
+	$totalCasesAmount = 0;
+	$totalPayment = 0;
+	$outstandingAmount = 0;
+
+	foreach($result as $value) {
+		$totalCasesAmount += $value['totalAmount'];
+		$totalPayment += $value['paymentAmount'];
+		$outstandingAmount += $value['dueAmount'];
+	}
+
+	echo json_encode(['status'=>true, 'totalCasesAmount'=>$totalCasesAmount, 'totalPayment'=>$totalPayment, 'outstandingAmount'=>$outstandingAmount ],JSON_INVALID_UTF8_SUBSTITUTE);
 }
 ?>

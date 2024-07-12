@@ -67,7 +67,7 @@ $excelData = implode("\t", array_values($fields_payment)) . "\n";
  
 if(isset($_GET['lsMId'])) {
     $qry_getpaymentdata="SELECT lsPaymentId, m.`ls_code`, s.lsStagesName_$language as lsStagesName , d.`lawsuitId`,
-        DATE_FORMAT(paymentDate,'%d-%b-%y') paymentDate, pm.name_$language as paymentMode, amount, invoiceNumber, remarks,
+        paymentDate, pm.name_$language as paymentMode, amount, invoiceNumber, remarks,
         (CASE WHEN IFNULL(m.`isPaidAll`,0)=0 THEN 'Current Stage' ELSE 'Full Stages' END) 
             paymentStatus_en,
         (CASE WHEN IFNULL(m.`isPaidAll`,0)=0 THEN 'مرحله واحده' ELSE 'مدفوع جميع المراحل' END) 
