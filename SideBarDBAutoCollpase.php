@@ -59,10 +59,10 @@
 	
 	$set_url_array=array();
 	array_push($set_url_array,"/Restricted.php");
-	
 	if($_SESSION['customerId']<0)
 	{
 ?>
+
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
 	<div class="sidebar-header">

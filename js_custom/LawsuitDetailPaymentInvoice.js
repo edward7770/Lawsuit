@@ -160,7 +160,7 @@ function getPaymentData() {
       lsMId: lsMId,
     },
     success: function (data) {
-      ///console.log(data);
+      // console.log(data);
 
       const jsonObject = JSON.parse(data);
       if (jsonObject.status) {

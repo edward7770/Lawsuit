@@ -157,10 +157,11 @@
 			exit($json =$errorInfo[2]);
 		}
 	}
+	print_r($language);
 ?>
 
 <body>
-	<div class="main-wrapper">
+	<div class="main-wrapper" <?php if ($language === 'ar') echo 'style="direction: rtl"'; else echo 'style="direction: ltr"';  ?>>
 		<div class="container">
 			<div class="invoice-wrapper download_section">
 				<div class="inv-content">
@@ -381,8 +382,8 @@
 				</div>												
 		    </div>
 			<input type="hidden" value=<?php echo $language; ?> id="lang" />
-			<!-- <input type='hidden' id="lsDId" value="<?php echo $_POST['lsDId']; ?>" >
-			<input type='hidden' id="lsMId" value="<?php echo $_POST['lsMId']; ?>" > -->
+			<input type='hidden' id="lsDId" value="<?php echo $_POST['lsDId']; ?>" >
+			<input type='hidden' id="lsMId" value="<?php echo $_POST['lsMId']; ?>" >
 			<?php /*
 			<div class="file-link">
 				<button class="download_btn download-link">         
