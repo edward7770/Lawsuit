@@ -53,10 +53,10 @@ function getData()
                 $("#example").DataTable().rows.add($(newRows)).draw();
                 $('div.dataTables_filter').css('float', 'right');
                 $('div.dataTables_filter').css('margin-bottom', '3px');
-                var csvButton = '<a href="AccountingExcelReport.php?lsMId=' + $("#lsMId").val() +'&lsDId=' + $("#lsDId").val() + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
+                var csvButton = '<a href="TaxExcelReport.php?lsMId=' + $("#lsMId").val() +'&lsDId=' + $("#lsDId").val() + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
                 var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
-                $(printButton).insertAfter(".dataTables_filter")
-                $(csvButton).insertAfter(".dataTables_filter")
+                $(printButton).insertAfter("#example_filter")
+                $(csvButton).insertAfter("#example_filter")
 			}
 			getPayment();
 			

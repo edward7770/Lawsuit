@@ -707,7 +707,7 @@ function printExcelPaymentReport() {
         url: "LawsuitPaymentExcelPrint.php",
         data: { lsMId: lsMId, lsDId: lsDId },
         success: function(data) {
-            console.log('123123123');
+            // console.log('123123123');
         }
     });
 }
