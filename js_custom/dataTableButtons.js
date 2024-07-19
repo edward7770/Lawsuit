@@ -33,8 +33,8 @@ $('.datatable').DataTable({
       var stage=$('#stage').val();
       var reportType=$('#reportType').val();
 
-      $('div.dataTables_filter').css('float', 'right');
-      $('div.dataTables_filter').css('margin-bottom', '3px');
+      $('div.dataTables_filter').css('position', 'absolute');
+      $('div.dataTables_filter').css('right', '0px');
       // var copyButton = '<a href="#" class="table-btn-action-icon buttons-copy" onclick="printLawsuitReport();"><span><i class="fa fa-copy"></i></span></a>';
       var csvButton = '<a href="LawsuitExcelPrint.php?type=' + type +'&stage=' + stage +'&reportType=' + reportType + '&state=' + state + '" class="table-btn-action-icon buttons-csv"><span><i class="fa fa-file-csv"></i></span></a>';
       var printButton = '<a href="#" class="table-btn-action-icon buttons-print" onclick="printLawsuitReport();"><span><i class="fa fa-print"></i></span></a>';

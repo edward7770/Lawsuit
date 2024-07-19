@@ -2,8 +2,6 @@
 $( document ).ready(function() {
 	getCurrency();
     getData();
-    getExpenseData();
-    getIncomeData();
 });
 $(document).ajaxStart(function() {
 	$("#ajax_loader").show();
@@ -39,6 +37,7 @@ function getData()
 {
 	var myTable = $('#example').DataTable();
  	var rows = myTable.rows().remove().draw();
+	console.log($("#lsMId").val());
 	$.ajax({
 		type:"POST",
 		url: "PaymentData.php",
@@ -53,7 +52,7 @@ function getData()
                 $("#example").DataTable().rows.add($(newRows)).draw();
 				$('div.dataTables_filter').css('position', 'absolute');
                 $('div.dataTables_filter').css('right', '0px');
-                var csvButton = '<a href="ProfitLossExcelReport.php?lsMId=' + $("#lsMId").val() +'&lsDId=' + $("#lsDId").val() + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
+                var csvButton = '<a href="ClientExcelReport.php?lsMId=' + $("#lsMId").val() +'&lsDId=' + $("#lsDId").val() + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
                 var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
                 $(printButton).insertAfter("#example_filter")
                 $(csvButton).insertAfter("#example_filter")
@@ -66,55 +65,6 @@ function getData()
 		}
 	});
 }
-
-function getExpenseData()
-{
-    var myTable = $('#setExpenseData').DataTable();
-    var rows = myTable.rows().remove().draw();
-    $.ajax({
-        type:"POST",
-        url: "ExpenseData.php",
-        data:{ getData:'1' },
-        success: function (data) {
-            ////console.log(data);
-            if (!$.trim(data) == '') {
-                data = data.replace(/^\s*|\s*$/g, '');
-                data = data.replace(/\\r\\n/gm, '');
-                var expr = "</tr>\\s*<tr";
-                var regEx = new RegExp(expr, "gm");
-                var newRows = data.replace(regEx, "</tr><tr");
-                $("#setExpenseData").DataTable().rows.add($(newRows)).draw();
-            }
-        }
-    });
-}
-
-function getIncomeData()
-{
-	var myTable = $('#setIncomeData').DataTable();
-	var rows = myTable.rows().remove().draw();
-	$.ajax({
-		type:"POST",
-		url: "IncomeData.php",
-		data:{ getData:'1' },
-		success: function (data) {
-			////console.log(data);
-			if (!$.trim(data) == '') {
-				data = data.replace(/^\s*|\s*$/g, '');
-				data = data.replace(/\\r\\n/gm, '');
-				var expr = "</tr>\\s*<tr";
-				var regEx = new RegExp(expr, "gm");
-				var newRows = data.replace(regEx, "</tr><tr");
-				$("#setIncomeData").DataTable().rows.add($(newRows)).draw();
-			}
-		},
-		error: function (jqXHR, exception) {
-			errorShow(jqXHR, exception);
-		}
-	});
-}
-
-
 
 function viewLSDetails(lsMId,lsDId)
 {
@@ -311,17 +261,6 @@ function getPayment()
 			const jsonObject = JSON.parse(data);
 			if(jsonObject.status)
 			{
-				// data_array = jsonObject['data'];
-				// console.log(data_array);
-				// jQuery.each(data_array, function() {
-				// $('#totalAmount').html(parseFloat(this.totalCasesAmount).toFixed(3)+" "+currency);
-				// $('#paidAmount').html(parseFloat(this.totalPayment).toFixed(3)+" "+currency);
-				// $('#dueAmount').html(parseFloat(this.outstandingAmount).toFixed(3)+" "+currency);
-				// ///$('#totalAmountMonthly').html(parseFloat(this.monthlyCasesAmount).toFixed(3)+" "+currency);
-				// ///$('#totalAmountToday').html(parseFloat(this.todayCasesAmount).toFixed(3)+" "+currency);
-				// ///$('#dueAmountMonthly').html(parseFloat(this.monthlyPayment).toFixed(3)+" "+currency);
-				// ///$('#dueAmountToday').html(parseFloat(this.dailyPayment).toFixed(3)+" "+currency);
-				// });
 				$('#totalAmount').html((jsonObject.totalCasesAmount).toFixed(3)+" "+currency);
 				$('#paidAmount').html((jsonObject.totalPayment).toFixed(3)+" "+currency);
 				$('#dueAmount').html((jsonObject.outstandingAmount).toFixed(3)+" "+currency);

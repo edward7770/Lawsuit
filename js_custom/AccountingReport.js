@@ -51,8 +51,8 @@ function getData()
                 var regEx = new RegExp(expr, "gm");
                 var newRows = data.replace(regEx, "</tr><tr");
                 $("#example").DataTable().rows.add($(newRows)).draw();
-                $('div.dataTables_filter').css('float', 'right');
-                $('div.dataTables_filter').css('margin-bottom', '3px');
+				$('div.dataTables_filter').css('position', 'absolute');
+                $('div.dataTables_filter').css('right', '0px');
                 var csvButton = '<a href="AccountingExcelReport.php?lsMId=' + $("#lsMId").val() +'&lsDId=' + $("#lsDId").val() + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
                 var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
                 $(printButton).insertAfter(".dataTables_filter")
