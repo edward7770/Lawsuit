@@ -83,7 +83,7 @@ function set_value($val)
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12">
-                    <label for="stage" class="form-label"><?php echo set_value("payment_option"); ?><span class="text-danger"> * </span></label>
+                    <label for="stage" class="form-label"><?php echo set_value("payment_option"); ?></label>
                     <select class="js-example-basic-single form-small select" id='payment_option'>
                         <option value=""><?php echo set_value("select"); ?></option>
                         <option value="payment"><?php echo set_value("payment"); ?></option>
