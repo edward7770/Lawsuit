@@ -1,9 +1,9 @@
 
 $( document ).ready(function() {
 	getCurrency();
-    getData();
-    getExpenseData();
-    getIncomeData();
+    // getData();
+    // getExpenseData();
+    // getIncomeData();
 });
 $(document).ajaxStart(function() {
 	$("#ajax_loader").show();
@@ -12,8 +12,15 @@ $(document).ajaxStart(function() {
 
 .ajaxStop(function() {
 	$("#ajax_loader").hide();
-	$('#submit').prop("disabled", false);		
+	$('#submit').prop("disabled", false);
 });
+
+function search()
+{
+    getData();
+    getExpenseData();
+    getIncomeData();
+}
 
 var currency="";
 function getCurrency()
@@ -39,25 +46,24 @@ function getData()
 {
 	var myTable = $('#example').DataTable();
  	var rows = myTable.rows().remove().draw();
+
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
+	var payment_status=$('#payment_status_select').val();
+
 	$.ajax({
 		type:"POST",
 		url: "PaymentData.php",
-		data:{ getData:'1' },
+		data:{ from :from, to: to, payment_status: payment_status },
 		success: function (data) {
-			if (!$.trim(data) == '') {
-                data = data.replace(/^\s*|\s*$/g, '');
-                data = data.replace(/\\r\\n/gm, '');
-                var expr = "</tr>\\s*<tr";
-                var regEx = new RegExp(expr, "gm");
-                var newRows = data.replace(regEx, "</tr><tr");
-                $("#example").DataTable().rows.add($(newRows)).draw();
-				$('div.dataTables_filter').css('position', 'absolute');
-                $('div.dataTables_filter').css('right', '0px');
-                var csvButton = '<a href="ProfitLossExcelReport.php?lsMId=' + $("#lsMId").val() +'&lsDId=' + $("#lsDId").val() + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
-                var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
-                $(printButton).insertAfter("#example_filter")
-                $(csvButton).insertAfter("#example_filter")
-			}
+			$('#setData_payment').html(data);
+			$('div.dataTables_filter').css('position', 'absolute');
+			$('div.dataTables_filter').css('right', '0px');
+			var csvButton = '<a href="ProfitLossExcelReport.php?from=' + from +'&to=' + to +'&payment_status=' + payment_status + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
+			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+			$(printButton).insertAfter("#example_filter")
+			$(csvButton).insertAfter("#example_filter")
+			
 			getPayment();
 			
 		},
@@ -69,44 +75,48 @@ function getData()
 
 function getExpenseData()
 {
-    var myTable = $('#setExpenseData').DataTable();
-    var rows = myTable.rows().remove().draw();
+    // var myTable = $('#setExpenseData').DataTable();
+    // var rows = myTable.rows().remove().draw();
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
     $.ajax({
         type:"POST",
         url: "ExpenseData.php",
-        data:{ getData:'1' },
+        data:{ from :from, to: to },
         success: function (data) {
-            ////console.log(data);
-            if (!$.trim(data) == '') {
-                data = data.replace(/^\s*|\s*$/g, '');
-                data = data.replace(/\\r\\n/gm, '');
-                var expr = "</tr>\\s*<tr";
-                var regEx = new RegExp(expr, "gm");
-                var newRows = data.replace(regEx, "</tr><tr");
-                $("#setExpenseData").DataTable().rows.add($(newRows)).draw();
-            }
+            // if (!$.trim(data) == '') {
+            //     data = data.replace(/^\s*|\s*$/g, '');
+            //     data = data.replace(/\\r\\n/gm, '');
+            //     var expr = "</tr>\\s*<tr";
+            //     var regEx = new RegExp(expr, "gm");
+            //     var newRows = data.replace(regEx, "</tr><tr");
+            //     $("#setExpenseData").DataTable().rows.add($(newRows)).draw();
+            // }
+			$('#setData_expense').html(data);
         }
     });
 }
 
 function getIncomeData()
 {
-	var myTable = $('#setIncomeData').DataTable();
-	var rows = myTable.rows().remove().draw();
+	// var myTable = $('#setIncomeData').DataTable();
+	// var rows = myTable.rows().remove().draw();
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
 	$.ajax({
 		type:"POST",
 		url: "IncomeData.php",
-		data:{ getData:'1' },
+		data:{ from :from, to: to },
 		success: function (data) {
-			////console.log(data);
-			if (!$.trim(data) == '') {
-				data = data.replace(/^\s*|\s*$/g, '');
-				data = data.replace(/\\r\\n/gm, '');
-				var expr = "</tr>\\s*<tr";
-				var regEx = new RegExp(expr, "gm");
-				var newRows = data.replace(regEx, "</tr><tr");
-				$("#setIncomeData").DataTable().rows.add($(newRows)).draw();
-			}
+			// if (!$.trim(data) == '') {
+			// 	data = data.replace(/^\s*|\s*$/g, '');
+			// 	data = data.replace(/\\r\\n/gm, '');
+			// 	var expr = "</tr>\\s*<tr";
+			// 	var regEx = new RegExp(expr, "gm");
+			// 	var newRows = data.replace(regEx, "</tr><tr");
+			// 	$("#setIncomeData").DataTable().rows.add($(newRows)).draw();
+			// }
+			$('#setData_income').html(data);
 		},
 		error: function (jqXHR, exception) {
 			errorShow(jqXHR, exception);

@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 // include_once('header.php'); 
-include_once ('config/conn.php');
+include_once('config/conn.php');
 $language = $_SESSION['lang'];
 
 $pageName = "Lawsuit";
@@ -32,7 +32,6 @@ function set_value($val)
             break;
         }
     }
-
 }
 
 function filterData(&$str)
@@ -65,37 +64,31 @@ if ($stmt_payment->execute()) {
     exit($json = $errorInfo[2]);
 }
 
-$qry="SELECT l.`phrase`, $language AS VALUE FROM `language` l
+$qry = "SELECT l.`phrase`, $language AS VALUE FROM `language` l
 LEFT JOIN languagepageref r ON r.languageid=l.`id`
 INNER JOIN `tbl_pagemenu` m ON m.`pageId`=r.`menuId`
-WHERE m.`pageName`=:pageName"; 
-$stmt=$dbo->prepare($qry);
-$stmt->bindParam(":pageName",$pageName,PDO::PARAM_STR);
-if($stmt->execute())
-{
+WHERE m.`pageName`=:pageName";
+$stmt = $dbo->prepare($qry);
+$stmt->bindParam(":pageName", $pageName, PDO::PARAM_STR);
+if ($stmt->execute()) {
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-else 
-{
+} else {
     $errorInfo = $stmt->errorInfo();
-    exit($json =$errorInfo[2]);
+    exit($json = $errorInfo[2]);
 }
 
-$qry_client="SELECT customerId,c.custTypeId,customerName_ar, customerName_en,
+$qry_client = "SELECT customerId,c.custTypeId,customerName_ar, customerName_en,
 ct.typeName_$language
 FROM tbl_customers c 
 LEFT JOIN tbl_customertypes ct ON ct.`custTypeId`=c.custTypeId
 WHERE c.`isActive`=1";
-    
-$stmt_client=$dbo->prepare($qry_client);
-if($stmt_client->execute())
-{
+
+$stmt_client = $dbo->prepare($qry_client);
+if ($stmt_client->execute()) {
     $result_client = $stmt_client->fetchAll(PDO::FETCH_ASSOC);
-}
-else 
-{
+} else {
     $errorInfo = $stmt->errorInfo();
-    exit($json =$errorInfo[2]);
+    exit($json = $errorInfo[2]);
 }
 
 
@@ -110,19 +103,42 @@ $excelData .= "\n";
 $excelData .= implode("\t", array_values($fields_payment)) . "\n";
 if (count($result_payment) > 0) {
     foreach ($result_payment as $i => $value) {
-        $clientType = '';
-        foreach ($result_client as $i => $client) {
-            if($client['customerName_'.$language] === $value['customerName']) {
-                $clientType = $client['typeName_'.$language];
+        $qry_payment_details = "SELECT lsPaymentId, m.`ls_code`, s.lsStagesName_$language as lsStagesName , d.`lawsuitId`,
+    paymentDate, pm.name_$language as paymentMode, amount, invoiceNumber, remarks
+    FROM tbl_lawsuit_payment l 
+    LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=l.`lsMasterId`
+    LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=l.`lsStageId`
+    LEFT JOIN `tbl_lawsuit_details` d ON d.`lsMasterId`=m.`lsMasterId`
+    LEFT JOIN `tbl_payment_mode` pm ON pm.`paymentModeId`=l.`paymentMode`
+    WHERE l.`isActive`=1 AND m.`isActive`=1
+    AND d.`lsMasterId`=:lsMasterId 
+    ORDER BY l.`paymentDate` DESC
+    LIMIT 1";
+        $stmt_payment_details = $dbo->prepare($qry_payment_details);
+        $stmt_payment_details->bindParam(":lsMasterId", $value['lsMasterId'], PDO::PARAM_INT);
+        if ($stmt_payment_details->execute()) {
+            $result_payment_details = $stmt_payment_details->fetchAll(PDO::FETCH_ASSOC);
+            if (count($result_payment_details) > 0) {
+                if (new DateTime($_GET['from']) <= new DateTime($result_payment_details[0]['paymentDate']) && new DateTime($result_payment_details[0]['paymentDate']) <= new DateTime($_GET['to'])) {
+                    if ($_GET['client'] == '' || $_GET['client'] == $value['customerName']) {
+                        $clientType = '';
+                        foreach ($result_client as $i => $client) {
+                            if ($client['customerName_' . $language] === $value['customerName']) {
+                                $clientType = $client['typeName_' . $language];
+                            }
+                        }
+                        $total_payment += $value['totalAmount'];
+                        $total_paid += $value['paymentAmount'];
+                        $total_due += $value['dueAmount'];
+                        $lineData_payment = array($serial_payment, $value['ls_code'], $value['customerName'], $value['referenceNo'], (string)$value['lawsuitId'], $clientType, $value['empName_' . $language], setAmountDecimal($value['paymentAmount']), setAmountDecimal($value['dueAmount']), setAmountDecimal($value['totalAmount']), $value['paymentStatus']);
+                        array_walk($lineData_payment, 'filterData');
+                        $excelData .= implode("\t", array_values($lineData_payment)) . "\n";
+                        $serial_payment++;
+                    }
+                }
             }
+            $stmt_payment_details->closeCursor();
         }
-        $total_payment += $value['totalAmount'];
-        $total_paid += $value['paymentAmount'];
-        $total_due += $value['dueAmount'];
-        $lineData_payment = array($serial_payment, $value['ls_code'], $value['customerName'], $value['referenceNo'], (string)$value['lawsuitId'], $clientType, $value['empName_'.$language], setAmountDecimal($value['paymentAmount']), setAmountDecimal($value['dueAmount']), setAmountDecimal($value['totalAmount']), $value['paymentStatus']);
-        array_walk($lineData_payment, 'filterData');
-        $excelData .= implode("\t", array_values($lineData_payment)) . "\n";
-        $serial_payment++;
     }
 }
 

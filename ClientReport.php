@@ -37,6 +37,19 @@
 		}
 		
 	}
+
+	$qry_client="SELECT customerId as id, customerName_$language as val FROM tbl_customers c WHERE c.isActive=1";
+	$stmt_client=$dbo->prepare($qry_client);
+	//$stmt_client->bindParam(":to_date",$to_date,PDO::PARAM_STR);
+	if($stmt_client->execute())
+	{
+		$result_client = $stmt_client->fetchAll(PDO::FETCH_ASSOC);
+	}
+	else 
+	{
+		$errorInfo = $stmt_client->errorInfo();
+		exit($json =$errorInfo[2]);
+	}
 	
 	/////include('get4setCurrency.php');
 ?>
@@ -84,67 +97,7 @@
 			$left=50;
 			include_once('loader.php'); 
 		?>
-		
-		<div class="row">
-			
-			<div class="col-lg-4 col-sm-6 col-12">
-				<div class="bg-info-light">
-					<div class="card-body">
-						
-						<div class="dash-widget-header">
-							<span class="inovices-widget-icon ">
-								<img src="assets/img/icons/receipt-item.svg" alt="">
-							</span>
-							<div class="dash-count">
-								<div class="dash-title"><?php echo set_value('totalAmount'); ?></div>
-								<div class="dash-counts">
-									<p id="totalAmount"></p>
-								</div>
-							</div>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4 col-sm-6 col-12">
-				
-				<div class="bg-green-light">
-					<div class="card-body">
-						<div class="dash-widget-header">
-							<span class="inovices-widget-icon ">
-								<img src="assets/img/icons/message-edit.svg" alt="">
-							</span>
-							<div class="dash-count">
-								<div class="dash-title"><?php echo set_value('paidAmount'); ?></div>
-								<div class="dash-counts">
-									<p id="paidAmount"></p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-			</div>
-			
-			<div class="col-lg-4 col-sm-6 col-12">
-				<div class="bg-warning-light">
-					<div class="card-body">
-						<div class="dash-widget-header">
-							<span class="inovices-widget-icon ">
-								<img src="assets/img/icons/archive-book.svg" alt="">
-							</span>
-							<div class="dash-count">
-								<div class="dash-title"><?php echo set_value('dueAmount'); ?></div>
-								<div class="dash-counts">
-									<p id="dueAmount"></p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-		</div>
+
 		<?php /*
 		<div class="row">
 			<div class="col-xl-2 col-lg-4 col-sm-6 col-12">
@@ -207,33 +160,48 @@
 			</div>
 		</div>
 		*/ ?>
+		 <form action="javascript:search();"> 
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="date" class="form-label" style="color: #878A99;"><?php echo set_value('from'); ?><span class="text-danger"> * </span></label>
+                        <input type="date" class="form-control form-control-sm" id="from_date" placeholder="dd/mm/yyyy" required onkeydown="return false;">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="date" class="form-label" style="color: #878A99;"><?php echo set_value('to'); ?><span class="text-danger"> * </span></label>
+                        <input type="date" class="form-control form-control-sm" id="to_date" placeholder="dd/mm/yyyy" required onkeydown="return false;">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <label for="stage" class="form-label"><?php echo set_value("customer"); ?></label>
+                    <select class="js-example-basic-single form-small select" id='client_select'>
+                        <option value=""><?php echo set_value("select"); ?></option>
+						<?php
+							foreach($result_client as $val)
+							{
+								echo "<option value='".$val['val']."'>".$val['val']."</option>";
+							}
+						?>
+                    </select>
+                </div>
+                <div class="col-lg-1 col-md-6 col-sm-12">
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <label for="search" class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary form-control" id='search'>
+                        <?php echo set_value("search"); ?>
+                    </button>
+                </div>
+            </div>
+        </form>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="card-table">
 					<div class="card-body">
-						<div class="table-responsive">
-							<table class="table table-center table-hover datatable" id="example">
-								<thead class="thead-light">
-									<tr>
-										<th><?php echo set_value('action'); ?></th>
-										<th>#</th>
-										<th><?php echo set_value('lsMasterCode'); ?></th>
-										<th><?php echo set_value('customer'); ?></th>
-										<th><?php echo set_value('lawsuitLawyer'); ?></th>
-										<th><?php echo set_value('lawsuits_Type'); ?></th>
-										<th><?php echo set_value('state'); ?></th>
-										<th><?php echo set_value('stage'); ?></th>
-										<th><?php echo set_value('noOfStages'); ?></th>
-										<th><?php echo set_value('paidStatus'); ?></th>
-										<th><?php echo set_value('totalAmount'); ?></th>
-										<th><?php echo set_value('paidAmount'); ?></th>
-										<th><?php echo set_value('dueAmount'); ?></th>
-										<th><?php echo set_value('paymentStatus'); ?></th>
-									</tr>
-								</thead>
-								<tbody id='setData'> </tbody>
-								
-							</table>
+						<div class="table-responsive" id='setData_payment'>
+							
 						</div>
 					</div>
 				</div>

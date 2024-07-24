@@ -1,9 +1,9 @@
 
 $( document ).ready(function() {
 	getCurrency();
-    getData();
-    getExpenseData();
-    getIncomeData();
+    // getData();
+    // getExpenseData();
+    // getIncomeData();
 });
 $(document).ajaxStart(function() {
 	$("#ajax_loader").show();
@@ -35,28 +35,54 @@ function getCurrency()
 	});
 }
 
+function search()
+{
+	var payment_option=$('#payment_option').val();
+	console.log(payment_option);
+	if(payment_option === '' || payment_option === 'payment') {
+		getData();
+		$('#setData_expense').html('');
+		$('#setData_income').html('');
+	}
+
+	if(payment_option === '' || payment_option === 'expense') {
+		getExpenseData();
+		$('#setData_payment').html('');
+		$('#setData_income').html('');
+	}
+
+	if(payment_option === '' || payment_option === 'income') {
+		getIncomeData();
+		$('#setData_expense').html('');
+		$('#setData_payment').html('');
+	}
+}
+
 function getData()
 {
 	var myTable = $('#example').DataTable();
  	var rows = myTable.rows().remove().draw();
+
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
+	var payment_option=$('#payment_option').val();
+
 	$.ajax({
 		type:"POST",
 		url: "PaymentData.php",
-		data:{ getData:'1' },
+		data:{ from :from, to: to },
 		success: function (data) {
-			if (!$.trim(data) == '') {
-                data = data.replace(/^\s*|\s*$/g, '');
-                data = data.replace(/\\r\\n/gm, '');
-                var expr = "</tr>\\s*<tr";
-                var regEx = new RegExp(expr, "gm");
-                var newRows = data.replace(regEx, "</tr><tr");
-                $("#example").DataTable().rows.add($(newRows)).draw();
-				$('div.dataTables_filter').css('position', 'absolute');
-                $('div.dataTables_filter').css('right', '0px');
-                var csvButton = '<a href="AccountingExcelReport.php?lsMId=' + $("#lsMId").val() +'&lsDId=' + $("#lsDId").val() + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
-                var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
-                $(printButton).insertAfter(".dataTables_filter")
-                $(csvButton).insertAfter(".dataTables_filter")
+			var csvButton = '<a href="AccountingExcelReport.php?from=' + from +'&to=' + to +'&payment_option=' + payment_option + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
+			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+			$('#setData_payment').html(data);
+			$('div.dataTables_filter').css('float', 'right');
+			// $('div.dataTables_filter').css('right', '0px');
+			$(printButton).insertAfter("#example_filter");
+			$(csvButton).insertAfter("#example_filter");
+			if(payment_option === '') {
+				$('#setData_payment').css('marginBottom', '40px');
+			} else {
+				$('#setData_payment').css('marginBottom', '0px');
 			}
 			getPayment();
 			
@@ -69,43 +95,52 @@ function getData()
 
 function getExpenseData()
 {
-    var myTable = $('#setExpenseData').DataTable();
-    var rows = myTable.rows().remove().draw();
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
+	var payment_option=$('#payment_option').val();
     $.ajax({
         type:"POST",
         url: "ExpenseData.php",
-        data:{ getData:'1' },
+        data:{ from :from, to: to },
         success: function (data) {
-            ////console.log(data);
-            if (!$.trim(data) == '') {
-                data = data.replace(/^\s*|\s*$/g, '');
-                data = data.replace(/\\r\\n/gm, '');
-                var expr = "</tr>\\s*<tr";
-                var regEx = new RegExp(expr, "gm");
-                var newRows = data.replace(regEx, "</tr><tr");
-                $("#setExpenseData").DataTable().rows.add($(newRows)).draw();
-            }
+			$('#setData_expense').html(data);
+			$('div.dataTables_filter').css('float', 'right');
+			if(payment_option !== '') {
+				var csvButton = '<a href="AccountingExcelReport.php?from=' + from +'&to=' + to +'&payment_option=' + payment_option + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
+				var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+				$('#setData_expense').html(data);
+				$(printButton).insertAfter("#setExpenseData_filter");
+				$(csvButton).insertAfter("#setExpenseData_filter");
+				$('#setData_expense').css('marginBottom', '0px');
+				$('div.dataTables_filter').css('float', 'right');
+			} else {
+				$('#setData_expense').css('marginBottom', '40px');
+			}
         }
     });
 }
 
 function getIncomeData()
 {
-	var myTable = $('#setIncomeData').DataTable();
-	var rows = myTable.rows().remove().draw();
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
+	var payment_option=$('#payment_option').val();
 	$.ajax({
 		type:"POST",
 		url: "IncomeData.php",
-		data:{ getData:'1' },
+		data:{ from :from, to: to },
 		success: function (data) {
-			////console.log(data);
-			if (!$.trim(data) == '') {
-				data = data.replace(/^\s*|\s*$/g, '');
-				data = data.replace(/\\r\\n/gm, '');
-				var expr = "</tr>\\s*<tr";
-				var regEx = new RegExp(expr, "gm");
-				var newRows = data.replace(regEx, "</tr><tr");
-				$("#setIncomeData").DataTable().rows.add($(newRows)).draw();
+			$('#setData_income').html(data);
+			$('div.dataTables_filter').css('float', 'right');
+			if(payment_option !== '') {
+				$('#setData_income').html(data);
+				var csvButton = '<a href="AccountingExcelReport.php?from=' + from +'&to=' + to +'&payment_option=' + payment_option + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
+				var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+				$(printButton).insertAfter("#setIncomeData_filter");
+				$(csvButton).insertAfter("#setIncomeData_filter");
+				$('div.dataTables_filter').css('float', 'right');
+			} else {
+				$('#setData_income').css('marginBottom', '40px');
 			}
 		},
 		error: function (jqXHR, exception) {

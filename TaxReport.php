@@ -126,74 +126,43 @@ function set_value($val)
                 </div>
             </div>
         </div> -->
-        <div class="card-table mt-3">
-            <div class="card-body">
-                <div class="table-responsive mb-5">
-                    <table class="table table-center table-hover datatable" id="example">
-                        <thead class="thead-light">
-                            <tr>
-                                <th><?php echo set_value('action'); ?></th>
-                                <th>#</th>
-                                <th><?php echo set_value('lsMasterCode'); ?></th>
-                                <th><?php echo set_value('customer'); ?></th>
-                                <th><?php echo set_value('lawsuitLawyer'); ?></th>
-                                <th><?php echo set_value('lawsuits_Type'); ?></th>
-                                <th><?php echo set_value('state'); ?></th>
-                                <th><?php echo set_value('stage'); ?></th>
-                                <th><?php echo set_value('noOfStages'); ?></th>
-                                <th><?php echo set_value('paidStatus'); ?></th>
-                                <th><?php echo set_value('totalAmount'); ?></th>
-                                <th><?php echo set_value('paidAmount'); ?></th>
-                                <th><?php echo set_value('dueAmount'); ?></th>
-                                <th><?php echo set_value('paymentStatus'); ?></th>
-                            </tr>
-                        </thead>
-                        <tbody id='setData'> </tbody>
-
-                    </table>
+        <form action="javascript:search();"> 
+            <div class="row">
+                <div class="col-lg-5 col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="date" class="form-label" style="color: #878A99;"><?php echo set_value('from'); ?><span class="text-danger"> * </span></label>
+                        <input type="date" class="form-control form-control-sm" id="from_date" placeholder="dd/mm/yyyy" required onkeydown="return false;">
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="date" class="form-label" style="color: #878A99;"><?php echo set_value('to'); ?><span class="text-danger"> * </span></label>
+                        <input type="date" class="form-control form-control-sm" id="to_date" placeholder="dd/mm/yyyy" required onkeydown="return false;">
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <label for="search" class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary form-control" id='search'>
+                        <?php echo set_value("search"); ?>
+                    </button>
                 </div>
             </div>
-            <h6><?php echo set_value('expense'); ?></h6>
-            <div class="table-responsive mb-5">
-                <table class="table table-center table-hover datatable" id='setExpenseData'>
-                    <thead class="thead-light">
-                        <tr>
-                            <th><?php echo set_value('action'); ?></th>
-                            <th>#</th>
-                            <th><?php echo set_value('expenseCategory'); ?></th>
-                            <th><?php echo set_value('lsMasterCode'); ?></th>
-                            <th><?php echo set_value('supplier'); ?></th>
-                            <th><?php echo set_value('expenseAmount'); ?></th>
-                            <th><?php echo set_value('taxValueAmount'); ?></th>
-                            <th><?php echo set_value('amountWithTax'); ?></th>
-                            <th><?php echo set_value('expenseDate'); ?></th>
-                            <th><?php echo set_value('expenseMode'); ?></th>
-                            <th><?php echo set_value('remarks'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody id='setData'> </tbody>
+        </form>
+        <div class="card-table mt-3">
+            <div class="card-body">
+                <div class="table-responsive mb-5" id='setData_payment'>
 
-                </table>
+                </div>
             </div>
-            <h6><?php echo set_value('income'); ?></h6>
-            <div class="table-responsive">
-                <table class="table table-center table-hover datatable" id='setIncomeData'>
-                    <thead class="thead-light">
-                        <tr>
-                            <th><?php echo set_value('action'); ?></th>
-                            <th>#</th>
-                            <th><?php echo set_value('incomeType'); ?></th>
-                            <th><?php echo set_value('lsMasterCode'); ?></th>
-                            <th><?php echo set_value('description'); ?></th>
-                            <th><?php echo set_value('amount'); ?></th>
-                            <th><?php echo set_value('taxValueAmount'); ?></th>
-                            <th><?php echo set_value('amountWithTax'); ?></th>
-                            <th><?php echo set_value('incomeDate'); ?></th>
-                            <th><?php echo set_value('receivedBy'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody id='setData'> </tbody>
-                </table>
+            <div class="card-body">
+                <div class="table-responsive mb-5" id='setData_expense'>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive mb-5" id='setData_income'>
+
+                </div>
             </div>
         </div>
     </div>

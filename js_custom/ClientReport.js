@@ -1,7 +1,7 @@
 
 $( document ).ready(function() {
 	getCurrency();
-    getData();
+    // getData();
 });
 $(document).ajaxStart(function() {
 	$("#ajax_loader").show();
@@ -33,30 +33,30 @@ function getCurrency()
 	});
 }
 
+function search()
+{
+    getData();
+}
+
 function getData()
 {
-	var myTable = $('#example').DataTable();
- 	var rows = myTable.rows().remove().draw();
-	console.log($("#lsMId").val());
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
+	var client=$('#client_select').val();
+	console.log(client);
 	$.ajax({
 		type:"POST",
 		url: "PaymentData.php",
-		data:{ getData:'1' },
+		data:{ from :from, to: to, client: client },
 		success: function (data) {
-			if (!$.trim(data) == '') {
-                data = data.replace(/^\s*|\s*$/g, '');
-                data = data.replace(/\\r\\n/gm, '');
-                var expr = "</tr>\\s*<tr";
-                var regEx = new RegExp(expr, "gm");
-                var newRows = data.replace(regEx, "</tr><tr");
-                $("#example").DataTable().rows.add($(newRows)).draw();
-				$('div.dataTables_filter').css('position', 'absolute');
-                $('div.dataTables_filter').css('right', '0px');
-                var csvButton = '<a href="ClientExcelReport.php?lsMId=' + $("#lsMId").val() +'&lsDId=' + $("#lsDId").val() + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
-                var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
-                $(printButton).insertAfter("#example_filter")
-                $(csvButton).insertAfter("#example_filter")
-			}
+			$('#setData_payment').html(data);
+			$('div.dataTables_filter').css('position', 'absolute');
+			$('div.dataTables_filter').css('right', '0px');
+			var csvButton = '<a href="ClientExcelReport.php?from=' + from +'&to=' + to +'&client=' + client + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
+			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+			$(printButton).insertAfter("#example_filter")
+			$(csvButton).insertAfter("#example_filter")
+			
 			getPayment();
 			
 		},

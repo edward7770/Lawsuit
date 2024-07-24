@@ -109,11 +109,36 @@ $excelData .= set_value('payment') . "\n";
 $excelData .= implode("\t", array_values($fields_payment)) . "\n";
 if (count($result_payment) > 0) {
     foreach ($result_payment as $i => $value) {
-        $total_payment += $value['totalAmount'];
-        $lineData_payment = array($serial_payment, $value['ls_code'], $value['customerName'], $value['empName_' . $language], setAmountDecimal($value['paymentAmount']), setAmountDecimal($value['dueAmount']), setAmountDecimal($value['totalAmount']), $value['paymentStatus']);
-        array_walk($lineData_payment, 'filterData');
-        $excelData .= implode("\t", array_values($lineData_payment)) . "\n";
-        $serial_payment++;
+        $qry_payment_details = "SELECT lsPaymentId, m.`ls_code`, s.lsStagesName_$language as lsStagesName , d.`lawsuitId`,
+		paymentDate, pm.name_$language as paymentMode, amount, invoiceNumber, remarks
+		FROM tbl_lawsuit_payment l 
+		LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=l.`lsMasterId`
+		LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=l.`lsStageId`
+		LEFT JOIN `tbl_lawsuit_details` d ON d.`lsMasterId`=m.`lsMasterId`
+		LEFT JOIN `tbl_payment_mode` pm ON pm.`paymentModeId`=l.`paymentMode`
+		WHERE l.`isActive`=1 AND m.`isActive`=1
+		AND d.`lsMasterId`=:lsMasterId 
+		ORDER BY l.`paymentDate` DESC
+		LIMIT 1";
+        $stmt_payment_details = $dbo->prepare($qry_payment_details);
+        $stmt_payment_details->bindParam(":lsMasterId", $value['lsMasterId'], PDO::PARAM_INT);
+        if ($stmt_payment_details->execute()) {
+            $result_payment_details = $stmt_payment_details->fetchAll(PDO::FETCH_ASSOC);
+            if (count($result_payment_details) > 0) {
+                if (new DateTime($_GET['from']) <= new DateTime($result_payment_details[0]['paymentDate']) && new DateTime($result_payment_details[0]['paymentDate']) <= new DateTime($_GET['to'])) {
+                    if($_GET['payment_status'] === "cash_collected") {
+                        $total_payment += $value['paymentAmount'];
+                    } else {
+                        $total_payment += $value['totalAmount'];
+                    }
+                    $lineData_payment = array($serial_payment, $value['ls_code'], $value['customerName'], $value['empName_' . $language], setAmountDecimal($value['paymentAmount']), setAmountDecimal($value['dueAmount']), setAmountDecimal($value['totalAmount']), $value['paymentStatus']);
+                    array_walk($lineData_payment, 'filterData');
+                    $excelData .= implode("\t", array_values($lineData_payment)) . "\n";
+                    $serial_payment++;
+                }
+            }
+            $stmt_payment_details->closeCursor();
+        }
     }
 }
 // $excelData .= "\t\t\t\t\t\t\t" . set_value('total') . ": " . setAmountDecimal($total_payment) . "\n";
@@ -124,17 +149,19 @@ $excelData .= set_value('income') . "\n";
 $excelData .= implode("\t", array_values($fields_income)) . "\n";
 if (count($result_income) > 0) {
     foreach ($result_income as $i => $value) {
-        if ($value['incomeTypeId'] == 1) {
-            $incomeType = 'Lawsuit';
-        } else {
-            $incomeType = 'General';
+        if(new DateTime($_GET['from']) <= new DateTime($value['incomeDate']) && new DateTime($value['incomeDate']) <= new DateTime($_GET['to'])) {
+            if ($value['incomeTypeId'] == 1) {
+                $incomeType = 'Lawsuit';
+            } else {
+                $incomeType = 'General';
+            }
+    
+            $total_income += $value['amount'];
+            $lineData_income = array($serial_income, $incomeType, $value['ls_code'], setAmountDecimal($value['amount']), setAmountDecimal($value['taxAmount']), $value['receivedBy'], $value['incomeDate']);
+            array_walk($lineData_income, 'filterData');
+            $excelData .= implode("\t", array_values($lineData_income)) . "\n";
+            $serial_income++;
         }
-
-        $total_income += $value['amount'];
-        $lineData_income = array($serial_income, $incomeType, $value['ls_code'], setAmountDecimal($value['amount']), setAmountDecimal($value['taxAmount']), $value['receivedBy'], $value['incomeDate']);
-        array_walk($lineData_income, 'filterData');
-        $excelData .= implode("\t", array_values($lineData_income)) . "\n";
-        $serial_income++;
     }
 }
 
@@ -146,17 +173,19 @@ $excelData .= set_value('expense') . "\n";
 $excelData .= implode("\t", array_values($fields_expense)) . "\n";
 if (count($result_expense) > 0) {
     foreach ($result_expense as $i => $value) {
-        if ($value['catId'] == 1) {
-            $expenseCategory = 'Lawsuit';
-        } else {
-            $expenseCategory = 'General Expense';
+        if(new DateTime($_GET['from']) <= new DateTime($value['expenseDate']) && new DateTime($value['expenseDate']) <= new DateTime($_GET['to'])) {
+            if ($value['catId'] == 1) {
+                $expenseCategory = 'Lawsuit';
+            } else {
+                $expenseCategory = 'General Expense';
+            }
+    
+            $total_expense += $value['amount'];
+            $lineData_expense = array($serial_expense, $expenseCategory, $value['ls_code'], $value['supplier'], number_format((float) $value['amount'], 2), number_format((float) $value['taxAmount'], 2), $value['expenseMode'], $value['expenseDate']);
+            array_walk($lineData_expense, 'filterData');
+            $excelData .= implode("\t", array_values($lineData_expense)) . "\n";
+            $serial_expense++;
         }
-
-        $total_expense += $value['amount'];
-        $lineData_expense = array($serial_expense, $expenseCategory, $value['ls_code'], $value['supplier'], number_format((float) $value['amount'], 2), number_format((float) $value['taxAmount'], 2), $value['expenseMode'], $value['expenseDate']);
-        array_walk($lineData_expense, 'filterData');
-        $excelData .= implode("\t", array_values($lineData_expense)) . "\n";
-        $serial_expense++;
     }
 }
 
