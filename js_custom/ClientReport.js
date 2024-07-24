@@ -50,8 +50,7 @@ function getData()
 		data:{ from :from, to: to, client: client },
 		success: function (data) {
 			$('#setData_payment').html(data);
-			$('div.dataTables_filter').css('position', 'absolute');
-			$('div.dataTables_filter').css('right', '0px');
+			$('div.dataTables_filter').css('float', 'right');
 			var csvButton = '<a href="ClientExcelReport.php?from=' + from +'&to=' + to +'&client=' + client + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
 			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
 			$(printButton).insertAfter("#example_filter")

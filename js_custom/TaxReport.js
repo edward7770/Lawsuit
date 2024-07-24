@@ -56,6 +56,7 @@ function getData()
 		data:{ from :from, to: to, payment_status: payment_status },
 		success: function (data) {
 			$('#setData_payment').html(data);
+			$('div.dataTables_filter').css('float', 'right');
 			// $('div.dataTables_filter').css('position', 'absolute');
 			// $('div.dataTables_filter').css('right', '0px');
 			var csvButton = '<a href="TaxExcelReport.php?from=' + from +'&to=' + to + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
