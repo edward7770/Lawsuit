@@ -174,10 +174,10 @@ if(count($result_payment) > 0){
             $result_payment_details = $stmt_payment_details->fetchAll(PDO::FETCH_ASSOC);
             if (count($result_payment_details) > 0) {
                 if (new DateTime($_GET['from']) <= new DateTime($result_payment_details[0]['paymentDate']) && new DateTime($result_payment_details[0]['paymentDate']) <= new DateTime($_GET['to'])) {
-					$payment_date = date('m/d/Y', strtotime($value['createdDate']));
+					// $payment_date = date('m/d/Y', strtotime($value['createdDate']));
 					// $payment_date = $displayDate($value['createdDate']);
 					$total_payment += $value['taxAmount'];
-					$lineData_payment = array($serial_payment, $value['ls_code'], $value['lsStagesName'],setAmountDecimal($value['amount']), setAmountDecimal($value['taxAmount']), $payment_date); 
+					$lineData_payment = array($serial_payment, $value['ls_code'], $value['lsStagesName'],setAmountDecimal($value['amount']), setAmountDecimal($value['taxAmount']), $result_payment_details[0]['paymentDate']); 
 					array_walk($lineData_payment, 'filterData'); 
 					$excelData .= implode("\t", array_values($lineData_payment)) . "\n"; 
 					$serial_payment++;

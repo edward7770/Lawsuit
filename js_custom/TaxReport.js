@@ -60,7 +60,7 @@ function getData()
 			// $('div.dataTables_filter').css('position', 'absolute');
 			// $('div.dataTables_filter').css('right', '0px');
 			var csvButton = '<a href="TaxExcelReport.php?from=' + from +'&to=' + to + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
-			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice();"><span><i class="fa fa-print"></i></span></a>';
 			$(printButton).insertAfter("#example_filter")
 			$(csvButton).insertAfter("#example_filter")
 			
@@ -93,8 +93,8 @@ function getExpenseData()
             //     var newRows = data.replace(regEx, "</tr><tr");
             //     $("#setExpenseData").DataTable().rows.add($(newRows)).draw();
             // }
-			$('div.dataTables_filter').css('float', 'right');
 			$('#setData_expense').html(data);
+			$('div.dataTables_filter').css('float', 'right');
         }
     });
 }
@@ -118,8 +118,8 @@ function getIncomeData()
 			// 	var newRows = data.replace(regEx, "</tr><tr");
 			// 	$("#setIncomeData").DataTable().rows.add($(newRows)).draw();
 			// }
-			$('div.dataTables_filter').css('float', 'right');
 			$('#setData_income').html(data);
+			$('div.dataTables_filter').css('float', 'right');
 		},
 		error: function (jqXHR, exception) {
 			errorShow(jqXHR, exception);
@@ -127,6 +127,41 @@ function getIncomeData()
 	});
 }
 
+
+function printInvoice() {
+    // Make AJAX call to get invoice content
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
+
+    $.ajax({
+        type: "POST",
+        url: "TaxReportPrint.php",
+        data: { from: from, to: to },
+        success: function(data) {
+			var printWindow = window.open("", "_blank");
+            printWindow.document.write("<html><head><title>&nbsp;</title>");
+
+			printWindow.document.write(`
+				<style type="text/css" media="print">
+
+				</style>
+			`);
+			
+			printWindow.document.write("</head><body>");
+
+            // Write the received content to the print window
+            printWindow.document.write(data);
+
+            printWindow.document.write("</body></html>");
+            printWindow.document.close();
+
+            setTimeout(function() {
+                printWindow.print();
+                printWindow.close();
+            }, 1000); // Adjust the delay as needed
+        }
+    });
+}
 
 
 function viewLSDetails(lsMId,lsDId)

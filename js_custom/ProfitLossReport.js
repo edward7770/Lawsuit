@@ -59,7 +59,7 @@ function getData()
 			$('#setData_payment').html(data);
 			$('div.dataTables_filter').css('float', 'right');
 			var csvButton = '<a href="ProfitLossExcelReport.php?from=' + from +'&to=' + to +'&payment_status=' + payment_status + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
-			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice();"><span><i class="fa fa-print"></i></span></a>';
 			$(printButton).insertAfter("#example_filter")
 			$(csvButton).insertAfter("#example_filter")
 			
@@ -92,6 +92,7 @@ function getExpenseData()
             //     $("#setExpenseData").DataTable().rows.add($(newRows)).draw();
             // }
 			$('#setData_expense').html(data);
+			$('div.dataTables_filter').css('float', 'right');
         }
     });
 }
@@ -116,11 +117,50 @@ function getIncomeData()
 			// 	$("#setIncomeData").DataTable().rows.add($(newRows)).draw();
 			// }
 			$('#setData_income').html(data);
+			$('div.dataTables_filter').css('float', 'right');
 		},
 		error: function (jqXHR, exception) {
 			errorShow(jqXHR, exception);
 		}
 	});
+}
+
+
+
+function printInvoice() {
+    // Make AJAX call to get invoice content
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
+	var payment_status=$('#payment_status_select').val();
+
+    $.ajax({
+        type: "POST",
+        url: "ProfitLossReportPrint.php",
+        data: { from: from, to: to, payment_status: payment_status},
+        success: function(data) {
+			var printWindow = window.open("", "_blank");
+            printWindow.document.write("<html><head><title>&nbsp;</title>");
+
+			printWindow.document.write(`
+				<style type="text/css" media="print">
+
+				</style>
+			`);
+			
+			printWindow.document.write("</head><body>");
+
+            // Write the received content to the print window
+            printWindow.document.write(data);
+
+            printWindow.document.write("</body></html>");
+            printWindow.document.close();
+
+            setTimeout(function() {
+                printWindow.print();
+                printWindow.close();
+            }, 1000); // Adjust the delay as needed
+        }
+    });
 }
 
 

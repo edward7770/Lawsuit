@@ -162,6 +162,7 @@ else if(isset($_POST['getIncome']))
 					<td><?php echo $value['receivedBy']; ?></td>
 				</tr>
 			<?php
+			$serial++;
 			}
 		}
 	?>

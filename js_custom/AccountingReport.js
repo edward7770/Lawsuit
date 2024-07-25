@@ -38,7 +38,6 @@ function getCurrency()
 function search()
 {
 	var payment_option=$('#payment_option').val();
-	console.log(payment_option);
 	if(payment_option === '' || payment_option === 'payment') {
 		getData();
 		$('#setData_expense').html('');
@@ -73,7 +72,7 @@ function getData()
 		data:{ from :from, to: to },
 		success: function (data) {
 			var csvButton = '<a href="AccountingExcelReport.php?from=' + from +'&to=' + to +'&payment_option=' + payment_option + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
-			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice();"><span><i class="fa fa-print"></i></span></a>';
 			$('#setData_payment').html(data);
 			$('div.dataTables_filter').css('float', 'right');
 			// $('div.dataTables_filter').css('right', '0px');
@@ -107,7 +106,7 @@ function getExpenseData()
 			$('div.dataTables_filter').css('float', 'right');
 			if(payment_option !== '') {
 				var csvButton = '<a href="AccountingExcelReport.php?from=' + from +'&to=' + to +'&payment_option=' + payment_option + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
-				var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+				var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice();"><span><i class="fa fa-print"></i></span></a>';
 				$('#setData_expense').html(data);
 				$(printButton).insertAfter("#setExpenseData_filter");
 				$(csvButton).insertAfter("#setExpenseData_filter");
@@ -135,7 +134,7 @@ function getIncomeData()
 			if(payment_option !== '') {
 				$('#setData_income').html(data);
 				var csvButton = '<a href="AccountingExcelReport.php?from=' + from +'&to=' + to +'&payment_option=' + payment_option + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
-				var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-print"></i></span></a>';
+				var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice();"><span><i class="fa fa-print"></i></span></a>';
 				$(printButton).insertAfter("#setIncomeData_filter");
 				$(csvButton).insertAfter("#setIncomeData_filter");
 				$('div.dataTables_filter').css('float', 'right');
@@ -147,6 +146,42 @@ function getIncomeData()
 			errorShow(jqXHR, exception);
 		}
 	});
+}
+
+function printInvoice() {
+    // Make AJAX call to get invoice content
+	var from=$('#from_date').val();
+	var to=$('#to_date').val();
+	var payment_option=$('#payment_option').val();
+
+    $.ajax({
+        type: "POST",
+        url: "AccountingReportPrint.php",
+        data: { from: from, to: to, payment_option: payment_option},
+        success: function(data) {
+			var printWindow = window.open("", "_blank");
+            printWindow.document.write("<html><head><title>&nbsp;</title>");
+
+			printWindow.document.write(`
+				<style type="text/css" media="print">
+
+				</style>
+			`);
+			
+			printWindow.document.write("</head><body>");
+
+            // Write the received content to the print window
+            printWindow.document.write(data);
+
+            printWindow.document.write("</body></html>");
+            printWindow.document.close();
+
+            setTimeout(function() {
+                printWindow.print();
+                printWindow.close();
+            }, 1000); // Adjust the delay as needed
+        }
+    });
 }
 
 

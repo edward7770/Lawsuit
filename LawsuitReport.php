@@ -56,7 +56,7 @@
     }
 </style>
 <!-- Page Wrapper -->
-<div class="page-wrapper">
+<div class="page-wrapper" <?php if ($language === 'ar') echo 'style="direction: rtl"'; else echo 'style="direction: ltr"';  ?>>
 	<div class="content container-fluid">				
 		<!-- Page Header -->
 		<div class="page-header">

@@ -94,6 +94,9 @@
 	$invoiceNumber = str_pad($randomNumber, 6, "0", STR_PAD_LEFT);
 	$invoiceDate = date('n/j/Y');
 
+	$totalAmount = 0;
+	$paidAmount = 0;
+
 	$serial=1;
 	$serial_contract=1;
 	if(isset($_POST['lsMId'])) {
@@ -157,7 +160,6 @@
 			exit($json =$errorInfo[2]);
 		}
 	}
-	print_r($language);
 ?>
 
 <body>
@@ -180,13 +182,15 @@
 								   <?php echo set_value('date'); ?>: <span><?php echo($invoiceDate) ?></span>
 								</div>
 								<div class="inv-date">
-									<?php echo set_value('invoice_number'); ?>: <span><?php echo($invoiceNumber) ?></span>
+									<?php echo set_value('invoice_number'); ?>: <span><?php echo $resultLawsuitDetails[0]['lawsuitId'] ?></span>
 								</div>
 			               	</div>	
 		                </div>					    
 				    </div>
-				    <div class="invoice-address">
+					<div class="mt-2" <?php if ($language === 'ar') echo 'style="margin-right: 30px;"'; else echo 'style="margin-left: 30px;"';  ?>>
 						<h6 class="company-name mt-3"><?php echo set_value('company_name'); ?></h6>
+					</div>
+				    <div class="invoice-address">
 						<!-- <h6 class="company-name mt-3"><?php echo($result_lawyerdata[0]['empName']) ?></h6> -->
 						<!-- <div class="company-details d-flex flex-wrap mt-2">
 							<div class="gst-details col-4 d-flex">
@@ -200,7 +204,7 @@
 				    		</div>
 						</div> -->
 						<!-- <hr/> -->
-				    	<div class="company-details d-flex flex-wrap mt-4">
+				    	<div class="company-details d-flex flex-wrap">
 							<div class="gst-details col-6 d-flex">
 				    			<b><?php echo set_value('lsMasterCode'); ?></b>: <span style="color: red;">&nbsp;<?php echo $resultLawsuitDetails[0]['ls_code']; ?></span>
 				    		</div>
@@ -260,6 +264,7 @@
 			                  <tbody>
 									<?php 
 										foreach ($result_paymentdata as $value) {
+											$paidAmount += $value['amount'];
 											?>
 												<tr>
 													<td> <?php echo $serial; ?> </td>
@@ -297,6 +302,7 @@
 			                  <tbody>
 									<?php 
 										foreach ($result_contactdata as $value) {
+											$totalAmount += $value['totalAmount'];
 											?>
 												<tr>
 													<td> <?php echo $serial_contract; ?> </td>
@@ -320,18 +326,18 @@
 				                <tbody>
 				                   <tr>
 				                      <td style="'color: black !important; font-size: 16px;"><b><?php echo set_value('paidAmount'); ?></b>:</td>
-				                      <td style="'color: black;" id="paidAmount"></td>
+				                      <td style="'color: black;"><?php echo $paidAmount; ?></td>
 				                    </tr>
 				                    <tr>
 				                      <td style="'color: black; font-size: 16px;"><b><?php echo set_value('dueAmount'); ?></b>:</td>
-				                      <td style="'color: black;" id="dueAmount"></td>
+				                      <td style="'color: black;"><?php echo $totalAmount - $paidAmount; ?></td>
 				                    </tr>				                    
 				                </tbody>
 				            </table>
 			            </div> 
 				    </div>
 				    <div class="invoice-table-footer mb-5">
-			            <div class="table-footer-left">       
+			            <div class="table-footer-left" style="opacity: 0">       
                             <p class="total-info">Total Items / Qty : 4 / 4.00</p>
 			            </div>
 			            <div class="table-footer-right">       
@@ -339,7 +345,7 @@
 				                <tbody>
 				                   <tr>
 				                      <td><?php echo set_value('totalAmount'); ?></td>
-				                      <td id="totalAmount"></td>
+				                      <td><?php echo $totalAmount; ?></td>
 				                    </tr>				                    				                    
 				                </tbody>
 				            </table>
@@ -382,8 +388,6 @@
 				</div>												
 		    </div>
 			<input type="hidden" value=<?php echo $language; ?> id="lang" />
-			<input type='hidden' id="lsDId" value="<?php echo $_POST['lsDId']; ?>" >
-			<input type='hidden' id="lsMId" value="<?php echo $_POST['lsMId']; ?>" >
 			<?php /*
 			<div class="file-link">
 				<button class="download_btn download-link">         

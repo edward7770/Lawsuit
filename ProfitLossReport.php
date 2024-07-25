@@ -101,7 +101,7 @@ function set_value($val)
             </div>
         </form>
 
-        <div class="card-table mt-5">
+        <div class="card-table mt-4">
             <div class="card-body">
                 <div class="table-responsive mb-5" id='setData_payment'>
 
