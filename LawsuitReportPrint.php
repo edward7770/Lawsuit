@@ -110,7 +110,7 @@
     }
 ?>
 
-<body>
+<body <?php if ($language === 'ar') echo 'style="direction: rtl"'; else echo 'style="direction: ltr"';  ?>>
 	<div class="main-wrapper">
 		<div class="container">
 			<div class="invoice-wrapper download_section">

@@ -51,9 +51,8 @@ function viewLSDetails(lsMId,lsDId)
 	form.setAttribute("action", "LawsuitDetail.php");
 
 	// Generate a unique name for the window
-	var windowName = "formresult_" + lsMId;
-	// setting form target to a window named 'formresult'
-	form.setAttribute("target", windowName);
+	// var windowName = "formresult_" + lsMId;
+	// form.setAttribute("target", windowName);
 
 	var hiddenField = document.createElement("input");
 	hiddenField.setAttribute("name", "lsMId");
@@ -71,7 +70,7 @@ function viewLSDetails(lsMId,lsDId)
 	
 	// creating the 'formresult' window with custom features prior to submitting the form
 	//window.open('test.html', 'formresult', 'scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no');
-	window.open('test.html', windowName);
+	// window.open('test.html', windowName);
 
 	form.submit();
 }
@@ -82,9 +81,9 @@ function viewLSDetailsPayment(lsMId,lsDId)
 	form.setAttribute("action", "LawsuitDetailPayment.php");
 
 	// Generate a unique name for the window
-	var windowName = "formresult_" + lsMId;
-	// setting form target to a window named 'formresult'
-	form.setAttribute("target", windowName);
+	// var windowName = "formresult_" + lsMId;
+	// // setting form target to a window named 'formresult'
+	// form.setAttribute("target", windowName);
 
 	var hiddenField = document.createElement("input");
 	hiddenField.setAttribute("name", "lsMId");
@@ -102,7 +101,7 @@ function viewLSDetailsPayment(lsMId,lsDId)
 	
 	// creating the 'formresult' window with custom features prior to submitting the form
 	//window.open('test.html', 'formresult', 'scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no');
-	window.open('test.html', windowName);
+	// window.open('test.html', windowName);
 
 	form.submit();
 }
@@ -114,9 +113,9 @@ function newStage(lsMId,lsDId,lsCode)
 	form.setAttribute("action", "LawsuitEdit.php");
 	
 	// Generate a unique name for the window
-	var windowName = "formresult_" + lsMId;
-	// setting form target to a window named 'formresult'
-	form.setAttribute("target", windowName);
+	// var windowName = "formresult_" + lsMId;
+	// // setting form target to a window named 'formresult'
+	// form.setAttribute("target", windowName);
 
 	var hiddenField = document.createElement("input");
 	hiddenField.setAttribute("name", "lsMId");
@@ -140,7 +139,7 @@ function newStage(lsMId,lsDId,lsCode)
 	
 	// creating the 'formresult' window with custom features prior to submitting the form
 	//window.open('test.html', 'formresult', 'scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no');
-	window.open('test.html', windowName);
+	// window.open('test.html', windowName);
 
 	form.submit();
 }
@@ -176,9 +175,9 @@ function viewLSEdit(lsMId,lsDId)
 	form.setAttribute("action", "LawsuitEdit.php");
 
 	// Generate a unique name for the window
-	var windowName = "formresultLS" + lsDId;
-	// setting form target to a window named 'formresult'
-	form.setAttribute("target", windowName);
+	// var windowName = "formresultLS" + lsDId;
+	// // setting form target to a window named 'formresult'
+	// form.setAttribute("target", windowName);
 
 	var hiddenField = document.createElement("input");
 	hiddenField.setAttribute("name", "lsMId");
@@ -196,7 +195,7 @@ function viewLSEdit(lsMId,lsDId)
 	
 	// creating the 'formresult' window with custom features prior to submitting the form
 	//window.open('test.html', 'formresult', 'scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no');
-	window.open('test.html', windowName);
+	// window.open('test.html', windowName);
 
 	form.submit();
 }
