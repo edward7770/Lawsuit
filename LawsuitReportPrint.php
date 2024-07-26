@@ -39,6 +39,8 @@
 	// include_once('header.php'); 
 	include_once('config/conn.php');
 	$language=$_SESSION['lang'];
+
+	$_POST['reportType'] = 'summary';
 	
 	$pageName = "Lawsuit";
 	$pageName2="LawsuitDetail";

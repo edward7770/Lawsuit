@@ -21,7 +21,7 @@ function getData()
   	var type=$('#lawsuitsType').val();
 	var state=$('#state').val();
 	var stage=$('#stage').val();
-	var reportType=$('#reportType').val();
+	var reportType="summary";
 	if(reportType<=0)
 	{
 		showMessage('Please select Report Type');
@@ -56,7 +56,6 @@ function getData()
 		url: "LawsuitReportData.php",
 		data: { type: type, state: state, stage: stage, reportType: reportType },
 		success: function(data) {
-			console.log(data);
 			///console.log(data);
 			// Append rows to the DataTable
 			$('#setData').html(data); // Assuming data contains correct HTML rows with rowspan
@@ -70,7 +69,7 @@ function printLawsuitReport() {
 	var type=$('#lawsuitsType').val();
 	var state=$('#state').val();
 	var stage=$('#stage').val();
-	var reportType=$('#reportType').val();
+	var reportType="summary";
 
 	$.ajax({
         type: "POST",
@@ -125,7 +124,7 @@ function printExcelLawsuitReport() {
 	var type=$('#lawsuitsType').val();
 	var state=$('#state').val();
 	var stage=$('#stage').val();
-	var reportType=$('#reportType').val();
+	var reportType="summary";
 
 	$.ajax({
         type: "POST",

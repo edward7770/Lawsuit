@@ -1,10 +1,7 @@
 
 <?php
 
-	if(isset($_POST['reportType']) && $_POST['reportType']=="-1")
-	{
-		exit('reportType');
-	}
+	$_POST['reportType'] = 'summary';
 	
 	if (session_status() === PHP_SESSION_NONE) {
 		session_start();

@@ -22,12 +22,7 @@ $('.datatable').DataTable({
       $('.dataTables_filter').appendTo('#tableSearch');
       $('.dataTables_filter').appendTo('.search-input');
       $('.dt-buttons').css('display', 'none');
-      // $('.dt-buttons').css('float', 'left');
-      // $('.dt-buttons').css('marginBottom', '2px');
-      // $('.dt-button').addClass('table-btn-action-icon');
-      // $('.buttons-copy').html('<span><i class="fa fa-copy"></i></span>');
-      // $('.buttons-csv').html('<span><i class="fa fa-file-csv"></i></span>');
-      // $('.buttons-print').html('<span><i class="fa fa-print"></i></span>');
+
       var type=$('#lawsuitsType').val();
       var state=$('#state').val();
       var stage=$('#stage').val();
@@ -44,6 +39,3 @@ $('.datatable').DataTable({
     },
 	
 });
-// $(document).ready(function() {
-//   $('.dt-buttons').css('float', 'right');
-// });

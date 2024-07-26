@@ -80,6 +80,8 @@
 				</div>
 				
 				<?php 
+					$top=20;
+					$left=50;
 					include_once('loader.php'); 
 				?>
 				<div class="card mb-0">

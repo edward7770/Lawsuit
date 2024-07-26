@@ -68,6 +68,11 @@ $fileName = "lawsuit_" . date('Y-m-d') . ".xls";
 $fields = array('#', set_value('lsMasterCode'), set_value('referenceNo'), set_value('lawsuitId'), set_value('customer'), set_value('opponent'), set_value('state'), set_value('stage'), set_value('lawsuitDate')); 
 $field_sessions = array('#', set_value('lsMasterCode'), set_value('sessions'), set_value('dateSession'), set_value('timeSession')); 
  
+$date = date('n/j/Y');
+
+$excelData = set_value('lawsuit_report') . "\n";
+$excelData .= set_value('date') . ":" . $date . "\n";
+$excelData .= "\n";
 // Display column names as first row 
 $excelData = implode("\t", array_values($fields)) . "\n"; 
  

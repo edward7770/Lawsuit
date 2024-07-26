@@ -92,34 +92,55 @@ function viewLSDetails(lsMId,lsDId)
 }
 function viewLSDetailsPayment(lsMId,lsDId)
 {
+	// var form = document.createElement("form");
+	// form.setAttribute("method", "post");
+	// form.setAttribute("action", "LawsuitDetailPayment.php");
+	
+	// // Generate a unique name for the window
+	// var windowName = "formresult_" + lsMId;
+	// // setting form target to a window named 'formresult'
+	// form.setAttribute("target", windowName);
+	
+	// var hiddenField = document.createElement("input");
+	// hiddenField.setAttribute("name", "lsMId");
+	// hiddenField.setAttribute("value", lsMId);
+	// hiddenField.setAttribute("hidden", "hidden");
+	// form.appendChild(hiddenField);
+	// document.body.appendChild(form);
+	
+	// var hiddenField = document.createElement("input");
+	// hiddenField.setAttribute("name", "lsDId");
+	// hiddenField.setAttribute("value", lsDId);
+	// hiddenField.setAttribute("hidden", "hidden");
+	// form.appendChild(hiddenField);
+	// document.body.appendChild(form);
+	
+	// // creating the 'formresult' window with custom features prior to submitting the form
+	// //window.open('test.html', 'formresult', 'scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no');
+	// window.open('test.html', windowName);
+	
+	// form.submit();
 	var form = document.createElement("form");
-	form.setAttribute("method", "post");
-	form.setAttribute("action", "LawsuitDetailPayment.php");
-	
-	// Generate a unique name for the window
-	var windowName = "formresult_" + lsMId;
-	// setting form target to a window named 'formresult'
-	form.setAttribute("target", windowName);
-	
-	var hiddenField = document.createElement("input");
-	hiddenField.setAttribute("name", "lsMId");
-	hiddenField.setAttribute("value", lsMId);
-	hiddenField.setAttribute("hidden", "hidden");
-	form.appendChild(hiddenField);
-	document.body.appendChild(form);
-	
-	var hiddenField = document.createElement("input");
-	hiddenField.setAttribute("name", "lsDId");
-	hiddenField.setAttribute("value", lsDId);
-	hiddenField.setAttribute("hidden", "hidden");
-	form.appendChild(hiddenField);
-	document.body.appendChild(form);
-	
-	// creating the 'formresult' window with custom features prior to submitting the form
-	//window.open('test.html', 'formresult', 'scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no');
-	window.open('test.html', windowName);
-	
-	form.submit();
+    form.setAttribute("method", "post");
+    form.setAttribute("action", "LawsuitDetailPayment.php");
+    
+    var hiddenField1 = document.createElement("input");
+    hiddenField1.setAttribute("name", "lsMId");
+    hiddenField1.setAttribute("value", lsMId);
+    hiddenField1.setAttribute("type", "hidden");
+    form.appendChild(hiddenField1);
+
+    var hiddenField2 = document.createElement("input");
+    hiddenField2.setAttribute("name", "lsDId");
+    hiddenField2.setAttribute("value", lsDId);
+    hiddenField2.setAttribute("type", "hidden");
+    form.appendChild(hiddenField2);
+
+    // Append the form to the document body
+    document.body.appendChild(form);
+
+    // Submit the form
+    form.submit();
 }
 
 function newStage(lsMId,lsCode)

@@ -118,7 +118,7 @@
 						</select>
 					</div>
 				</div>
-				<div class="col-lg-2 col-md-4 col-sm-12">
+				<!-- <div class="col-lg-2 col-md-4 col-sm-12">
 					<div class="form-group">
 						<label for="reportType" class="form-label"><?php echo set_value("reportType"); ?><span class="text-danger"> * </span></label>
 						<select class="js-example-basic-single form-small select" id='reportType'>
@@ -128,9 +128,10 @@
 							
 						</select>
 					</div>
-				</div>
-				
+				</div> -->
 				<div class="col-lg-1 col-md-4 col-sm-12">
+				</div>
+				<div class="col-lg-2 col-md-4 col-sm-12">
 					<label for="search" class="form-label">&nbsp;</label>
 					<button type="submit" class="btn btn-primary form-control" id='search'>
 						<?php echo set_value("search"); ?>
