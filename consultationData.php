@@ -50,10 +50,10 @@
 		<td><?php echo $value['empName']; ?></td>
 		<td><?php echo $value['title']; ?></td>
 		<td><?php echo $value['contractDate']; ?></td>
-		<td><?php echo setAmountDecimal($value['amount']); ?></td>
+		<!-- <td><?php echo setAmountDecimal($value['amount']); ?></td>
 		<td><?php echo setAmountDecimal($value['taxAmount']); ?></td>
 		<td><?php echo setAmountDecimal($value['totalAmount']); ?></td>
-		<td><?php if($value['isPaid']) echo $checkButton; else echo $crossButton; ?></td>
+		<td><?php if($value['isPaid']) echo $checkButton; else echo $crossButton; ?></td> -->
 	</tr>
 	
 	<?php 

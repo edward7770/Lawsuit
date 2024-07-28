@@ -89,10 +89,10 @@
 										<th><?php echo set_value('lawsuitLawyer'); ?></th>
 										<th><?php echo set_value('titleConsultation'); ?></th>
 										<th><?php echo set_value('ContractDate'); ?></th>
-										<th><?php echo set_value('amountContract'); ?></th>
+										<!-- <th><?php echo set_value('amountContract'); ?></th>
 										<th><?php echo set_value('taxValueAmount'); ?></th>
 										<th><?php echo set_value('ContAmountinclTax'); ?></th>
-										<th><?php echo set_value('paidStatus'); ?></th>
+										<th><?php echo set_value('paidStatus'); ?></th> -->
 									</tr>
 								</thead>
 								<tbody > </tbody>

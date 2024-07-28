@@ -313,8 +313,8 @@
 						<div class="col-md-3">
 							<div class="mb-4">
 								<div class="form-group">
-									<label for="invoiceNumber" class="form-label"><?php echo set_value('invoiceNumber'); ?> <span class="text-danger"> * </span></label>
-									<input type="text" class="form-control form-control-sm" id="invoiceNumber" placeholder="<?php echo set_value('invoiceNumber'); ?>" required>
+									<label for="invoiceNumber" class="form-label"><?php echo set_value('invoiceNumber'); ?></label>
+									<input type="text" class="form-control form-control-sm" id="invoiceNumber" placeholder="<?php echo set_value('invoiceNumber'); ?>">
 								</div>
 							</div>
 						</div>

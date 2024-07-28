@@ -133,7 +133,6 @@ function add() {
     !date ||
     !mode ||
     !amount ||
-    !invoiceNumber ||
     !id ||
     !lsStage ||
     !paidStatus ||

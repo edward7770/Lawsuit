@@ -100,7 +100,7 @@
 					<div class="card-body pb-0">
 						
 							<div class="row">
-								<div class="col-lg-3 col-md-6 col-sm-12">
+								<div class="col-lg-6 col-md-6 col-sm-12">
 									<div class="form-group">
 										<label for="customer" class="form-label"><?php echo set_value("customer"); ?><span class="text-danger"> * </span></label>
 										<select class="form-control js-example-basic-single form-small select" id='customer' >
@@ -110,7 +110,7 @@
 										<?php if(isset($custId)) echo '<input type="hidden" id="setCustId" value="'.$custId.'" />'; ?>
 									</div>
 								</div>
-								<div class="col-lg-3 col-md-6 col-sm-12">
+								<div class="col-lg-6 col-md-6 col-sm-12">
 									<div class="form-group">
 										<label for="lawsuitLawyer" class="form-label"><?php echo set_value("lawsuitLawyer"); ?><span class="text-danger"> * </span></label>
 										<select class="form-control js-example-basic-single form-small select" id='lawsuitLawyer'>
@@ -120,22 +120,28 @@
 										<?php if(isset($lawyId)) echo '<input type="hidden" id="setLawyId" value="'.$lawyId.'" />'; ?>
 									</div>
 								</div>
+								<!-- <div class="col-lg-6 col-md-6 col-sm-12">
+									<div class="form-group">
+										<label for="title" class="form-label"><?php echo set_value("titleConsultation"); ?><span class="text-danger"> * </span></label>
+										<input type="text" class="form-control form-control-sm" id="title" value="<?php if(isset($title)) echo $title; ?>" placeholder="<?php echo set_value("titleConsultation"); ?>" >
+									</div>
+								</div> -->
+							</div>
+							<div class="row">
 								<div class="col-lg-6 col-md-6 col-sm-12">
 									<div class="form-group">
 										<label for="title" class="form-label"><?php echo set_value("titleConsultation"); ?><span class="text-danger"> * </span></label>
 										<input type="text" class="form-control form-control-sm" id="title" value="<?php if(isset($title)) echo $title; ?>" placeholder="<?php echo set_value("titleConsultation"); ?>" >
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-lg-3 col-md-6 col-sm-12">
+								<div class="col-lg-6 col-md-6 col-sm-12">
 									<div class="form-group">
 										<label for="date" class="form-label"><?php echo set_value("consultationContractDate"); ?><span class="text-danger"> * </span></label>
 										<input type="date" class="form-control form-control-sm" id="date" value="<?php if(isset($Date)) echo $Date; ?>" placeholder="<?php echo set_value("ContractDate"); ?>">
 									</div>
 								</div>
 								
-								<div class="col-lg-2 col-md-6 col-sm-12">
+								<!-- <div class="col-lg-2 col-md-6 col-sm-12">
 									<div class="form-group">
 										<label for="amountContract" class="form-label"><?php echo set_value("consultationAmountContract"); ?></label>
 										<input type="number" class="form-control form-control-sm" id="amountContract" value="<?php if(isset($amount)) echo $amount; ?>" placeholder="<?php echo set_value("amountContract"); ?>">
@@ -152,14 +158,14 @@
 										<label for="taxValueAmount" class="form-label"><?php echo set_value("taxValueAmount"); ?></label>
 										<input type="number" class="form-control form-control-sm" id="taxValueAmount" disabled value="<?php if(isset($taxAmount) && !empty($taxAmount)) echo $taxAmount; else echo '0'; ?>" placeholder="<?php echo set_value("taxValueAmount"); ?>">
 									</div>
-								</div>
+								</div> -->
 								
-								<div class="col-lg-3 col-md-6 col-sm-12">
+								<!-- <div class="col-lg-3 col-md-6 col-sm-12">
 									<div class="form-group">
 										<label for="ContAmountinclTax" class="form-label"><?php echo set_value("ContAmountinclTax"); ?>%</label>
 										<input type="text" class="form-control form-control-sm" id="ContAmountinclTax" step="0.01" value="<?php if(isset($totalAmount)) echo $totalAmount; else '0.00'; ?>" disabled>
 									</div>
-								</div>
+								</div> -->
 							</div>
 							<div class="invoice-card-title">
 								<h6><?php echo set_value('contractDetails_en'); ?> :</h6>
