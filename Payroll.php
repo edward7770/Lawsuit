@@ -280,12 +280,12 @@
 </div><!-- /.modal -->
 <?php include_once('footer.php'); ?>
 <!-- DataTables Buttons CSS and JS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script> -->
 
 <script src="js_custom/Payroll.js"> </script>
 <script src="js_custom/PayrollGenerate.js"> </script>
 <script src="js_custom/PayrollPost.js"> </script>
-<script src="js_custom/dataTableButtons.js"> </script>
+<!-- <script src="js_custom/dataTableButtons.js"> </script> -->

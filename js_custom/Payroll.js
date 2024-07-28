@@ -81,6 +81,7 @@ function getRemainingRecord()
 	$("#divtblGen").hide();
 	$("#setData").show();
 	$("#setDataGenerated").hide();
+	$(".table-btn-action-icon").hide();
 	var month=$('#month').val();
 	var year=$("#year").val();
 	var type=$("#type").val();
@@ -101,7 +102,12 @@ function getRemainingRecord()
 				var newRows = data.replace(regEx, "</tr><tr");
 				$("#setData").DataTable().rows.add($(newRows)).draw();
 			}
-			showHideActionButton();
+			$('div.dataTables_filter').css('float', 'right');
+			var csvButton = '<a href="PayrollExcelReport.php?month='+ month + '&year=' + year + '&type=' + type + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
+			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice();"><span><i class="fa fa-print"></i></span></a>';
+			$(printButton).insertAfter(".dataTables_filter");
+			$(csvButton).insertAfter(".dataTables_filter");
+			// showHideActionButton();
 		},
 		error: function (jqXHR, exception) {
 			errorFunction(jqXHR, exception)
@@ -116,6 +122,8 @@ function getGenRecord()
 	
 	$("#setData").hide();
 	$("#setDataGenerated").show();
+
+	$(".table-btn-action-icon").hide();
 	
 	var month=$('#month').val();
 	var year=$("#year").val();
@@ -136,14 +144,56 @@ function getGenRecord()
 				var regEx = new RegExp(expr, "gm");
 				var newRows = data.replace(regEx, "</tr><tr");
 				$("#setDataGenerated").DataTable().rows.add($(newRows)).draw();
+
 			}
-			showHideActionButton();
+			$('div.dataTables_filter').css('float', 'right');
+			var csvButton = '<a href="PayrollExcelReport.php?month='+ month + '&year=' + year + '&type=' + type + '" class="table-btn-action-icon""><span><i class="fa fa-file-csv"></i></span></a>';
+			var printButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice();"><span><i class="fa fa-print"></i></span></a>';
+			$(printButton).insertAfter("#setDataGenerated_filter");
+			$(csvButton).insertAfter("#setDataGenerated_filter");
+			// showHideActionButton();
 			
 		},
 		error: function (jqXHR, exception) {
 			errorFunction(jqXHR, exception)
 		}
 	}); 
+}
+
+function printInvoice() {
+    // Make AJAX call to get invoice content
+	var month=$('#month').val();
+	var year=$("#year").val();
+	var type=$("#type").val();
+
+    $.ajax({
+        type: "POST",
+        url: "PayrollReportPrint.php",
+        data: { month: month, year: year, type: type },
+        success: function(data) {
+			var printWindow = window.open("", "_blank");
+            printWindow.document.write("<html><head><title>&nbsp;</title>");
+
+			printWindow.document.write(`
+				<style type="text/css" media="print">
+
+				</style>
+			`);
+			
+			printWindow.document.write("</head><body>");
+
+            // Write the received content to the print window
+            printWindow.document.write(data);
+
+            printWindow.document.write("</body></html>");
+            printWindow.document.close();
+
+            setTimeout(function() {
+                printWindow.print();
+                printWindow.close();
+            }, 1000); // Adjust the delay as needed
+        }
+    });
 }
 
 function errorFunction(jqXHR, exception)

@@ -23,7 +23,7 @@
 				$stmt->bindParam(":lsMasterId",$_POST['subCatId'],PDO::PARAM_INT);
 		///$stmt->bindParam(":customerId",$_POST['subCatId'],PDO::PARAM_INT);
 		////$stmt->bindParam(":lawyerId",$_POST['lawyerId'],PDO::PARAM_INT);
-		$stmt->bindParam(":description",$_POST['desc'],PDO::PARAM_STR);
+		$stmt->bindParam(":description",$_POST['desc'],PDO::PARAM_STR);  
 		$stmt->bindParam(":incomeDate",$_POST['date'],PDO::PARAM_STR);
 		$stmt->bindParam(":amount",$_POST['amount'],PDO::PARAM_STR);
 		$stmt->bindParam(":taxValue",$_POST['tax'],PDO::PARAM_STR);
