@@ -184,7 +184,7 @@ $serial = 1;
                                                     ?>
                                                         <th>#</th>
                                                         <th><?php echo set_value('employeeName'); ?></th>
-                                                        <th><?php echo set_value('employeecategory'); ?></th>
+                                                        <th class="table_header_min_width_120"><?php echo set_value('employeecategory'); ?></th>
                                                         <th class="table_header_min_width_90"><?php echo set_value('basicSalary'); ?></th>
                                                         <th class="table_header_min_width_90"><?php echo set_value('allowance'); ?></th>
                                                         <th class="table_header_min_width_90"><?php echo set_value('grossSalary'); ?></th>
@@ -215,12 +215,12 @@ $serial = 1;
                                                         <tr>
                                                             <td> <?php echo $serial; ?> </td>
                                                             <td><?php echo $value['empName_' . $language]; ?></td>
-                                                            <td><?php echo $value['categoryName']; ?></td>
-                                                            <td><?php echo setAmountDecimal($value['basicSalary']); ?></td>
-                                                            <td><?php echo setAmountDecimal($value['allow']); ?></td>
-                                                            <td><?php echo setAmountDecimal($value['basicSalary'] + $value['allow']); ?></td>
-                                                            <td><?php echo setAmountDecimal($value['deduct']); ?></td>
-                                                            <td><?php echo setAmountDecimal(($value['basicSalary'] + $value['allow']) - $value['deduct']); ?></td>
+                                                            <td class="table_header_min_width_120"><?php echo $value['categoryName']; ?></td>
+                                                            <td class="table_header_min_width_90"><?php echo setAmountDecimal($value['basicSalary']); ?></td>
+                                                            <td class="table_header_min_width_90"><?php echo setAmountDecimal($value['allow']); ?></td>
+                                                            <td class="table_header_min_width_90"><?php echo setAmountDecimal($value['basicSalary'] + $value['allow']); ?></td>
+                                                            <td class="table_header_min_width_90"><?php echo setAmountDecimal($value['deduct']); ?></td>
+                                                            <td class="table_header_min_width_90"><?php echo setAmountDecimal(($value['basicSalary'] + $value['allow']) - $value['deduct']); ?></td>
                                                         </tr>
                                                 <?php
                                                 $serial++;
