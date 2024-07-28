@@ -61,48 +61,48 @@ function getData() {
         var regEx = new RegExp(expr, "gm");
         var newRows = data.replace(regEx, "</tr><tr");
         $("#setData").DataTable().rows.add($(newRows)).draw();
-        $("div.dataTables_filter").css("float", "right");
-        // var copyButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-copy"></i></span></a>';
-        var csvButton =
-          '<a href="LawsuitPaymentExcelPrint.php?lsMId=' +
-          $("#lsMId").val() +
-          "&lsDId=" +
-          $("#lsDId").val() +
-          '" class="table-btn-action-icon" onclick="printExcelPaymentReport();"><span><i class="fa fa-file-csv"></i></span></a>';
-        var printButton =
-          '<a href="#" class="table-btn-action-icon" onclick="printInvoice(' +
-          $("#lsMId").val() +
-          "," +
-          $("#lsDId").val() +
-          ');"><span><i class="fa fa-print"></i></span></a>';
-        $(printButton).insertAfter(".dataTables_filter");
-        $(csvButton).insertAfter(".dataTables_filter");
         // $(copyButton).insertAfter(".dataTables_filter")
       }
+      $("div.dataTables_filter").css("float", "right");
+      // var copyButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-copy"></i></span></a>';
+      var csvButton =
+        '<a href="LawsuitPaymentExcelPrint.php?lsMId=' +
+        $("#lsMId").val() +
+        "&lsDId=" +
+        $("#lsDId").val() +
+        '" class="table-btn-action-icon" onclick="printExcelPaymentReport();"><span><i class="fa fa-file-csv"></i></span></a>';
+      var printButton =
+        '<a href="#" class="table-btn-action-icon" onclick="printInvoice(' +
+        $("#lsMId").val() +
+        "," +
+        $("#lsDId").val() +
+        ');"><span><i class="fa fa-print"></i></span></a>';
+      $(printButton).insertAfter(".dataTables_filter");
+      $(csvButton).insertAfter(".dataTables_filter");
     },
   });
 }
 
 function getContractData() {
-	var myTable = $("#setDataContract").DataTable();
-	// $("#setDataContract").hide();
-	var rows = myTable.rows().remove().draw();
-	$.ajax({
-	  type: "POST",
-	  url: "LawsuitDetailPaymentData.php",
-	  data: { lsMId: $("#lsMId").val(), contractData: 1 },
-	  success: function (data) {
-		if (!$.trim(data) == "") {
-		  data = data.replace(/^\s*|\s*$/g, "");
-		  data = data.replace(/\\r\\n/gm, "");
-		  var expr = "</tr>\\s*<tr";
-		  var regEx = new RegExp(expr, "gm");
-		  var newRows = data.replace(regEx, "</tr><tr");
-		  $("#setDataContract").DataTable().rows.add($(newRows)).draw();
-		}
-	  },
-	});
-  }
+  var myTable = $("#setDataContract").DataTable();
+  // $("#setDataContract").hide();
+  var rows = myTable.rows().remove().draw();
+  $.ajax({
+    type: "POST",
+    url: "LawsuitDetailPaymentData.php",
+    data: { lsMId: $("#lsMId").val(), contractData: 1 },
+    success: function (data) {
+      if (!$.trim(data) == "") {
+        data = data.replace(/^\s*|\s*$/g, "");
+        data = data.replace(/\\r\\n/gm, "");
+        var expr = "</tr>\\s*<tr";
+        var regEx = new RegExp(expr, "gm");
+        var newRows = data.replace(regEx, "</tr><tr");
+        $("#setDataContract").DataTable().rows.add($(newRows)).draw();
+      }
+    },
+  });
+}
 
 $("body").on("click", "#addButton", function () {
   $("#form")[0].reset();
@@ -509,8 +509,6 @@ $("#lsStage").change(function () {
   }
 });
 
-
-
 function editContract(id) {
   ///$("#ContractTermsEn").summernote('code','');
   ////$("#ContractTermsAr").summernote('code','');
@@ -568,7 +566,7 @@ function del() {
     url: "LawsuitDetailPaymentDB.php",
     data: { action: "del", del: action, id: id, lsMId: lsMId },
     success: function (data) {
-		console.log('tttt');
+      console.log("tttt");
       getContractData();
       getData();
       getPaymentData();
