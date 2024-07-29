@@ -112,7 +112,7 @@
 								</div>
 								<div class="col-lg-6 col-md-6 col-sm-12">
 									<div class="form-group">
-										<label for="lawsuitLawyer" class="form-label"><?php echo set_value("lawsuitLawyer"); ?><span class="text-danger"> * </span></label>
+										<label for="lawsuitLawyer" class="form-label"><?php echo set_value("lawsuitLawyer"); ?></label>
 										<select class="form-control js-example-basic-single form-small select" id='lawsuitLawyer'>
 											<option value=""><?php echo set_value("select"); ?></option>
 											<?php echo include_once('dropdown_lawsuitLawyer.php'); ?>

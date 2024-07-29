@@ -58,11 +58,6 @@ function add()
 		showMessage("Please select Customer");
 		return;
 	} 
-	if(!lawyerId)
-	{
-		showMessage("Please Select lawsuit Lawyer");
-		return;
-	}
 	var title = $("#title").val(); 
 	if(!title)
 	{
