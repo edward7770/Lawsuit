@@ -147,7 +147,7 @@ $serial = 1;
                     </div>
                     <div class="mt-5 mb-5">
                         <div class="card-table" style="padding-left: 15px; padding-right: 15px;">
-                            <h6><?php echo set_value('payment'); ?></h6>
+                            <!-- <h6><?php echo set_value('payment'); ?></h6> -->
                             <div class="card-body mb-4">
                                 <div class="table-responsive" id='setData_payment'>
                                     <div class="table-responsive">
