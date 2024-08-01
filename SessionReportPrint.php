@@ -155,12 +155,15 @@ $serial = 1;
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th>#</th>
-                                                    <th class="table_header_min_width_120"><?php echo set_value('lsMasterCode'); ?></th>
-                                                    <th class="table_header_min_width_120"><?php echo set_value('referenceNo'); ?></th>
+                                                    <th class="table_header_min_width_90"><?php echo set_value('lsMasterCode'); ?></th>
+                                                    <!-- <th class="table_header_min_width_120"><?php echo set_value('referenceNo'); ?></th> -->
                                                     <th class="table_header_min_width_90"><?php echo set_value('lawsuitId'); ?></th>
+                                                    <th class="table_header_min_width_90"><?php echo set_value('lawsuitLocation'); ?></th>
+                                                    <th class="table_header_min_width_120"><?php echo set_value('customer'); ?></th>
+                                                    <th class="table_header_min_width_90"><?php echo set_value('opponent'); ?></th>
                                                     <th class="table_header_min_width_90"><?php echo set_value('sessions'); ?></th>
-                                                    <th class="table_header_min_width_120"><?php echo set_value('dateSession'); ?></th>
-                                                    <th><?php echo set_value('timeSession'); ?></th>
+                                                    <th class="table_header_min_width_90"><?php echo set_value('dateSession'); ?></th>
+                                                    <th class="table_header_min_width_90"><?php echo set_value('timeSession'); ?></th>
                                                 </tr>
                                             </thead>
                                             <tbody id='setData'>
@@ -206,11 +209,14 @@ $serial = 1;
                                                             ?>
                                                                         <tr>
                                                                             <td> <?php echo $serial; ?> </td>
-                                                                            <td class="table_header_min_width_120"><?php echo $value['ls_code']; ?></td>
-                                                                            <td class="table_header_min_width_120"> <?php echo $value['empName_' . $language]; ?> </td>
+                                                                            <td class="table_header_min_width_90"><?php echo $value['ls_code']; ?></td>
+                                                                            <!-- <td class="table_header_min_width_120"> <?php echo $value['empName_' . $language]; ?> </td> -->
                                                                             <td class="table_header_min_width_90"> <?php echo $value['lawsuitId']; ?> </td>
+                                                                            <td class="table_header_min_width_90"> <?php echo $value['location']; ?> </td>
+                                                                            <td class="table_header_min_width_120"> <?php echo $value['customerName']; ?> </td>
+                                                                            <td class="table_header_min_width_90"> <?php echo $value['oppoName']; ?> </td>
                                                                             <td class="table_header_min_width_90"> <?php echo $innerValue['sessionName']; ?> </td>
-                                                                            <td class="table_header_min_width_120"> <?php echo $innerValue['sessionDate']; ?></td>
+                                                                            <td class="table_header_min_width_90"> <?php echo $innerValue['sessionDate']; ?></td>
                                                                             <td class="table_header_min_width_90"> <?php echo $innerValue['sessionTime']; ?></td>
                                                                         </tr>
                                                             <?php

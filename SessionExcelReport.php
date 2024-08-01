@@ -57,8 +57,8 @@ $lsDetailsId = 0;
 $fileName = "Session_Report" . date('Y-m-d') . ".xls";
 
 // Column names 
-$fields_payment = array('#', set_value('lsMasterCode'), set_value('referenceNo'), set_value('lawsuitId'), set_value('sessions'), set_value('dateSession'), set_value('timeSession'));
-
+// $fields_payment = array('#', set_value('lsMasterCode'), set_value('referenceNo'), set_value('lawsuitId'), set_value('sessions'), set_value('dateSession'), set_value('timeSession'));
+$fields_payment = array('#', set_value('lsMasterCode'), set_value('lawsuitId'),  set_value('lawsuitLocation'),  set_value('customer'),  set_value('opponent'), set_value('sessions'), set_value('dateSession'), set_value('timeSession'));
 //get payment data
 $qry_payment = "CALL sp_getLawsuitDetails('" . $language . "'," . $_SESSION['customerId'] . ",-1,-1,-1)";
 $stmt_payment = $dbo->prepare($qry_payment);
@@ -142,7 +142,7 @@ if (count($result_payment) > 0) {
                 foreach ($result as $i => $innerValue) {
                     if ($lsDetailsId == $innerValue['lsDetailsId_Session']) {
                         if (new DateTime($_GET['from']) <= new DateTime($innerValue['sessionDate']) && new DateTime($innerValue['sessionDate']) <= new DateTime($_GET['to'])) {
-                            $lineData_payment = array($serial, $value['ls_code'], $value['empName_' . $language], $value['lawsuitId'], $innerValue['sessionName'], $innerValue['sessionDate'], $innerValue['sessionTime']);
+                            $lineData_payment = array($serial, $value['ls_code'],  $value['lawsuitId'], $value['location'], $value['customerName'], $value['oppoName'], $innerValue['sessionName'], $innerValue['sessionDate'], $innerValue['sessionTime']);
                             array_walk($lineData_payment, 'filterData');
                             $excelData .= implode("\t", array_values($lineData_payment)) . "\n";
                             $serial++;

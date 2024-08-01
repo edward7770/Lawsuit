@@ -1,6 +1,6 @@
 ////$(".image_preview").change(function(){ //// not working for dynamically added selects	
 var MAX_FILE_SIZE 			 	= (1024*1024); // 1MB
-var MAX_FILE_SIZE 			 	= (MAX_FILE_SIZE*14); // 14MB
+var MAX_FILE_SIZE 			 	= (MAX_FILE_SIZE*50); // 14MB
 
 $('body').on('change', '.image_check', function() {
 		fileSize = this.files[0].size;
@@ -8,7 +8,7 @@ $('body').on('change', '.image_check', function() {
 			var $image = $('#img-upload-'+this.id);
 			$image.removeAttr('src').replaceWith($image.clone());
 			/////alert('File size must be less than 5 Mb');
-			showMessageFull('File size must be less than 15 Mb');
+			showMessageFull('File size must be less than 50 Mb');
 			////document.getElementById(this.id).value = "";
 			jQuery('#'+this.id).remove();
 			var addnew ='<input type="file" class="form-control form-control-sm image_check" id="'+this.id+'">';

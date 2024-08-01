@@ -44,9 +44,10 @@ function set_value($val)
         <tr>
             <th>#</th>
             <th><?php echo set_value('lsMasterCode'); ?></th>
-            <th><?php echo set_value('referenceNo'); ?></th>
             <th><?php echo set_value('lawsuitId'); ?></th>
-            <!-- <th><?php echo set_value('customer'); ?></th> -->
+            <th><?php echo set_value('lawsuitLocation'); ?></th>
+            <th><?php echo set_value('customer'); ?></th>
+            <th><?php echo set_value('opponent'); ?></th>
             <th> <?php echo set_value('sessions'); ?></th>
             <th> <?php echo set_value('dateSession'); ?></th>
             <th> <?php echo set_value('timeSession'); ?></th>
@@ -70,7 +71,7 @@ function set_value($val)
         ///exit;
         $serial = 1;
         $lsDetailsId = 0;
-        ////print_r($result);
+
         function getCountSessions($lsDetailsId)
         {
             $count = 0;
@@ -118,8 +119,11 @@ function set_value($val)
                                 <tr>
                                     <td> <?php echo $serial; ?> </td>
                                     <td><?php echo $value['ls_code']; ?></td>
-                                    <td> <?php echo $value['empName_' . $language]; ?> </td>
+                                    <!-- <td> <?php echo $value['empName_' . $language]; ?> </td> -->
                                     <td> <?php echo $value['lawsuitId']; ?> </td>
+                                    <td> <?php echo $value['location']; ?> </td>
+                                    <td> <?php echo $value['customerName']; ?> </td>
+                                    <td> <?php echo $value['oppoName']; ?> </td>
                                     <td> <?php echo $innerValue['sessionName']; ?> </td>
                                     <td> <?php echo $innerValue['sessionDate']; ?></td>
                                     <td> <?php echo $innerValue['sessionTime']; ?></td>

@@ -182,7 +182,7 @@
 								   <?php echo set_value('date'); ?>: <span><?php echo($invoiceDate) ?></span>
 								</div>
 								<div class="inv-date">
-									<?php echo set_value('invoice_number'); ?>: <span><?php echo $resultLawsuitDetails[0]['lawsuitId'] ?></span>
+									<?php echo set_value('invoice_number'); ?>: <span><?php echo $invoiceNumber; ?></span>
 								</div>
 			               	</div>	
 		                </div>					    
