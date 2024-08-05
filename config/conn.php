@@ -3,7 +3,7 @@
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
-	$dbname = "lv7_lawsuit";
+	$dbname = "lv7";
 		
 	try {
 		$dbo = new PDO('mysql:host='.$servername.';dbname='.$dbname, $username, $password);

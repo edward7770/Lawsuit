@@ -702,7 +702,6 @@ function printInvoiceModal() {
   //   },
   // });
   var invoiceNumber = $.trim($("#invoice_number_list").html());
-  console.log(invoiceNumber);
   $("#form_invoice_number").val(invoiceNumber);
   $("#LawsuitPrintModal").modal("toggle");
 }
