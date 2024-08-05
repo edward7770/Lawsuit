@@ -18,12 +18,30 @@
 	if($stmt->execute())
 	{
 		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$stmt->closeCursor();
 	}
 	else 
 	{
 		$errorInfo = $stmt->errorInfo();
 		exit($json =$errorInfo[2]);
 	}
+
+	$qry_detail="call LawsuitDetailsData(:lsDetailId)"; 
+	$stmt_detail=$dbo->prepare($qry_detail);
+	$stmt_detail->bindParam(":lsDetailId",$_POST['lsDId'],PDO::PARAM_INT);
+	if($stmt_detail->execute())
+	{
+		$resultLawsuitDetails = $stmt_detail->fetchAll(PDO::FETCH_ASSOC);
+		$customerArray=explode (",", $resultLawsuitDetails[0]['custName']);
+		$opponentArray=explode (",", $resultLawsuitDetails[0]['OpponentsName']);
+		$stmt_detail->closeCursor();
+	}
+	else 
+	{
+		$errorInfo = $stmt->errorInfo();
+		exit($json =$errorInfo[2]);
+	}
+
 	////print_r($result);
 	function set_value($val)
 	{
@@ -356,6 +374,104 @@
 	</div>
 </div><!-- /.modal -->
 
+<div class="modal fade" id="LawsuitPrintModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<form id='formLawsuitPrint' action='javascript:printInvoice();'>
+				<div class="modal-header">
+					<h4 class="modal-title"><?php echo set_value('lawsuit_invoice'); ?></h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body p-4">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="form_invoice_number" class="form-label"><?php echo set_value('invoice_number'); ?><span class="text-danger"> * </span></label>
+									<input type="text" class="form-control form-control-sm" id="form_invoice_number" placeholder="<?php echo set_value('invoice_number'); ?>">
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="form_invoice_date" class="form-label"><?php echo set_value('invoice_date'); ?><span class="text-danger"> * </span></label>
+									<input type="date" class="form-control form-control-sm" id="form_invoice_date" value="<?php echo date('Y-m-d'); ?>" required onkeydown="return false;">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="lawsuit_code" class="form-label"><?php echo set_value('lsMasterCode'); ?> <span class="text-danger"> * </span></label>
+									<input type="text" class="form-control form-control-sm" id="lawsuit_code" value="<?php echo $resultLawsuitDetails[0]['ls_code']; ?>" disabled>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="lawsuit_reference_no" class="form-label"><?php echo set_value('referenceNo'); ?> <span class="text-danger"> * </span></label>
+									<input type="text" class="form-control form-control-sm" id="lawsuit_reference_no" value="<?php if(empty($resultLawsuitDetails[0]['referenceNo'])) echo "-"; else echo $resultLawsuitDetails[0]['referenceNo']; ?>" disabled>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="lawsuit_number" class="form-label"><?php echo set_value('lawsuitId'); ?> <span class="text-danger"> * </span></label>
+									<input type="text" class="form-control form-control-sm" id="lawsuit_number" value="<?php if(empty($resultLawsuitDetails[0]['lawsuitId'])) echo "-"; else echo $resultLawsuitDetails[0]['lawsuitId']; ?>" disabled>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="type" class="form-label"><?php echo set_value('type'); ?> <span class="text-danger"> * </span></label>
+									<input type="text" class="form-control form-control-sm" id="type" value="<?php echo $resultLawsuitDetails[0]['lsTypeName_'.$language]; ?>" disabled>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="state" class="form-label"><?php echo set_value('state'); ?> <span class="text-danger"> * </span></label>
+									<input type="text" class="form-control form-control-sm" id="state" value="<?php echo $resultLawsuitDetails[0]['lsStateName_'.$language]; ?>" disabled>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="stage" class="form-label"><?php echo set_value('stage'); ?> <span class="text-danger"> * </span></label>
+									<input type="text" class="form-control form-control-sm" id="stage" value="<?php echo $resultLawsuitDetails[0]['lsStagesName_'.$language]; ?>" disabled>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary " data-bs-dismiss="modal"><?php echo set_value('close'); ?></button>&nbsp; 
+					<input class="btn btn-primary" type="submit" id='submit' value="<?php echo set_value('print'); ?>" />
+					<input type='hidden' value='0' id='id'>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="LawsuitAmountModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
@@ -492,7 +608,8 @@
 				</div>
 			</form>
 			
-			
+			<input type='hidden' value="<?php echo $_SESSION['invoice_no']; ?>" id='invoice_number'>
+			<input type='hidden' value="<?php echo date('Y-m-d'); ?>" id='invoice_date'>
 		</div>
 	</div>
 </div><!-- /.modal -->

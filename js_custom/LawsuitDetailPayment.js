@@ -72,7 +72,7 @@ function getData() {
         $("#lsDId").val() +
         '" class="table-btn-action-icon" onclick="printExcelPaymentReport();"><span><i class="fa fa-file-csv"></i></span></a>';
       var printButton =
-        '<a href="#" class="table-btn-action-icon" onclick="printInvoice(' +
+        '<a href="#" class="table-btn-action-icon" onclick="printInvoiceModal(' +
         $("#lsMId").val() +
         "," +
         $("#lsDId").val() +
@@ -565,7 +565,6 @@ function del() {
     url: "LawsuitDetailPaymentDB.php",
     data: { action: "del", del: action, id: id, lsMId: lsMId },
     success: function (data) {
-      console.log("tttt");
       getContractData();
       getData();
       getPaymentData();
@@ -677,13 +676,141 @@ function printContract(activeTabContent) {
   }, 1000); // Adjust the timeout as needed
 }
 
-function printInvoice(isMid, isDid) {
-  // Make AJAX call to get invoice content
+function printInvoiceModal() {
+  // $.ajax({
+  //   type: "POST",
+  //   url: "LawsuitDetailPayment-invoice.php",
+  //   data: { lsMId: isMid, lsDid: isDid },
+  //   success: function (data) {
+  //     // Open a new window for printing
+  //     var printWindow = window.open("", "_blank");
+  //     printWindow.document.write(
+  //       "<html><head><title>&nbsp;</title></head><body>"
+  //     );
+
+  //     // Write the received content to the print window
+  //     printWindow.document.write(data);
+
+  //     printWindow.document.write("</body></html>");
+  //     printWindow.document.close();
+
+  //     // Print the content after a short delay
+  //     setTimeout(function () {
+  //       printWindow.print();
+  //       printWindow.close();
+  //     }, 1000); // Adjust the delay as needed
+  //   },
+  // });
+  var invoiceNumber = $.trim($("#invoice_number_list").html());
+  console.log(invoiceNumber);
+  $("#form_invoice_number").val(invoiceNumber);
+  $("#LawsuitPrintModal").modal("toggle");
+}
+
+// function printLawsuitInvoice(lsMId, lsDId) {
+//   $.ajax({
+//     type: "POST",
+//     url: "LawsuitDetailPayment-invoice.php",
+//     data: {
+//       lsMId: lsMId,
+//       lsDid: lsDId,
+//       paymentId: paymentId
+//     },
+//     success: function (data) {
+//       // Open a new window for printing
+//       var printWindow = window.open("", "_blank");
+//       printWindow.document.write(
+//         "<html><head><title>&nbsp;</title></head><body>"
+//       );
+
+//       // Write the received content to the print window
+//       printWindow.document.write(data);
+
+//       printWindow.document.write("</body></html>");
+//       printWindow.document.close();
+
+//       // Print the content after a short delay
+//       setTimeout(function () {
+//         printWindow.print();
+//         printWindow.close();
+//       }, 1000);
+//     },
+//   });
+// }
+
+function printInvoice() {
+  var isMid = $("#lsMId").val();
+  var isDid = $("#lsDId").val();
+  var invoiceNumber = $("#form_invoice_number").val();
+  var invoiceDate = $("#form_invoice_date").val();
+
   $.ajax({
     type: "POST",
-    url: "LawsuitDetailPayment-invoice.php",
-    data: { lsMId: isMid, lsDid: isDid },
+    url: "LawsuitDetailPaymentDB.php", // URL of the session update script
+    data: {action: "updateSessionInvoice", lsMId: isMid, isDid: isDid, invoiceNumber: invoiceNumber, invoiceDate: invoiceDate },
+    success: function (response) {
+      var result = JSON.parse(response);
+      if (result.status == "success") {
+        $('#invoice_number_list').html(invoiceNumber);
+        console.log(invoiceNumber);
+        $('#invoice_number').html(invoiceNumber);
+
+        $.ajax({
+          type: "POST",
+          url: "LawsuitDetailPayment-invoice.php",
+          data: {
+            lsMId: isMid,
+            lsDid: isDid,
+            invoiceNumber: invoiceNumber,
+            invoiceDate: invoiceDate,
+          },
+          success: function (data) {
+            $("#formLawsuitPrint")[0].reset();
+            $("#LawsuitPrintModal").modal("toggle");
+            // Open a new window for printing
+            var printWindow = window.open("", "_blank");
+            printWindow.document.write(
+              "<html><head><title>&nbsp;</title></head><body>"
+            );
+
+            // Write the received content to the print window
+            printWindow.document.write(data);
+
+            printWindow.document.write("</body></html>");
+            printWindow.document.close();
+
+            // Print the content after a short delay
+            setTimeout(function () {
+              printWindow.print();
+              printWindow.close();
+            }, 1000); // Adjust the delay as needed
+          },
+        });
+      } else {
+        // Handle the error response
+        alert("Error updating session: " + result.message);
+      }
+    },
+    error: function () {
+      alert("Error communicating with the server.");
+    },
+  });
+}
+
+function printPaymentReceipt(paymentId) {
+  var lsMId = $("#lsMId").val();
+  var lsDId = $("#lsDId").val();
+
+  $.ajax({
+    type: "POST",
+    url: "PaymentReceiptPrint.php",
+    data: {
+      lsMId: lsMId,
+      lsDid: lsDId,
+      paymentId: paymentId
+    },
     success: function (data) {
+      $("#formLawsuitPrint")[0].reset();
       // Open a new window for printing
       var printWindow = window.open("", "_blank");
       printWindow.document.write(
@@ -700,7 +827,7 @@ function printInvoice(isMid, isDid) {
       setTimeout(function () {
         printWindow.print();
         printWindow.close();
-      }, 1000); // Adjust the delay as needed
+      }, 1000);
     },
   });
 }

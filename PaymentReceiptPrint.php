@@ -92,13 +92,13 @@
 	$max = 500000;
 	$randomNumber = rand($min, $max);
 	$invoiceNumber = str_pad($randomNumber, 6, "0", STR_PAD_LEFT);
-	$invoiceDate = date('n/j/Y');
+	$receiptDate = date('n/j/Y');
 
 	$totalAmount = 0;
 	$paidAmount = 0;
 
 	$serial=1;
-	$serial_contract=1;
+
 	if(isset($_POST['lsMId'])) {
 		$qry_getpaymentdata="SELECT lsPaymentId, m.`ls_code`, s.lsStagesName_$language as lsStagesName , d.`lawsuitId`,
 			DATE_FORMAT(paymentDate,'%d-%b-%y') paymentDate, pm.name_$language as paymentMode, amount, invoiceNumber, remarks,
@@ -111,10 +111,11 @@
 			LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=l.`lsStageId`
 			LEFT JOIN `tbl_lawsuit_details` d ON d.`lsMasterId`=m.`lsMasterId`
 			LEFT JOIN `tbl_payment_mode` pm ON pm.`paymentModeId`=l.`paymentMode`
-			WHERE l.isActive=1 AND m.`isActive`=1
+			WHERE l.isActive=1 AND m.`isActive`=1 AND l.`lsPaymentId`=:lsPaymentId
 			AND d.`lsMasterId`=:lsMasterId GROUP BY l.`lsPaymentId` ";
 		$stmt_getpaymentdata=$dbo->prepare($qry_getpaymentdata);
 		$stmt_getpaymentdata->bindParam(":lsMasterId",$_POST['lsMId'],PDO::PARAM_INT);
+        $stmt_getpaymentdata->bindParam(":lsPaymentId",$_POST['paymentId'],PDO::PARAM_INT);
 		if($stmt_getpaymentdata->execute())
 		{
 			$result_paymentdata = $stmt_getpaymentdata->fetchAll(PDO::FETCH_ASSOC);
@@ -123,24 +124,6 @@
 		else 
 		{
 			$errorInfo = $stmt_getpaymentdata->errorInfo();
-			exit($json =$errorInfo[2]);
-		}
-
-
-		$qry_getcontractdata="SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,`lsStageId`, s.lsStagesName_$language as lsStagesName,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractEn`, `contractAr`, `contractFilePath`, c.`isActive` FROM `tbl_lawsuit_contract` c 
-		LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=c.`lsMasterId`
-		LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=c.`lsStageId`
-		WHERE c.`isActive`=1 AND c.`lsMasterId`=:lsMasterId";
-		$stmt_getcontractdata=$dbo->prepare($qry_getcontractdata);
-		$stmt_getcontractdata->bindParam(":lsMasterId",$_POST['lsMId'],PDO::PARAM_INT);
-		if($stmt_getcontractdata->execute())
-		{
-			$result_contactdata = $stmt_getcontractdata->fetchAll(PDO::FETCH_ASSOC);
-			$stmt_getcontractdata->closeCursor();
-		}
-		else 
-		{
-			$errorInfo = $stmt_getcontractdata->errorInfo();
 			exit($json =$errorInfo[2]);
 		}
 
@@ -175,14 +158,14 @@
 		                </div>
 		                <div class="inv-header-right">
 		                	<div class="invoice-title">
-								<?php echo set_value('lawsuit_invoice'); ?>
+								<?php echo set_value('payment_receipt'); ?>
 							</div>
 			               	<div class="inv-details">
 			               		<div class="inv-date">
-								   <?php echo set_value('date'); ?>: <span><?php echo $_POST['invoiceDate'] ?></span>
+								   <?php echo set_value('date'); ?>: <span><?php echo $receiptDate ?></span>
 								</div>
 								<div class="inv-date">
-									<?php echo set_value('invoice_number'); ?>: <span><?php echo $_POST['invoiceNumber']; ?></span>
+									<?php echo set_value('invoice_number'); ?>: <span><?php echo $result_paymentdata[0]['invoiceNumber']; ?></span>
 								</div>
 			               	</div>	
 		                </div>					    
@@ -244,7 +227,7 @@
 				    		</div>
 				    	</div>				    	
 				    </div>
-				    <div class="invoice-table mt-3">
+				    <div class="invoice-table mt-3 mb-5">
 						<p class="mb-1"><?php echo set_value('paymentDetails'); ?></p>
 				    	<div class="table-responsive">
 			                <table>
@@ -286,40 +269,7 @@
 			                </table>			               
 			            </div>
 				    </div>
-					<div class="invoice-table mt-3">
-						<p class="mb-1"><?php echo set_value('contractDetails'); ?></p>
-				    	<div class="table-responsive">
-			                <table>
-								<thead>
-									<tr>
-										<th class="table_width_1">#</th>
-										<th><?php echo set_value('stage'); ?></th>
-										<th><?php echo set_value('paymentAmount'); ?></th>
-										<th><?php echo set_value('taxValueAmount'); ?></th>
-										<th><?php echo set_value('contractAmountIncludingTax'); ?></th>
-									</tr>
-								</thead>
-			                  <tbody>
-									<?php 
-										foreach ($result_contactdata as $value) {
-											$totalAmount += $value['totalAmount'];
-											?>
-												<tr>
-													<td> <?php echo $serial_contract; ?> </td>
-													<td><?php echo $value['lsStagesName']; ?></td>
-													<td><?php echo setAmountDecimal($value['amount']); ?></td>
-													<td><?php echo setAmountDecimal($value['taxAmount']); ?></td>
-													<td><?php echo setAmountDecimal($value['totalAmount']); ?></td>
-												</tr>
-											<?php
-											$serial_contract++;
-										}
-									?>
-			                  </tbody>
-			                </table>			               
-			            </div>
-				    </div>
-				    <div class="invoice-table-footer">
+				    <!-- <div class="invoice-table-footer">
 				    	<div class="table-footer-left"></div>
 				    	<div class="text-end table-footer-right">
 			                <table>
@@ -335,8 +285,8 @@
 				                </tbody>
 				            </table>
 			            </div> 
-				    </div>
-				    <div class="invoice-table-footer mb-5">
+				    </div> -->
+				    <!-- <div class="invoice-table-footer mb-5">
 			            <div class="table-footer-left" style="opacity: 0">       
                             <p class="total-info">Total Items / Qty : 4 / 4.00</p>
 			            </div>
@@ -350,7 +300,7 @@
 				                </tbody>
 				            </table>
 			            </div>			                           	
-			        </div>
+			        </div> -->
 			        <!-- <div class="total-amountdetails">
 			        	<p>Total amount ( in words): <span>$  One Thousand Six Hundred Fifteen  Only.</span></p>
 			        </div> -->

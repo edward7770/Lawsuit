@@ -2,6 +2,10 @@
 	/////echo $_POST['lsDId'];
 	if(isset($_POST['lsDId']) && !empty($_POST['lsDId']))
 	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+
 		include_once('config/conn.php');
 		$qry="call LawsuitDetailsData(:lsDetailId)"; 
 		$stmt=$dbo->prepare($qry);
@@ -17,7 +21,13 @@
 			$errorInfo = $stmt->errorInfo();
 			exit($json =$errorInfo[2]);
 		}
-		
+
+		// $invoiceNoLength = strlen($_SESSION['invoice_no']);
+		// $numericPart = substr($_SESSION['invoice_no'], -$invoiceNoLength);
+		// $incrementedNumber = str_pad((int)$numericPart + 1, $invoiceNoLength, '0', STR_PAD_LEFT);
+		// $_SESSION['invoice_no'] = substr($_SESSION['invoice_no'], 0, -$invoiceNoLength) . $incrementedNumber;
+
+		$invoiceDate = date('n/j/Y');
 	}
 	
 	/////exit('<script>window.location.replace("Lawsuit.php")</script>');
@@ -25,6 +35,18 @@
 	<div class="card">
 					<div class="card-body">
 						<ul class="list-unstyled mb-0">
+							<li class="pt-2 py-0">
+								<h6><?php echo set_value('invoice_number'); ?></h6>
+							</li>	
+							<li id="invoice_number_list">
+								<?php echo $_SESSION['invoice_no']; ?> </h6>
+							</li>
+							<li class="pt-2 py-0">
+								<h6><?php echo set_value('invoice_date'); ?></h6>
+							</li>	
+							<li id="invoice_date_list">
+								<?php echo $invoiceDate; ?> </h6>
+							</li>
 							<li class="pt-2 py-0">
 								<h6><?php echo set_value('lsMasterCode'); ?></h6>
 							</li>

@@ -36,7 +36,11 @@ if (isset($_POST['getData'])) {
 	$OutStanding = set_value('OutStanding');
 	$paymentStatusVal = "";
 
+	$invoiceDate = date('n/j/Y');
+
 	include('get4setCurrency.php');
+
+	// print_r($_SESSION['invoice_no']);
 
 	foreach ($result as $value) {
 		if ($value['paymentStatus'] == 'FullPaid') {
@@ -54,7 +58,7 @@ if (isset($_POST['getData'])) {
 
 ?>
 		<tr>
-			<td><?php /*
+			<td class="d-flex"><?php /*
 			<div class="dropdown dropdown-action">
 				<a href="#" class=" btn-action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
 				
@@ -78,8 +82,25 @@ if (isset($_POST['getData'])) {
 			</div>
 			*/ ?>
 				<a href="javascript:viewLSDetailsPayment(<?php echo $value['lsMasterId'] . "," . $value['lsDetailsId']; ?>);" class="btn-action-icon me-2"><span><?php echo $currencyText; ?></span></a>
-
-
+				<?php
+				if (isset($_POST['getLawsuitInvoice'])) {
+				?>
+					<a href='javascript:printInvoiceModal(
+							"<?php echo $value['ls_code']; ?>",
+							"<?php echo $value['referenceNo']; ?>",
+							"<?php echo $value['lawsuitId']; ?>",
+							"<?php echo $value['lsTypeName_' . $language]; ?>",
+							"<?php echo $value['lsStateName_' . $language]; ?>",
+							"<?php echo $value['lsStagesName_' . $language]; ?>",
+							"<?php echo $value['lsDetailsId']; ?>",
+							"<?php echo $value['lsMasterId']; ?>"
+						);' class="btn-action-icon"><span><i class="fa fa-file-invoice"></i></span>
+					</a>
+					&nbsp;&nbsp;
+					<a href="javascript:printLawsuitInvoice(<?php echo $value['lsMasterId'] . "," . $value['lsDetailsId']; ?>);" class="btn-action-icon"><span><i class="fa fa-print"></i></span></a>
+				<?php
+				}
+				?>
 			</td>
 			<td> <?php echo $serial; ?> </td>
 
@@ -308,7 +329,7 @@ if (isset($_POST['getData'])) {
 									<td><?php echo $value[$typeName]; ?></td>
 									<!--<td style="background-color:<?php ///echo $value['lsColor']; 
 																	?>"><?php ///echo $value[$stateName]; 
-																			?></td> -->
+																		?></td> -->
 									<td style="color:<?php echo $value['lsColor']; ?>"><?php echo $value[$stateName]; ?></td>
 									<td><?php echo $value[$stagesName]; ?></td>
 									<td><?php echo $value['noofStages']; ?></td>
