@@ -40,8 +40,6 @@ if (isset($_POST['getData'])) {
 
 	include('get4setCurrency.php');
 
-	// print_r($_SESSION['invoice_no']);
-
 	foreach ($result as $value) {
 		if ($value['paymentStatus'] == 'FullPaid') {
 			$paymentStatus = "bg-success-light";
@@ -93,11 +91,17 @@ if (isset($_POST['getData'])) {
 							"<?php echo $value['lsStateName_' . $language]; ?>",
 							"<?php echo $value['lsStagesName_' . $language]; ?>",
 							"<?php echo $value['lsDetailsId']; ?>",
-							"<?php echo $value['lsMasterId']; ?>"
+							"<?php echo $value['lsMasterId']; ?>",
+							"<?php echo $value['lawsuitInvoiceNumber']; ?>"
 						);' class="btn-action-icon"><span><i class="fa fa-file-invoice"></i></span>
 					</a>
 					&nbsp;&nbsp;
-					<a href="javascript:printLawsuitInvoice(<?php echo $value['lsMasterId'] . "," . $value['lsDetailsId']; ?>);" class="btn-action-icon"><span><i class="fa fa-print"></i></span></a>
+					<a href='javascript:printLawsuitInvoice(
+							"<?php echo $value['lsMasterId']; ?>",
+							"<?php echo $value['lsDetailsId']; ?>",
+							"<?php echo $value['lawsuitInvoiceNumber']; ?>",
+							"<?php echo $value['ls_code']; ?>"
+						);' class="btn-action-icon"><span><i class="fa fa-print"></i></span></a>
 				<?php
 				}
 				?>

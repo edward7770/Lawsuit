@@ -111,37 +111,28 @@ function viewLSDetailsPayment(lsMId, lsDId) {
   // // creating the 'formresult' window with custom features prior to submitting the form
   // //window.open('test.html', 'formresult', 'scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no');
   // window.open('test.html', windowName);
-  $.ajax({
-    type: "POST",
-    url: "UpdateSessionInvoice.php",
-    data: {},
-    success: function (response) {
-      var result = JSON.parse(response);
-      if (result.status == "success") {
-        var form = document.createElement("form");
-        form.setAttribute("method", "post");
-        form.setAttribute("action", "LawsuitDetailPayment.php");
 
-        var hiddenField1 = document.createElement("input");
-        hiddenField1.setAttribute("name", "lsMId");
-        hiddenField1.setAttribute("value", lsMId);
-        hiddenField1.setAttribute("type", "hidden");
-        form.appendChild(hiddenField1);
+  var form = document.createElement("form");
+  form.setAttribute("method", "post");
+  form.setAttribute("action", "LawsuitDetailPayment.php");
 
-        var hiddenField2 = document.createElement("input");
-        hiddenField2.setAttribute("name", "lsDId");
-        hiddenField2.setAttribute("value", lsDId);
-        hiddenField2.setAttribute("type", "hidden");
-        form.appendChild(hiddenField2);
+  var hiddenField1 = document.createElement("input");
+  hiddenField1.setAttribute("name", "lsMId");
+  hiddenField1.setAttribute("value", lsMId);
+  hiddenField1.setAttribute("type", "hidden");
+  form.appendChild(hiddenField1);
 
-        // Append the form to the document body
-        document.body.appendChild(form);
+  var hiddenField2 = document.createElement("input");
+  hiddenField2.setAttribute("name", "lsDId");
+  hiddenField2.setAttribute("value", lsDId);
+  hiddenField2.setAttribute("type", "hidden");
+  form.appendChild(hiddenField2);
 
-        // Submit the form
-        form.submit();
-      }
-    },
-  });
+  // Append the form to the document body
+  document.body.appendChild(form);
+
+  // Submit the form
+  form.submit();
 
   // form.submit();
 }

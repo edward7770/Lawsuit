@@ -85,37 +85,27 @@ function viewLSDetails(lsMId, lsDId) {
   form.submit();
 }
 function viewLSDetailsPayment(lsMId, lsDId) {
-  $.ajax({
-    type: "POST",
-    url: "UpdateSessionInvoice.php",
-    data: {},
-    success: function (response) {
-      var result = JSON.parse(response);
-      if (result.status == "success") {
-        var form = document.createElement("form");
-        form.setAttribute("method", "post");
-        form.setAttribute("action", "LawsuitDetailPayment.php");
+  var form = document.createElement("form");
+  form.setAttribute("method", "post");
+  form.setAttribute("action", "LawsuitDetailPayment.php");
 
-        var hiddenField1 = document.createElement("input");
-        hiddenField1.setAttribute("name", "lsMId");
-        hiddenField1.setAttribute("value", lsMId);
-        hiddenField1.setAttribute("type", "hidden");
-        form.appendChild(hiddenField1);
+  var hiddenField1 = document.createElement("input");
+  hiddenField1.setAttribute("name", "lsMId");
+  hiddenField1.setAttribute("value", lsMId);
+  hiddenField1.setAttribute("type", "hidden");
+  form.appendChild(hiddenField1);
 
-        var hiddenField2 = document.createElement("input");
-        hiddenField2.setAttribute("name", "lsDId");
-        hiddenField2.setAttribute("value", lsDId);
-        hiddenField2.setAttribute("type", "hidden");
-        form.appendChild(hiddenField2);
+  var hiddenField2 = document.createElement("input");
+  hiddenField2.setAttribute("name", "lsDId");
+  hiddenField2.setAttribute("value", lsDId);
+  hiddenField2.setAttribute("type", "hidden");
+  form.appendChild(hiddenField2);
 
-        // Append the form to the document body
-        document.body.appendChild(form);
+  // Append the form to the document body
+  document.body.appendChild(form);
 
-        // Submit the form
-        form.submit();
-      }
-    },
-  });
+  // Submit the form
+  form.submit();
 }
 
 function newStage(lsMId, lsCode) {
@@ -323,8 +313,10 @@ function errorShow(jqXHR, exception) {
   }
 }
 
-function printLawsuitInvoice(lsMId, lsDId) {
-  var invoiceNumber = $("#invoice_number").val();
+function printLawsuitInvoice(lsMId, lsDId, invoiceNumber, lawsuitCode) {
+  if (invoiceNumber == "" || invoiceNumber == null) {
+    invoiceNumber = lawsuitCode.split("LS-")[1];
+  }
   var invoiceDate = $("#invoice_date").val();
 
   $.ajax({
@@ -410,6 +402,8 @@ function printInvoice() {
               printWindow.print();
               printWindow.close();
             }, 1000); // Adjust the delay as needed
+
+            getData();
           },
         });
       } else {
@@ -431,9 +425,14 @@ function printInvoiceModal(
   state,
   stage,
   lsDid,
-  lsMid
+  lsMid,
+  invoiceNumber
 ) {
-  var invoiceNumber = $("#invoice_number").val();
+  if (invoiceNumber == "" || invoiceNumber == null) {
+    invoiceNumber = lawsuitCode.split("LS-")[1];
+  }
+
+  // var invoiceNumber = $("#invoice_number").val();
   var invoiceDate = $("#invoice_date").val();
   $("#lawsuit_code").val(lawsuitCode);
   $("#lawsuit_reference_no").val(referenceNo);

@@ -23,17 +23,17 @@
 			exit($json =$errorInfo[2]);
 		}
 
-		$invoicequery="SELECT * FROM tbl_lawsuit_invoice ORDER BY invoiceId DESC LIMIT 1";
-		$stmt_invoice=$dbo->prepare($invoicequery);
-		if($stmt_invoice->execute())
-		{
-			$result_invoice = $stmt_invoice->fetchAll(PDO::FETCH_ASSOC);
-		}
-		else 
-		{
-			$errorInfo = $stmt_invoice->errorInfo();
-			exit($json =$errorInfo[2]);
-		}
+		// $invoicequery="SELECT * FROM tbl_lawsuit_invoice ORDER BY invoiceId DESC LIMIT 1";
+		// $stmt_invoice=$dbo->prepare($invoicequery);
+		// if($stmt_invoice->execute())
+		// {
+		// 	$result_invoice = $stmt_invoice->fetchAll(PDO::FETCH_ASSOC);
+		// }
+		// else 
+		// {
+		// 	$errorInfo = $stmt_invoice->errorInfo();
+		// 	exit($json =$errorInfo[2]);
+		// }
 		
 		if ($result)
 		{
@@ -45,11 +45,8 @@
 				$_SESSION['customerId']=$rsd['customerId'];
 				$_SESSION['empId']=$rsd['empId'];
 				$_SESSION['lang']="en";
-				if(count($result_invoice) > 0) {
-					$_SESSION['invoice_no']=$result_invoice[0]['invoiceNumber'];
-				} else {
-					$_SESSION['invoice_no']="00001";
-				}
+
+				$_SESSION['invoice_no']="00001";
 				echo "1";
 				if(empty($rsd['pageName']))
 					echo 'Dashboard';

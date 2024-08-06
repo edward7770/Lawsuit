@@ -8,8 +8,11 @@ $incrementedNumber = str_pad((int)$numericPart + 1, $invoiceNoLength, '0', STR_P
 $_SESSION['invoice_no'] = substr($_SESSION['invoice_no'], 0, -$invoiceNoLength) . $incrementedNumber;
 
 $dbo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
-$qry = "UPDATE tbl_lawsuit_invoice SET invoiceNumber=:invoiceNumber
-    WHERE invoiceId = (SELECT MAX(invoiceId) FROM tbl_lawsuit_invoice);";
+$qry = "UPDATE tbl_lawsuit_invoice   
+    SET invoiceNumber=:invoiceNumber
+    WHERE invoiceId = (  
+        SELECT max(invoiceId) FROM (SELECT invoiceId FROM tbl_lawsuit_invoice) AS temp_table  
+    );";
 $stmt = $dbo->prepare($qry);
 $stmt->bindParam(":invoiceNumber",$_SESSION['invoice_no'], PDO::PARAM_STR);
 

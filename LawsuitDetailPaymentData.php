@@ -18,6 +18,7 @@
 		{
 			$errorInfo = $stmt->errorInfo();
 			exit($json =$errorInfo[2]);
+			echo json_encode(['status'=>false, 'data'=>'error']);
 		}
 	
 	}

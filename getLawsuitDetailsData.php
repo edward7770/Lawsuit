@@ -39,7 +39,7 @@
 								<h6><?php echo set_value('invoice_number'); ?></h6>
 							</li>	
 							<li id="invoice_number_list">
-								<?php echo $_SESSION['invoice_no']; ?> </h6>
+								<?php echo $resultLawsuitDetails[0]['lawsuitInvoiceNumber']; ?> </h6>
 							</li>
 							<li class="pt-2 py-0">
 								<h6><?php echo set_value('invoice_date'); ?></h6>

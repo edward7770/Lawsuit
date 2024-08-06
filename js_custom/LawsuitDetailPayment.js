@@ -751,7 +751,6 @@ function printInvoice() {
       var result = JSON.parse(response);
       if (result.status == "success") {
         $('#invoice_number_list').html(invoiceNumber);
-        console.log(invoiceNumber);
         $('#invoice_number').html(invoiceNumber);
 
         $.ajax({

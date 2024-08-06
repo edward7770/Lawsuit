@@ -92,15 +92,15 @@ if (isset($_POST['action']) && $_POST['action'] == 'add') {
 }
 
 if (isset($_POST['action']) && $_POST['action'] == 'updateSessionInvoice') {
-	$qry = "INSERT INTO tbl_lawsuit_invoice(lsMasterId,lsDetailsId,invoiceNumber,invoiceDate) 
-		VALUES(:lsMasterId,:lsDetailsId,:invoiceNumber,:invoiceDate)";
+	$qry = "UPDATE tbl_lawsuit_master SET lawsuitInvoiceNumber=:invoiceNumber WHERE lsMasterId=:lsMasterId AND lsDetailId=:lsDetailsId";
 	$stmt = $dbo->prepare($qry);
 	$stmt->bindParam(":lsDetailsId", $_POST['isDid'], PDO::PARAM_INT);
 	$stmt->bindParam(":lsMasterId", $_POST['lsMId'], PDO::PARAM_INT);
 	$stmt->bindParam(":invoiceNumber", $_POST['invoiceNumber'], PDO::PARAM_STR);
-	$stmt->bindParam(":invoiceDate", $_POST['invoiceDate'], PDO::PARAM_STR);
 
+	$dbo->beginTransaction();
 	if ($stmt->execute()) {
+		$dbo->commit();
 		$_SESSION['invoice_no'] = $_POST['invoiceNumber'];
 		// Optionally return a success response
 		echo json_encode(['status' => 'success', 'invoice_no' => $_SESSION['invoice_no']]);
@@ -108,6 +108,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'updateSessionInvoice') {
 		$dbo->rollBack();
 		$errorInfo = $stmt->errorInfo();
 		errorMessage($json = $errorInfo[2]);
+		echo json_encode(['status' => 'error', 'message' => 'Update failed']);
 	}
 }
 
