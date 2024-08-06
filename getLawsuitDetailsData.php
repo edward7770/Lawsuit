@@ -40,10 +40,10 @@
 							</li>	
 							<li id="invoice_number_list">
 								<?php if($resultLawsuitDetails[0]['lawsuitInvoiceNumber'] == '' || $resultLawsuitDetails[0]['lawsuitInvoiceNumber'] == null) {
-									echo $resultLawsuitDetails[0]['lawsuitInvoiceNumber'];
-								} {
 									$parts = explode("LS-", $resultLawsuitDetails[0]['ls_code']);  
 									echo $parts[1];
+								} {
+									echo $resultLawsuitDetails[0]['lawsuitInvoiceNumber'];
 								}  ?> </h6>
 							</li>
 							<li class="pt-2 py-0">

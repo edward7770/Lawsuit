@@ -782,6 +782,8 @@ function printInvoice() {
               printWindow.print();
               printWindow.close();
             }, 1000); // Adjust the delay as needed
+
+            getData();
           },
         });
       } else {
