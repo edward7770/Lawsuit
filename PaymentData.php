@@ -79,7 +79,12 @@ if (isset($_POST['getData'])) {
 				</div>
 			</div>
 			*/ ?>
-				<a href="javascript:viewLSDetailsPayment(<?php echo $value['lsMasterId'] . "," . $value['lsDetailsId']; ?>);" class="btn-action-icon me-2"><span><?php echo $currencyText; ?></span></a>
+				<a href='javascript:viewLSDetailsPayment(
+							"<?php echo $value['lsMasterId']; ?>",
+							"<?php echo $value['lsDetailsId']; ?>",
+							"<?php echo $value['lawsuitInvoiceNumber']; ?>",
+							"<?php echo $value['ls_code']; ?>"
+						);' class="btn-action-icon me-2"><span><?php echo $currencyText; ?></span></a>
 				<?php
 				if (isset($_POST['getLawsuitInvoice'])) {
 				?>

@@ -84,7 +84,12 @@ function viewLSDetails(lsMId, lsDId) {
 
   form.submit();
 }
-function viewLSDetailsPayment(lsMId, lsDId) {
+function viewLSDetailsPayment(lsMId, lsDId, invoiceNumber, lawsuitCode) {
+  if (invoiceNumber == "" || invoiceNumber == null) {
+    invoiceNumber = lawsuitCode.split("LS-")[1];
+    $("#invoice_number_list").html(invoiceNumber);
+  }
+
   var form = document.createElement("form");
   form.setAttribute("method", "post");
   form.setAttribute("action", "LawsuitDetailPayment.php");
