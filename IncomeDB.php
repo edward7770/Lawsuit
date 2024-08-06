@@ -16,8 +16,8 @@
 		$qry="INSERT INTO tbl_income(incomeTypeId,customerId,lawyerId,description,incomeDate,amount,taxValue,totalIncomeAmount,incomeReceivedBy,isActive,createdDate,createdBy) 
 				VALUES(:incomeTypeId,:customerId,:lawyerId,:description,:incomeDate,:amount,:taxValue,:totalIncomeAmount,:incomeReceivedBy,1,now(),:createdBy)";
 		*/
-		$qry="INSERT INTO tbl_income(incomeTypeId,lsMasterId,description,incomeDate,amount,taxValue,taxAmount,totalIncomeAmount,incomeReceivedBy,isActive,createdDate,createdBy) 
-				VALUES(:incomeTypeId, :lsMasterId, :description,:incomeDate,:amount,:taxValue,:taxValueAmount,:totalIncomeAmount,:incomeReceivedBy,1,now(),:createdBy)";
+		$qry="INSERT INTO tbl_income(incomeTypeId,lsMasterId,description,incomeDate,amount,taxValue,taxAmount,totalIncomeAmount,incomeReceivedBy,invoiceNumber,isActive,createdDate,createdBy) 
+				VALUES(:incomeTypeId, :lsMasterId, :description,:incomeDate,:amount,:taxValue,:taxValueAmount,:totalIncomeAmount,:incomeReceivedBy,:invoiceNumber,1,now(),:createdBy)";
 		$stmt=$dbo->prepare($qry);
 		$stmt->bindParam(":incomeTypeId",$_POST['catId'],PDO::PARAM_INT);
 				$stmt->bindParam(":lsMasterId",$_POST['subCatId'],PDO::PARAM_INT);
@@ -30,6 +30,7 @@
 		$stmt->bindParam(":taxValueAmount",$_POST['taxAmount'],PDO::PARAM_STR);
 		$stmt->bindParam(":totalIncomeAmount",$_POST['totAmount'],PDO::PARAM_STR);
 		$stmt->bindParam(":incomeReceivedBy",$_POST['receivedBy'],PDO::PARAM_INT);
+		$stmt->bindParam(":invoiceNumber",$_POST['invoiceNumber'],PDO::PARAM_STR);
 		$stmt->bindParam(":createdBy",$_SESSION['username'],PDO::PARAM_STR);
 		if($stmt->execute())
 		{
@@ -45,7 +46,7 @@
 	if(isset($_POST['action']) && $_POST['action']=='getData' )
 	{
 		////$qry="SELECT incomeId AS id,incomeTypeId as catId,customerId AS subCatId,lawyerId,incomeDate,incomeReceivedBy,amount,taxValue,totalIncomeAmount,description FROM tbl_income WHERE isActive=1 AND incomeId=:incomeId";
-		$qry="SELECT incomeId AS id,incomeTypeId as catId, lsMasterId as subCatId,  incomeDate,incomeReceivedBy,amount,taxValue,taxAmount,totalIncomeAmount,description FROM tbl_income WHERE isActive=1 AND incomeId=:incomeId";
+		$qry="SELECT incomeId AS id,incomeTypeId as catId, lsMasterId as subCatId,invoiceNumber,  incomeDate,incomeReceivedBy,amount,taxValue,taxAmount,totalIncomeAmount,description FROM tbl_income WHERE isActive=1 AND incomeId=:incomeId";
 		$stmt=$dbo->prepare($qry);
 		$stmt->bindParam(":incomeId",$_POST['id'],PDO::PARAM_STR);
 		if($stmt->execute())
@@ -65,7 +66,7 @@
 	if(isset($_POST['action']) && $_POST['action']=='edit' )
 	{
 		////$qry="UPDATE tbl_income SET incomeTypeId=:incomeTypeId, customerId=:customerId,lawyerId=:lawyerId,description=:description, amount=:amount, taxValue=:taxValue,totalIncomeAmount=:totalIncomeAmount, incomeDate=:incomeDate, incomeReceivedBy=:incomeReceivedBy,  modifiedDate=NOW(), modifiedBy=:modifiedBy
-		$qry="UPDATE tbl_income SET incomeTypeId=:incomeTypeId,lsMasterId=:lsMasterId,description=:description, amount=:amount, taxValue=:taxValue, taxAmount=:taxValueAmount,  totalIncomeAmount=:totalIncomeAmount, incomeDate=:incomeDate, incomeReceivedBy=:incomeReceivedBy,  modifiedDate=NOW(), modifiedBy=:modifiedBy
+		$qry="UPDATE tbl_income SET incomeTypeId=:incomeTypeId,lsMasterId=:lsMasterId,description=:description, amount=:amount, taxValue=:taxValue, taxAmount=:taxValueAmount,  totalIncomeAmount=:totalIncomeAmount, incomeDate=:incomeDate, incomeReceivedBy=:incomeReceivedBy,invoiceNumber=:invoiceNumber  modifiedDate=NOW(), modifiedBy=:modifiedBy
 		WHERE incomeId=:incomeId";
 		$stmt=$dbo->prepare($qry);
 		$stmt->bindParam(":incomeTypeId",$_POST['catId'],PDO::PARAM_INT);
@@ -79,6 +80,7 @@
 		$stmt->bindParam(":totalIncomeAmount",$_POST['totAmount'],PDO::PARAM_STR);
 		$stmt->bindParam(":incomeDate",$_POST['date'],PDO::PARAM_STR);
 		$stmt->bindParam(":incomeReceivedBy",$_POST['receivedBy'],PDO::PARAM_INT);
+		$stmt->bindParam(":invoiceNumber",$_POST['invoiceNumber'],PDO::PARAM_STR);
 		$stmt->bindParam(":modifiedBy",$_SESSION['username'],PDO::PARAM_STR);
 		$stmt->bindParam(":incomeId",$_POST['id'],PDO::PARAM_INT);
 		if($stmt->execute())

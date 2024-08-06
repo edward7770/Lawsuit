@@ -137,6 +137,7 @@
 										<th><?php echo set_value('amountWithTax'); ?></th>												   
 										<th><?php echo set_value('expenseDate'); ?></th>												   
 										<th><?php echo set_value('expenseMode'); ?></th>
+										<th><?php echo set_value('invoiceNumber'); ?></th>
 										<th><?php echo set_value('remarks'); ?></th>
 									</tr>
 								</thead>
@@ -257,7 +258,14 @@
 								</div>
 							</div>
 						</div>
-						
+						<div class="col-md-4">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="invoiceNumber" class="form-label"><?php echo set_value('invoiceNumber'); ?></label>
+									<input type="text" class="form-control form-control-sm" id="invoiceNumber" placeholder="<?php echo set_value('invoiceNumber'); ?>" required>
+								</div>
+							</div>
+						</div>
 						
 					</div>
 					

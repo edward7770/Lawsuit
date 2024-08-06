@@ -6,7 +6,7 @@ if (isset($_POST['getData'])) {
 	}
 
 	$language = $_SESSION['lang'];
-	$qry = "SELECT expenseId,e.`expCatId` AS catId,m.`ls_code`,expenseDate,supplier, pm.name_$language AS expenseMode,amount,taxValue, taxAmount,totalExpAmount,remarks
+	$qry = "SELECT expenseId,e.`expCatId` AS catId,m.`ls_code`,expenseDate,supplier,invoiceNumber, pm.name_$language AS expenseMode,amount,taxValue, taxAmount,totalExpAmount,remarks
 	FROM tbl_expense e
 	LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=e.`lsMasterId`
 	LEFT JOIN `tbl_payment_mode` pm ON pm.`paymentModeId`=e.`expenseMode` AND pm.`isActive`=1
@@ -26,6 +26,8 @@ if (isset($_POST['getData'])) {
 			<td class="d-flex align-items-center">
 				<a href="#" class="btn-action-icon me-2" onclick="edit(<?php echo $value['expenseId']; ?>);"><span><i class="fe fe-edit"></i></span></a>
 				<a href="#" class="btn-action-icon" onclick="delModal(<?php echo $value['expenseId']; ?>);"><span><i class="fe fe-trash-2"></i></span></a>
+				&nbsp; &nbsp; 
+				<a href="#" class="btn-action-icon" onclick="printExpenseReceipt(<?php echo $value['expenseId']; ?>);"><span><i class="fa fa-print"></i></span></a>
 			</td>
 			<td> <?php echo $serial; ?> </td>
 			<td><?php if ($value['catId'] == 1) echo 'Lawsuit';
@@ -37,6 +39,7 @@ if (isset($_POST['getData'])) {
 			<td><?php echo number_format((float)$value['totalExpAmount'], $decimalplace); ?></td>
 			<td><?php echo $value['expenseDate']; ?></td>
 			<td><?php echo $value['expenseMode']; ?></td>
+			<td><?php echo $value['invoiceNumber']; ?></td>
 			<td><?php echo $value['remarks']; ?></td>
 		</tr>
 
@@ -88,7 +91,7 @@ if (isset($_POST['getData'])) {
 		}
 	}
 
-	$qry_expense = "SELECT expenseId,e.`expCatId` AS catId,m.`ls_code`,expenseDate,supplier, pm.name_$language AS expenseMode,amount,taxValue, taxAmount,totalExpAmount,remarks
+	$qry_expense = "SELECT expenseId,e.`expCatId` AS catId,m.`ls_code`,expenseDate,supplier,invoiceNumber, pm.name_$language AS expenseMode,amount,taxValue, taxAmount,totalExpAmount,remarks
 	FROM tbl_expense e
 	LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=e.`lsMasterId`
 	LEFT JOIN `tbl_payment_mode` pm ON pm.`paymentModeId`=e.`expenseMode` AND pm.`isActive`=1

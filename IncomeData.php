@@ -15,7 +15,7 @@ if(isset($_POST['getData']))
 	LEFT JOIN `tbl_employees` l ON l.`empId`=i.`incomeReceivedBy`
 	WHERE i.`isActive`=1";
 	*/
-	$qry="SELECT incomeId,incomeTypeId,i.lsMasterId,m.`ls_code`,l.empName_$language AS receivedBy,description,amount,taxValue,taxAmount,totalIncomeAmount,incomeDate
+	$qry="SELECT incomeId,incomeTypeId,i.lsMasterId,m.`ls_code`,l.empName_$language AS receivedBy,description,amount,taxValue,taxAmount,totalIncomeAmount,incomeDate,invoiceNumber
 	FROM tbl_income i
 	LEFT JOIN `tbl_employees` l ON l.`empId`=i.`incomeReceivedBy`
 	LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=i.`lsMasterId`
@@ -39,6 +39,8 @@ if(isset($_POST['getData']))
 		<td class="d-flex align-items-center">
 			<a href="#" class="btn-action-icon me-2" onclick="edit(<?php echo $value['incomeId']; ?>);"><span><i class="fe fe-edit"></i></span></a>
 			<a href="#" class="btn-action-icon" onclick="delModal(<?php echo $value['incomeId']; ?>);"><span><i class="fe fe-trash-2"></i></span></a>
+			&nbsp; &nbsp; 
+			<a href="#" class="btn-action-icon" onclick="printIncomeReceipt(<?php echo $value['incomeId']; ?>);"><span><i class="fa fa-print"></i></span></a>
 		</td>
 	<td> <?php echo $serial; ?> </td>
 		<td><?php if($value['incomeTypeId']==1) echo 'Lawsuit'; else echo 'General'; ?></td>
@@ -52,6 +54,7 @@ if(isset($_POST['getData']))
 		<td><?php echo setAmountDecimal($value['taxAmount']); ?></td>
 		<td><?php echo setAmountDecimal($value['totalIncomeAmount']); ?></td>
 		<td><?php echo $value['incomeDate']; ?></td>
+		<td><?php echo $value['invoiceNumber']; ?></td>
 		<td><?php echo $value['receivedBy']; ?></td>
 	</tr>
 	

@@ -86,6 +86,7 @@
 		var taxAmount=$('#taxValueAmount').val();
 		var totAmount=$('#amountWithTax').val();
 		var remarks=$('#remarks').val();
+		var invoiceNumber=$('#invoiceNumber').val();
 		var date=$('#date').val();
 		var mode=$('#mode').val();
 		
@@ -105,7 +106,7 @@
 			url: "ExpenseDB.php",
 			data: {
 				action:action,id:id,catId:catId,subCatId:subCatId,date:date,mode:mode,
-				amount:amount,remarks:remarks,supl:supl,tax:tax,taxAmount:taxAmount,totAmount:totAmount
+				amount:amount,remarks:remarks,supl:supl,tax:tax,taxAmount:taxAmount,totAmount:totAmount,invoiceNumber:invoiceNumber
 			},
 			success: function (data) {
 				console.log(data);
@@ -155,6 +156,7 @@
 						window.setTimeout( $('#supplier').val(this.supplier), 5000 ); // 5 seconds
 						$('#taxValue').val(this.taxValue);
 						$('#taxValueAmount').val(this.taxValueAmount);
+						$('#invoiceNumber').val(this.invoiceNumber);
 						
 						CalculateTax();
 						window.setTimeout( getSubCategory(this.subCatId), 5000 ); // 5 seconds
@@ -299,3 +301,32 @@ function getExpense()
 		}
 	});
 }
+
+function printExpenseReceipt(expenseId) {
+	$.ajax({
+	  type: "POST",
+	  url: "ExpenseReceiptPrint.php",
+	  data: {
+		expenseId: expenseId
+	  },
+	  success: function (data) {
+		// Open a new window for printing
+		var printWindow = window.open("", "_blank");
+		printWindow.document.write(
+		  "<html><head><title>&nbsp;</title></head><body>"
+		);
+  
+		// Write the received content to the print window
+		printWindow.document.write(data);
+  
+		printWindow.document.write("</body></html>");
+		printWindow.document.close();
+  
+		// Print the content after a short delay
+		setTimeout(function () {
+		  printWindow.print();
+		  printWindow.close();
+		}, 1000);
+	  },
+	});
+  }

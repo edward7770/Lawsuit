@@ -12,8 +12,8 @@
 	}
 	if(isset($_POST['action']) && $_POST['action']=='add' )
 	{
-		$qry="INSERT INTO tbl_expense(expCatId,lsMasterId,expenseDate,supplier,expenseMode,amount,taxValue,taxAmount,totalExpAmount,remarks,isActive,createdBy) 
-											VALUES(:expCatId,:lsMasterId,:expenseDate,:supplier,:expenseMode,:amount,:taxValue,:taxValueAmount,:totalExpAmount,:remarks,1,:createdBy)";
+		$qry="INSERT INTO tbl_expense(expCatId,lsMasterId,expenseDate,supplier,expenseMode,amount,taxValue,taxAmount,totalExpAmount,remarks,invoiceNumber,isActive,createdBy) 
+											VALUES(:expCatId,:lsMasterId,:expenseDate,:supplier,:expenseMode,:amount,:taxValue,:taxValueAmount,:totalExpAmount,:remarks,:invoiceNumber,1,:createdBy)";
 		$stmt=$dbo->prepare($qry);
 		$stmt->bindParam(":expCatId",$_POST['catId'],PDO::PARAM_INT);
 		$stmt->bindParam(":lsMasterId",$_POST['subCatId'],PDO::PARAM_INT);
@@ -25,6 +25,7 @@
 		$stmt->bindParam(":taxValueAmount",$_POST['taxAmount'],PDO::PARAM_STR);
 		$stmt->bindParam(":totalExpAmount",$_POST['totAmount'],PDO::PARAM_STR);
 		$stmt->bindParam(":remarks",$_POST['remarks'],PDO::PARAM_STR);
+		$stmt->bindParam(":invoiceNumber",$_POST['invoiceNumber'],PDO::PARAM_STR);
 		$stmt->bindParam(":createdBy",$_SESSION['username'],PDO::PARAM_STR);
 		if($stmt->execute())
 		{
@@ -39,7 +40,7 @@
 	}
 	if(isset($_POST['action']) && $_POST['action']=='getData' )
 	{
-		$qry="SELECT expenseId AS id,expCatId as catId,lsMasterId as subCatId,expenseDate,supplier,expenseMode,amount,taxValue,taxAmount,totalExpAmount,remarks FROM tbl_expense WHERE isActive=1 AND expenseId=:expenseId";
+		$qry="SELECT expenseId AS id,expCatId as catId,lsMasterId as subCatId,expenseDate,supplier,expenseMode,amount,taxValue,taxAmount,totalExpAmount,invoiceNumber,remarks FROM tbl_expense WHERE isActive=1 AND expenseId=:expenseId";
 		$stmt=$dbo->prepare($qry);
 		$stmt->bindParam(":expenseId",$_POST['id'],PDO::PARAM_STR);
 		if($stmt->execute())
@@ -58,7 +59,7 @@
 	
 	if(isset($_POST['action']) && $_POST['action']=='edit' )
 	{
-		$qry="UPDATE tbl_expense SET expCatId=:expCatId,lsMasterId=:lsMasterId, expenseDate=:expenseDate, expenseMode=:expenseMode, amount=:amount, supplier=:supplier,taxValue=:taxValue,taxAmount=:taxValueAmount, totalExpAmount=:totalExpAmount, remarks=:remarks, modifiedDate=NOW(), modifiedBy=:modifiedBy
+		$qry="UPDATE tbl_expense SET expCatId=:expCatId,lsMasterId=:lsMasterId, expenseDate=:expenseDate, expenseMode=:expenseMode, amount=:amount, supplier=:supplier,taxValue=:taxValue,taxAmount=:taxValueAmount, totalExpAmount=:totalExpAmount,invoiceNumber=:invoiceNumber, remarks=:remarks, modifiedDate=NOW(), modifiedBy=:modifiedBy
 		WHERE expenseId=:expenseId";
 		$stmt=$dbo->prepare($qry);
 		$stmt->bindParam(":expCatId",$_POST['catId'],PDO::PARAM_INT);
@@ -71,6 +72,7 @@
 		$stmt->bindParam(":taxValueAmount",$_POST['taxAmount'],PDO::PARAM_STR);
 		$stmt->bindParam(":totalExpAmount",$_POST['totAmount'],PDO::PARAM_STR);
 		$stmt->bindParam(":remarks",$_POST['remarks'],PDO::PARAM_STR);
+		$stmt->bindParam(":invoiceNumber",$_POST['invoiceNumber'],PDO::PARAM_STR);
 		$stmt->bindParam(":modifiedBy",$_SESSION['username'],PDO::PARAM_STR);
 		$stmt->bindParam(":expenseId",$_POST['id'],PDO::PARAM_INT);
 		if($stmt->execute())

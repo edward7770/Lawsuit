@@ -96,6 +96,7 @@ function add()
 	var desc=$('#description').val();
 	var date=$('#date').val();
 	var receivedBy=$('#receivedBy').val();
+	var invoiceNumber=$('#invoiceNumber').val();
 	var id=$('#id').val();
 	////if(!catId || subCatId=='' || lawyerId=='' || !date || !receivedBy || !amount || !totAmount || !tax || !id)
 	if(!catId || !date || !receivedBy || !amount || !totAmount || !tax || !id)
@@ -113,7 +114,7 @@ function add()
 		url: "IncomeDB.php",
 		data: {
 			action:action,id:id,catId:catId, subCatId:subCatId,date:date,
-			receivedBy:receivedBy,amount:amount,tax:tax, taxAmount:taxAmount,totAmount:totAmount,desc:desc
+			receivedBy:receivedBy,amount:amount,tax:tax, taxAmount:taxAmount,totAmount:totAmount,desc:desc, invoiceNumber:invoiceNumber
 		},
 		success: function (data) {
 			console.log(data);
@@ -152,6 +153,7 @@ function edit(id)
 					$('#catId').val(this.catId).change();
 					$('#taxValue').val(this.taxValue);
 					$('#taxValueAmount').val(this.taxValueAmount);
+					$('#invoiceNumber').val(this.invoiceNumber);
 					////window.setTimeout( getSubCategory(this.subCatId), 5000 ); // 5 seconds
 					/////window.setTimeout( getLawyer(this.lawyerId), 5000 ); // 5 seconds
 					CalculateTax();
@@ -385,3 +387,32 @@ function getSubCategory(subCatId)
 		}
 	});
 }
+
+function printIncomeReceipt(incomeId) {
+	$.ajax({
+	  type: "POST",
+	  url: "IncomeReceiptPrint.php",
+	  data: {
+		incomeId: incomeId
+	  },
+	  success: function (data) {
+		// Open a new window for printing
+		var printWindow = window.open("", "_blank");
+		printWindow.document.write(
+		  "<html><head><title>&nbsp;</title></head><body>"
+		);
+  
+		// Write the received content to the print window
+		printWindow.document.write(data);
+  
+		printWindow.document.write("</body></html>");
+		printWindow.document.close();
+  
+		// Print the content after a short delay
+		setTimeout(function () {
+		  printWindow.print();
+		  printWindow.close();
+		}, 1000);
+	  },
+	});
+  }
