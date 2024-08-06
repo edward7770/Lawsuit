@@ -39,7 +39,12 @@
 								<h6><?php echo set_value('invoice_number'); ?></h6>
 							</li>	
 							<li id="invoice_number_list">
-								<?php echo $resultLawsuitDetails[0]['lawsuitInvoiceNumber']; ?> </h6>
+								<?php if($resultLawsuitDetails[0]['lawsuitInvoiceNumber'] == '' || $resultLawsuitDetails[0]['lawsuitInvoiceNumber'] == null) {
+									echo $resultLawsuitDetails[0]['lawsuitInvoiceNumber'];
+								} {
+									$parts = explode("LS-", $resultLawsuitDetails[0]['ls_code']);  
+									echo $parts[1];
+								}  ?> </h6>
 							</li>
 							<li class="pt-2 py-0">
 								<h6><?php echo set_value('invoice_date'); ?></h6>
