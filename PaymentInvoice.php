@@ -303,7 +303,8 @@
 				
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary " data-bs-dismiss="modal"><?php echo set_value('close'); ?></button>&nbsp; 
-					<input class="btn btn-primary" type="submit" id='submit' value="<?php echo set_value('print'); ?>" />
+					<input class="btn btn-primary" type="button" onclick="saveInvoice()" value="<?php echo set_value('save'); ?>" />
+					<input class="btn btn-primary" type="submit" style="margin-left: 5px;" id='submit' value="<?php echo set_value('print'); ?>" />
 					<input type='hidden' id='lawsuit_detail_id'>
                     <input type='hidden' id='lawsuit_master_id'>
 				</div>

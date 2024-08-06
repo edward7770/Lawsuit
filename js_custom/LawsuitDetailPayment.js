@@ -355,8 +355,7 @@ function updateContract() {
   var lsMId = $("#lsMId").val();
   var termEn = $("#ContractTermsEn").summernote("code");
   var termAr = $("#ContractTermsAr").summernote("code");
-  var stage = $("#stage").val();
-
+  var stage = $("#contract_stage").val();
   if (
     !amountContract ||
     !taxValue ||
@@ -842,6 +841,34 @@ function printExcelPaymentReport() {
     data: { lsMId: lsMId, lsDId: lsDId },
     success: function (data) {
       // console.log('123123123');
+    },
+  });
+}
+
+function saveInvoice() {
+  var isMid = $("#lsMId").val();
+  var isDid = $("#lsDId").val();
+  var invoiceNumber = $("#form_invoice_number").val();
+  var invoiceDate = $("#form_invoice_date").val();
+
+  $.ajax({
+    type: "POST",
+    url: "LawsuitDetailPaymentDB.php",
+    data: {action: "updateSessionInvoice", lsMId: isMid, isDid: isDid, invoiceNumber: invoiceNumber, invoiceDate: invoiceDate },
+    success: function (response) {
+      var result = JSON.parse(response);
+      if (result.status == "success") {
+        $('#invoice_number_list').html(invoiceNumber);
+        $('#invoice_number').html(invoiceNumber);
+        $("#LawsuitPrintModal").modal("toggle");
+        getData();
+      } else {
+        // Handle the error response
+        alert("Error updating session: " + result.message);
+      }
+    },
+    error: function () {
+      alert("Error communicating with the server.");
     },
   });
 }

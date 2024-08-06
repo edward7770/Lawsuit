@@ -463,11 +463,11 @@
 				
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary " data-bs-dismiss="modal"><?php echo set_value('close'); ?></button>&nbsp; 
-					<input class="btn btn-primary" type="submit" id='submit' value="<?php echo set_value('print'); ?>" />
+					<input class="btn btn-primary" type="button" onclick="saveInvoice()" value="<?php echo set_value('save'); ?>" />
+					<input class="btn btn-primary" style="margin-left: 5px;" type="submit" id='submit' value="<?php echo set_value('print'); ?>" />
 					<input type='hidden' value='0' id='id'>
 				</div>
 			</form>
-			
 		</div>
 	</div>
 </div>
@@ -487,7 +487,7 @@
 							<div class="mb-4">
 								<div class="form-group">
 									<label for="stage" class="form-label"><?php echo set_value('stage'); ?><span class="text-danger"> * </span></label>
-									<select class="form-control js-example-basic-single form-small select" id='stage' required>
+									<select class="form-control js-example-basic-single form-small select" id='contract_stage' required>
 										<option value=""> <?php echo set_value("select"); ?></option>
 										<?php include('dropdown_LawsuitStagesContract.php'); ?>
 									</select>
