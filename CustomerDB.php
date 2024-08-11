@@ -54,13 +54,13 @@
 		
 		$qry="INSERT INTO `tbl_customers`(custTypeId,customerName_en,customerName_ar,
 			idPassportNo,passportNoFilePath,passportNoFileName,
-			crNo,crNoFilePath,crNoFileName,cityId,address,postBox,mobileNo,
+			crNo,crNoFilePath,crNoFileName,vatNumber,cityId,address,postBox,mobileNo,
 			customerEmail,nationalityId,endDateAgency,agencyFilePath,
 			agencyFileName,notes,isActive,createdBy)
 		
 			VALUES (:custTypeId,:customerName_en,:customerName_ar,
 			:idPassportNo,:passportNoFilePath,:passportNoFileName,
-			:crNo,:crNoFilePath,:crNoFileName,:cityId,:address,:postBox,:mobileNo,
+			:crNo,:crNoFilePath,:crNoFileName,:vatNumber,:cityId,:address,:postBox,:mobileNo,
 			:customerEmail,:nationalityId,:endDateAgency,:agencyFilePath,
 			:agencyFileName,:notes,1,:createdBy)";
 			
@@ -73,6 +73,7 @@
 			$stmt->bindParam(":crNo",$postData['crNo'],PDO::PARAM_NULL);
 		else 
 			$stmt->bindParam(":crNo",$postData['crNo'],PDO::PARAM_STR);
+		$stmt->bindParam(":vatNumber",$postData['vatNumber'],PDO::PARAM_INT);
 		$stmt->bindParam(":cityId",$postData['city'],PDO::PARAM_INT);
 		$stmt->bindParam(":address",$postData['address'],PDO::PARAM_STR);
 		$stmt->bindParam(":postBox",$postData['postBox'],PDO::PARAM_STR);

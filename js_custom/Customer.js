@@ -39,6 +39,7 @@ function addCustomer()
 	else 
 		var action="Add";
 	var custTypeId=$('#custTypeId').val();
+
 	var customerData = {
 		"action":action,
 		"id":id,
@@ -46,6 +47,7 @@ function addCustomer()
 		"nameEn":$('#nameEn').val(),
 		"custTypeId":custTypeId,
 		"passportNo":$('#passportNo').val(),
+		"vatNumber":$('#vatNumber').val(),
 		"crNo":$('#crNo').val(),
 		"city":$('#city').val(),
 		"address":$('#address').val(),
@@ -278,6 +280,7 @@ $("body").on("change","#custTypeId",function(){
 		$('#divCrNo').show();
 		$('#divCrCopy').show();
 		$('#divIdCopy').hide();
+		$('#divVatNumber').show();
 	}
 	else if(this.value==2)
 	{
@@ -287,6 +290,7 @@ $("body").on("change","#custTypeId",function(){
 		$('#divCrNo').hide();
 		$('#divCrCopy').hide();
 		$('#divIdCopy').show();
+		$('#divVatNumber').hide();
 	}
 	else 
 	{
@@ -294,5 +298,6 @@ $("body").on("change","#custTypeId",function(){
 		$('#divCrCopy').hide();
 		$('#divIdCopy').hide();
 		$('#divPassportNo').hide();
+		$('#divVatNumber').hide();
 	}
 });

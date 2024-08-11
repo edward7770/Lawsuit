@@ -23,17 +23,17 @@
 			exit($json =$errorInfo[2]);
 		}
 
-		// $invoicequery="SELECT * FROM tbl_lawsuit_invoice ORDER BY invoiceId DESC LIMIT 1";
-		// $stmt_invoice=$dbo->prepare($invoicequery);
-		// if($stmt_invoice->execute())
-		// {
-		// 	$result_invoice = $stmt_invoice->fetchAll(PDO::FETCH_ASSOC);
-		// }
-		// else 
-		// {
-		// 	$errorInfo = $stmt_invoice->errorInfo();
-		// 	exit($json =$errorInfo[2]);
-		// }
+		$paymentquery="SELECT * FROM tbl_lawsuit_payment ORDER BY lsPaymentId DESC LIMIT 1";
+		$stmt_payment=$dbo->prepare($paymentquery);
+		if($stmt_payment->execute())
+		{
+			$result_payment = $stmt_payment->fetchAll(PDO::FETCH_ASSOC);
+		}
+		else 
+		{
+			$errorInfo = $stmt_payment->errorInfo();
+			exit($json =$errorInfo[2]);
+		}
 		
 		if ($result)
 		{
@@ -47,6 +47,7 @@
 				$_SESSION['lang']="en";
 
 				$_SESSION['invoice_no']="00001";
+				$_SESSION['receipt_no']="001";
 				echo "1";
 				if(empty($rsd['pageName']))
 					echo 'Dashboard';

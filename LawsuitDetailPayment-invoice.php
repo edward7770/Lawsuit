@@ -42,7 +42,7 @@
 		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		$stmt->closeCursor();
 	}
-	else 
+	else
 	{
 		$errorInfo = $stmt->errorInfo();
 		exit($json =$errorInfo[2]);
@@ -71,14 +71,14 @@
 
 	if(isset($_POST['lsDid']))
 	{
-		$query="call LawsuitDetailsData(:lsDetailId)"; 
+		$query="CALL sp_getLawsuitDetails('" . $language . "'," . $_SESSION['customerId'] . ",-1,-1,-1)";
 		$stmt_lawsuitdetails=$dbo->prepare($query);
-		$stmt_lawsuitdetails->bindParam(":lsDetailId",$_POST['lsDid'],PDO::PARAM_INT);
+		// $stmt_lawsuitdetails->bindParam(":lsDetailId",$_POST['lsDid'],PDO::PARAM_INT);
 		if($stmt_lawsuitdetails->execute())
 		{
 			$resultLawsuitDetails = $stmt_lawsuitdetails->fetchAll(PDO::FETCH_ASSOC);
-			$customerArray=explode (",", $resultLawsuitDetails[0]['custName']);
-			$opponentArray=explode (",", $resultLawsuitDetails[0]['OpponentsName']);
+			// $customerArray=explode (",", $resultLawsuitDetails[0]['custName']);
+			// $opponentArray=explode (",", $resultLawsuitDetails[0]['OpponentsName']);
 			$stmt_lawsuitdetails->closeCursor();
 		}
 		else 
@@ -87,7 +87,7 @@
 			exit($json =$errorInfo[2]);
 		}
 	}
-
+	// print_r($resultLawsuitDetails);
 	$min = 0;
 	$max = 500000;
 	$randomNumber = rand($min, $max);
@@ -100,7 +100,7 @@
 	$serial=1;
 	$serial_contract=1;
 	if(isset($_POST['lsMId'])) {
-		$qry_getpaymentdata="SELECT lsPaymentId, m.`ls_code`, s.lsStagesName_$language as lsStagesName , d.`lawsuitId`,
+		$qry_getpaymentdata="SELECT lsPaymentId, m.`ls_code`, s.lsStagesName_$language as lsStagesName , d.`lawsuitId`, e.empName_$language as empName_$language,
 			DATE_FORMAT(paymentDate,'%d-%b-%y') paymentDate, pm.name_$language as paymentMode, amount, remarks,
 			(CASE WHEN IFNULL(m.`isPaidAll`,0)=0 THEN 'Current Stage' ELSE 'Full Stages' END) 
 				paymentStatus_en,
@@ -110,6 +110,8 @@
 			LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=l.`lsMasterId`
 			LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=l.`lsStageId`
 			LEFT JOIN `tbl_lawsuit_details` d ON d.`lsMasterId`=m.`lsMasterId`
+			LEFT JOIN `tbl_lawsuit_lawyer` ll ON ll.`lsDetailId`=d.`lsDetailsId`
+			LEFT JOIN `tbl_employees` e ON e.`empId`=ll.`empId`
 			LEFT JOIN `tbl_payment_mode` pm ON pm.`paymentModeId`=l.`paymentMode`
 			WHERE l.isActive=1 AND m.`isActive`=1
 			AND d.`lsMasterId`=:lsMasterId GROUP BY l.`lsPaymentId` ";
@@ -127,7 +129,7 @@
 		}
 
 
-		$qry_getcontractdata="SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,`lsStageId`, s.lsStagesName_$language as lsStagesName,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractEn`, `contractAr`, `contractFilePath`, c.`isActive` FROM `tbl_lawsuit_contract` c 
+		$qry_getcontractdata="SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,`lsStageId`, s.lsStagesName_$language as lsStagesName,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractEn`, `contractAr`, `contractFilePath`, c.`isActive`, c.`remarks` FROM `tbl_lawsuit_contract` c 
 		LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=c.`lsMasterId`
 		LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=c.`lsStageId`
 		WHERE c.`isActive`=1 AND c.`lsMasterId`=:lsMasterId";
@@ -167,6 +169,9 @@
 		<div class="container">
 			<div class="invoice-wrapper download_section">
 				<div class="inv-content">
+					<div class="invoice-header" style="padding: 20px;">
+						<div class="invoice-title" style="color: #2c3038; font-size: 24px; font-weight: 700;"><?php echo set_value('tax_invoice'); ?></div>
+					</div>
 					<div class="invoice-header">
 		                <div class="inv-header-left">
 		                	 <a href="#">
@@ -174,11 +179,11 @@
 		                	</a> 
 		                </div>
 		                <div class="inv-header-right">
-		                	<div class="invoice-title">
-								<?php echo set_value('lawsuit_invoice'); ?>
-							</div>
-			               	<div class="inv-details">
-			               		<div class="inv-date">
+		                	<!-- <div class="invoice-title">
+								<?php echo set_value('tax_invoice'); ?>
+							</div> -->
+			               	<div class="inv-details" style="display: block;">
+			               		<div class="inv-date" style="margin-right: 0px;">
 								   <?php echo set_value('date'); ?>: <span><?php echo $_POST['invoiceDate'] ?></span>
 								</div>
 								<div class="inv-date">
@@ -188,7 +193,7 @@
 		                </div>					    
 				    </div>
 					<div class="mt-2" <?php if ($language === 'ar') echo 'style="margin-right: 30px;"'; else echo 'style="margin-left: 30px;"';  ?>>
-						<h6 class="company-name mt-3"><?php echo set_value('company_name'); ?></h6>
+						<!-- <h6 class="company-name mt-3"><?php echo set_value('company_name'); ?></h6> -->
 					</div>
 				    <div class="invoice-address">
 						<!-- <h6 class="company-name mt-3"><?php echo($result_lawyerdata[0]['empName']) ?></h6> -->
@@ -205,11 +210,14 @@
 						</div> -->
 						<!-- <hr/> -->
 				    	<div class="company-details d-flex flex-wrap">
+							<div class="gst-details col-12 d-flex">
+								<b><?php echo set_value('vat_number'); ?></b>:<span>&nbsp;<?php if(!empty($resultLawsuitDetails[0]['vatNumber'])) echo $resultLawsuitDetails[0]['vatNumber']; else echo '-'; ?></span>
+				    		</div>
 							<div class="gst-details col-6 d-flex">
 				    			<b><?php echo set_value('lsMasterCode'); ?></b>: <span style="color: red;">&nbsp;<?php echo $resultLawsuitDetails[0]['ls_code']; ?></span>
 				    		</div>
 				    		<div class="gst-details col-6 d-flex">
-								<b><?php echo set_value('referenceNo'); ?></b>: <span>&nbsp;<?php if(empty($resultLawsuitDetails[0]['referenceNo'])) echo "-"; else echo $resultLawsuitDetails[0]['referenceNo']; ?></span>
+								<b><?php echo set_value('employeeName'); ?></b>: <span>&nbsp;<?php echo($resultLawsuitDetails[0]['empName_' . $language]); ?></span>
 				    		</div>
 							<div class="gst-details col-6 d-flex">
 								<b><?php echo set_value('lawsuitId'); ?></b>: <span>&nbsp;<?php if(empty($resultLawsuitDetails[0]['lawsuitId'])) echo "-"; else echo $resultLawsuitDetails[0]['lawsuitId']; ?></span>
@@ -227,65 +235,14 @@
 								<b>Subject</b>: <span>&nbsp;<?php if(!empty($resultLawsuitDetails[0]['lsSubject'])) echo $resultLawsuitDetails[0]['lsSubject']; else echo '-'; ?></span>
 				    		</div> -->
 							<div class="gst-details col-6 mb-0 d-flex">
-								<b><?php echo set_value('customer'); ?></b>: &nbsp;<?php 
-									foreach($customerArray as $row)
-									{
-										echo '<span>'.$row.'</span><br>';
-									}
-								?></span>
+								<b><?php echo set_value('customer'); ?></b>:<span>&nbsp;<?php echo $resultLawsuitDetails[0]['customerName']; ?></span>
 				    		</div>
 							<div class="gst-details col-6 mb-0 d-flex">
-								<b><?php echo set_value('opponent'); ?></b>:&nbsp;<?php 
-									foreach($opponentArray as $row)
-									{
-										echo '<span>'.$row.'</span><br>';
-									}
-								?>
+								<b><?php echo set_value('opponent'); ?></b>:<span>&nbsp;<?php echo $resultLawsuitDetails[0]['oppoName']; ?></span>
 				    		</div>
-				    	</div>				    	
+				    	</div>
 				    </div>
-				    <div class="invoice-table mt-3">
-						<p class="mb-1"><?php echo set_value('paymentDetails'); ?></p>
-				    	<div class="table-responsive">
-			                <table>
-								<thead>
-									<tr>
-										<th class="table_width_1">#</th>
-										<!-- <th><?php echo set_value('lsMasterCode'); ?></th> -->
-										<th><?php echo set_value('stage'); ?></th>
-										<!-- <th><?php echo set_value('invoiceNumber'); ?></th> -->
-										<th><?php echo set_value('paymentDate'); ?></th>
-										<th><?php echo set_value('paymentMode'); ?></th>												   
-										<th><?php echo set_value('paidAmount'); ?></th>
-										<th><?php echo set_value('remarks'); ?></th>
-										<th><?php echo set_value('paidStatus'); ?></th>
-									</tr>
-								</thead>
-			                  <tbody>
-									<?php 
-										foreach ($result_paymentdata as $value) {
-											$paidAmount += $value['amount'];
-											?>
-												<tr>
-													<td> <?php echo $serial; ?> </td>
-													<!-- <td><?php echo $value['ls_code']; ?></td> -->
-													<td><?php echo $value['lsStagesName']; ?></td>
-													<!-- <td><?php echo $value['invoiceNumber']; ?></td> -->
-													<td><?php echo $value['paymentDate']; ?></td>
-													<td><?php echo $value['paymentMode']; ?></td>
-													<td><?php echo setAmountDecimal($value['amount']); ?></td>
-													<td><?php echo $value['remarks']; ?></td>
-													<td><?php echo $value['paymentStatus_'.$language]; ?></td>
-													
-												</tr>
-											<?php
-											$serial++;
-										}
-									?>
-			                  </tbody>
-			                </table>			               
-			            </div>
-				    </div>
+				    
 					<div class="invoice-table mt-3">
 						<p class="mb-1"><?php echo set_value('contractDetails'); ?></p>
 				    	<div class="table-responsive">
@@ -297,6 +254,7 @@
 										<th><?php echo set_value('paymentAmount'); ?></th>
 										<th><?php echo set_value('taxValueAmount'); ?></th>
 										<th><?php echo set_value('contractAmountIncludingTax'); ?></th>
+										<th><?php echo set_value('remarks'); ?></th>
 									</tr>
 								</thead>
 			                  <tbody>
@@ -310,6 +268,7 @@
 													<td><?php echo setAmountDecimal($value['amount']); ?></td>
 													<td><?php echo setAmountDecimal($value['taxAmount']); ?></td>
 													<td><?php echo setAmountDecimal($value['totalAmount']); ?></td>
+													<td><?php echo $value['remarks']; ?></td>
 												</tr>
 											<?php
 											$serial_contract++;
@@ -323,20 +282,29 @@
 				    	<div class="table-footer-left"></div>
 				    	<div class="text-end table-footer-right">
 			                <table>
-				                <tbody>
-				                   <tr>
-				                      <td style="'color: black !important; font-size: 16px;"><b><?php echo set_value('paidAmount'); ?></b>:</td>
-				                      <td style="'color: black;"><?php echo $paidAmount; ?></td>
+								<tbody>
+									<tr>
+									  <td style="'color: black;"><b style="font-size: 18px;"><?php echo set_value('totalAmount'); ?></b>:</td>
+									  <td style="'color: black;"><span style="font-size: 18px;"><?php echo $totalAmount; ?></span></td>
+									</tr>				                    
+				                   <!-- <tr>
+				                      <td style="'color: black !important;"><b style="font-size: 18px;"><?php echo set_value('paidAmount'); ?></b>:</td>
+				                      <td style="'color: black;"><span style="font-size: 18px;"><?php echo $paidAmount; ?></span></td>
 				                    </tr>
 				                    <tr>
-				                      <td style="'color: black; font-size: 16px;"><b><?php echo set_value('dueAmount'); ?></b>:</td>
-				                      <td style="'color: black;"><?php echo $totalAmount - $paidAmount; ?></td>
-				                    </tr>				                    
+				                      <td style="'color: black;"><b style="font-size: 18px;"><?php echo set_value('dueAmount'); ?></b>:</td>
+				                      <td style="'color: black;"><span style="font-size: 18px;"><?php echo $totalAmount - $paidAmount; ?></span></td>
+				                    </tr>		 -->
 				                </tbody>
 				            </table>
 			            </div> 
 				    </div>
-				    <div class="invoice-table-footer mb-5">
+					<div class="invoice-address" style="margin-top: 150px; display:block;">
+						<p style="font-size: 24px;"><b><?php echo set_value('officeName'); ?></b></p>
+						<p class="mt-3" style="font-size: 18px;"><?php echo set_value('signature'); ?></p>
+						<p style="font-size: 18px; text-align:right;"><?php echo set_value('receivedBy'); ?></p>
+					</div>
+				    <!-- <div class="invoice-table-footer mb-5">
 			            <div class="table-footer-left" style="opacity: 0">       
                             <p class="total-info">Total Items / Qty : 4 / 4.00</p>
 			            </div>
@@ -350,7 +318,7 @@
 				                </tbody>
 				            </table>
 			            </div>			                           	
-			        </div>
+			        </div> -->
 			        <!-- <div class="total-amountdetails">
 			        	<p>Total amount ( in words): <span>$  One Thousand Six Hundred Fifteen  Only.</span></p>
 			        </div> -->

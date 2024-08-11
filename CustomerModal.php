@@ -107,6 +107,14 @@ else
 							</div>
 						</div>
 					</div>
+					<div class="col-md-4" id='divVatNumber' style='display:none'>
+						<div class="mb-3">
+							<div class="form-group">
+								<label for="vatNumber" class="form-label"><?php echo set_value("vat_number"); ?></label>
+								<input type="text" class="form-control form-control-sm" id="vatNumber" placeholder="<?php echo set_value("vat_number"); ?>">
+							</div>
+						</div>
+					</div>
 				</div>
 				
 				<div class="row">	

@@ -24,7 +24,7 @@
 		$errorInfo = $stmt->errorInfo();
 		exit($json =$errorInfo[2]);
 	}
-	////print_r($result);
+	// print_r($result);
 	function set_value($val)
 	{
 		foreach($GLOBALS['result'] as $value)
@@ -219,8 +219,10 @@
 										<th>#</th>
 										<th><?php echo set_value('lsMasterCode'); ?></th>
 										<th><?php echo set_value('customer'); ?></th>
+										<th><?php echo set_value('opponentName'); ?></th>
 										<th><?php echo set_value('lawsuitLawyer'); ?></th>
 										<th><?php echo set_value('lawsuits_Type'); ?></th>
+										<th><?php echo set_value('lawsuitLocation'); ?></th>
 										<th><?php echo set_value('state'); ?></th>
 										<th><?php echo set_value('stage'); ?></th>
 										<th><?php echo set_value('noOfStages'); ?></th>

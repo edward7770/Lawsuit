@@ -161,9 +161,12 @@
 										<th><?php echo set_value('action'); ?></th>
 										<th>#</th>
 										<th><?php echo set_value('lsMasterCode'); ?></th>
+										<!-- <th><?php echo set_value('invoice_number'); ?></th> -->
 										<th><?php echo set_value('customer'); ?></th>
+										<th><?php echo set_value('opponentName'); ?></th>
 										<th><?php echo set_value('lawsuitLawyer'); ?></th>
 										<th><?php echo set_value('lawsuits_Type'); ?></th>
+										<th><?php echo set_value('lawsuitLocation'); ?></th>
 										<th><?php echo set_value('state'); ?></th>
 										<th><?php echo set_value('stage'); ?></th>
 										<th><?php echo set_value('noOfStages'); ?></th>

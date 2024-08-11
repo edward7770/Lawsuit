@@ -332,7 +332,7 @@
 							<div class="mb-4">
 								<div class="form-group">
 									<label for="invoiceNumber" class="form-label"><?php echo set_value('invoiceNumber'); ?></label>
-									<input type="text" class="form-control form-control-sm" id="invoiceNumber" placeholder="<?php echo set_value('invoiceNumber'); ?>">
+									<input type="text" class="form-control form-control-sm" id="invoiceNumber" value="<?php echo $_SESSION['receipt_no']; ?>" placeholder="<?php echo set_value('invoiceNumber'); ?>">
 								</div>
 							</div>
 						</div>

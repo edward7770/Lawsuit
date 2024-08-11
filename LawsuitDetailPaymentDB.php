@@ -64,6 +64,12 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 
 
 if (isset($_POST['action']) && $_POST['action'] == 'add') {
+	$_SESSION['receipt_no'] = $_POST['invoiceNumber'];
+	$invoiceNoLength = strlen($_SESSION['receipt_no']);
+	$numericPart = substr($_SESSION['receipt_no'], -$invoiceNoLength);
+	$incrementedNumber = str_pad((int)$numericPart + 1, $invoiceNoLength, '0', STR_PAD_LEFT);
+	$_SESSION['receipt_no'] = substr($_SESSION['receipt_no'], 0, -$invoiceNoLength) . $incrementedNumber;
+
 	$qry = "INSERT INTO tbl_lawsuit_payment(lsStageId,lsMasterId,lsDetailsId,paymentDate,paymentMode,amount,invoiceNumber,remarks,isActive,createdBy) 
 					VALUES(:lsStageId,:lsMasterId,:lsDetailsId,:paymentDate,:paymentMode,:amount,:invoiceNumber,:remarks,1,:createdBy)";
 
@@ -615,8 +621,7 @@ function updatePaidStatus($dbo)
 
 	if ($tbl_lawsuit_details && $tbl_lawsuit_master) {
 		$dbo->commit();
-		echo get_lang_msg('modified_successfully');
-		exit('1');
+		echo json_encode(['message' => get_lang_msg('modified_successfully').'1', 'receiptNo' => $_SESSION['receipt_no']]) ;
 	} else {
 		$dbo->rollBack();
 		echo get_lang_msg('errorMessage');

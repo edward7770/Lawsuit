@@ -114,12 +114,15 @@ if (isset($_POST['getData'])) {
 			<td> <?php echo $serial; ?> </td>
 
 			<td> <?php /* <a href="javascript:viewLSDetails(<?php echo $value['lsMasterId'].",".$value['lsDetailsId']; ?>);" ><?php echo $value['ls_code']; ?>  </a> */ echo $value['ls_code']; ?> </td>
+			<!-- <td> <?php echo $value['lawsuitInvoiceNumber']; ?> </td> -->
 			<td> <?php echo $value['customerName']; ?> </td>
+			<td> <?php echo $value['oppoName']; ?> </td>
 			<td> <?php echo $value['empName_' . $language]; ?> </td>
 			<td><?php echo $value[$typeName]; ?></td>
 			<!--<td style="background-color:<?php ///echo $value['lsColor']; 
 											?>"><?php ///echo $value[$stateName]; 
 												?></td> -->
+			<td><?php echo $value['location']; ?></td>
 			<td style="color:<?php echo $value['lsColor']; ?>"><?php echo $value[$stateName]; ?></td>
 			<td><?php echo $value[$stagesName]; ?></td>
 			<td><?php echo $value['noofStages']; ?></td>

@@ -63,22 +63,22 @@ function getData() {
         $("#setData").DataTable().rows.add($(newRows)).draw();
         // $(copyButton).insertAfter(".dataTables_filter")
       }
-      $("div.dataTables_filter").css("float", "right");
-      // var copyButton = '<a href="#" class="table-btn-action-icon" onclick="printInvoice('+ $("#lsMId").val() + ',' + $("#lsDId").val() +');"><span><i class="fa fa-copy"></i></span></a>';
-      var csvButton =
-        '<a href="LawsuitPaymentExcelPrint.php?lsMId=' +
-        $("#lsMId").val() +
-        "&lsDId=" +
-        $("#lsDId").val() +
-        '" class="table-btn-action-icon" onclick="printExcelPaymentReport();"><span><i class="fa fa-file-csv"></i></span></a>';
-      var printButton =
-        '<a href="#" class="table-btn-action-icon" onclick="printInvoiceModal(' +
-        $("#lsMId").val() +
-        "," +
-        $("#lsDId").val() +
-        ');"><span><i class="fa fa-print"></i></span></a>';
-      $(printButton).insertAfter(".dataTables_filter");
-      $(csvButton).insertAfter(".dataTables_filter");
+      // $("div.dataTables_filter").css("float", "right");
+
+      // var csvButton =
+      //   '<a href="LawsuitPaymentExcelPrint.php?lsMId=' +
+      //   $("#lsMId").val() +
+      //   "&lsDId=" +
+      //   $("#lsDId").val() +
+      //   '" class="table-btn-action-icon" onclick="printExcelPaymentReport();"><span><i class="fa fa-file-csv"></i></span></a>';
+      // var printButton =
+      //   '<a href="#" class="table-btn-action-icon" onclick="printInvoiceModal(' +
+      //   $("#lsMId").val() +
+      //   "," +
+      //   $("#lsDId").val() +
+      //   ');"><span><i class="fa fa-print"></i></span></a>';
+      // $(printButton).insertAfter(".dataTables_filter");
+      // $(csvButton).insertAfter(".dataTables_filter");
     },
   });
 }
@@ -105,10 +105,12 @@ function getContractData() {
 }
 
 $("body").on("click", "#addButton", function () {
+  var invoiceNumber =  $("#invoiceNumber").val();
   $("#form")[0].reset();
   $("#id").val("0");
   $("#lsStage").val("").change();
   $("#mode").val("").change();
+  $("#invoiceNumber").val(invoiceNumber);
   $("#LawsuitPaymentModal").modal("toggle");
 });
 
@@ -164,13 +166,14 @@ function add() {
       lsDId: lsDId,
     },
     success: function (data) {
-      ////console.log(data);
-      showMessage(data);
-      var data_validate = data.replace(/[^\d.]/g, "");
+      let response = JSON.parse(data);
+      showMessage(response.message);
+      var data_validate = response.message.replace(/[^\d.]/g, "");
       if (data_validate == "101") {
         return;
-      } else if (data_validate == "1") {
+      } else if(data_validate == "1") {
         $("#LawsuitPaymentModal").modal("toggle");
+        $("#invoiceNumber").val(response.receiptNo);
         getData();
         getPaymentData();
       }
@@ -754,7 +757,7 @@ function printInvoice() {
 
         $.ajax({
           type: "POST",
-          url: "LawsuitDetailPayment-invoice.php",
+          url: "LawsuitPaymentReceiptPrint.php",
           data: {
             lsMId: isMid,
             lsDid: isDid,
