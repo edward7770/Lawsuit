@@ -106,11 +106,21 @@ function getContractData() {
 
 $("body").on("click", "#addButton", function () {
   var invoiceNumber =  $("#invoiceNumber").val();
+  // const min = 100;
+  // const max = 999;
+  // const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+  let randomNumber = '1';
+
   $("#form")[0].reset();
   $("#id").val("0");
   $("#lsStage").val("").change();
   $("#mode").val("").change();
-  $("#invoiceNumber").val(invoiceNumber);
+  if(invoiceNumber === '') {
+    $("#invoiceNumber").val(randomNumber.toString().padStart(3, '0'));
+  } else {
+    currentNumber = parseInt(invoiceNumber) + 1;
+    $("#invoiceNumber").val(currentNumber.toString().padStart(3, '0'));
+  }
   $("#LawsuitPaymentModal").modal("toggle");
 });
 
@@ -171,9 +181,9 @@ function add() {
       var data_validate = response.message.replace(/[^\d.]/g, "");
       if (data_validate == "101") {
         return;
-      } else if(data_validate == "1") {
+      } else if (data_validate == "1") {
         $("#LawsuitPaymentModal").modal("toggle");
-        $("#invoiceNumber").val(response.receiptNo);
+        // $("#invoiceNumber").val(response.receiptNo);
         getData();
         getPaymentData();
       }
@@ -748,12 +758,18 @@ function printInvoice() {
   $.ajax({
     type: "POST",
     url: "LawsuitDetailPaymentDB.php", // URL of the session update script
-    data: {action: "updateSessionInvoice", lsMId: isMid, isDid: isDid, invoiceNumber: invoiceNumber, invoiceDate: invoiceDate },
+    data: {
+      action: "updateSessionInvoice",
+      lsMId: isMid,
+      isDid: isDid,
+      invoiceNumber: invoiceNumber,
+      invoiceDate: invoiceDate,
+    },
     success: function (response) {
       var result = JSON.parse(response);
       if (result.status == "success") {
-        $('#invoice_number_list').html(invoiceNumber);
-        $('#invoice_number').html(invoiceNumber);
+        $("#invoice_number_list").html(invoiceNumber);
+        $("#invoice_number").html(invoiceNumber);
 
         $.ajax({
           type: "POST",
@@ -809,7 +825,7 @@ function printPaymentReceipt(paymentId) {
     data: {
       lsMId: lsMId,
       lsDid: lsDId,
-      paymentId: paymentId
+      paymentId: paymentId,
     },
     success: function (data) {
       $("#formLawsuitPrint")[0].reset();
@@ -857,12 +873,18 @@ function saveInvoice() {
   $.ajax({
     type: "POST",
     url: "LawsuitDetailPaymentDB.php",
-    data: {action: "updateSessionInvoice", lsMId: isMid, isDid: isDid, invoiceNumber: invoiceNumber, invoiceDate: invoiceDate },
+    data: {
+      action: "updateSessionInvoice",
+      lsMId: isMid,
+      isDid: isDid,
+      invoiceNumber: invoiceNumber,
+      invoiceDate: invoiceDate,
+    },
     success: function (response) {
       var result = JSON.parse(response);
       if (result.status == "success") {
-        $('#invoice_number_list').html(invoiceNumber);
-        $('#invoice_number').html(invoiceNumber);
+        $("#invoice_number_list").html(invoiceNumber);
+        $("#invoice_number").html(invoiceNumber);
         $("#LawsuitPrintModal").modal("toggle");
         getData();
       } else {

@@ -171,7 +171,7 @@
 		$qry="UPDATE tbl_customers SET custTypeId=:custTypeId, 
 		customerName_en=:customerName_en,customerName_ar=:customerName_ar,
 		idPassportNo=:idPassportNo,crNo=:crNo,
-		cityId=:cityId,address=:address,postBox=:postBox,mobileNo=:mobileNo,
+		cityId=:cityId,address=:address,postBox=:postBox,mobileNo=:mobileNo, vatNumber=:vatNumber,
 		customerEmail=:customerEmail,nationalityId=:nationalityId $column,
 		endDateAgency=:endDateAgency,notes=:notes,modifiedBy=:modifiedBy, modifiedDate=NOW()
 		WHERE customerId=:customerId";
@@ -188,6 +188,7 @@
 		$stmt->bindParam(":cityId",$postData['city'],PDO::PARAM_INT);
 		$stmt->bindParam(":address",$postData['address'],PDO::PARAM_STR);
 		$stmt->bindParam(":postBox",$postData['postBox'],PDO::PARAM_STR);
+		$stmt->bindParam(":vatNumber",$postData['vatNumber'],PDO::PARAM_STR);
 		if(empty($postData['mobileNo']))
 			$stmt->bindParam(":mobileNo",$postData['mobileNo'],PDO::PARAM_NULL);
 		else 

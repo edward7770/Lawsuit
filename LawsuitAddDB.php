@@ -113,7 +113,32 @@
 		}
 		if(!isset($_POST['lsMId']))	
 		{
-			$qry="UPDATE tbl_lawsuit_master m SET m.ls_code=CONCAT('LS-', LPAD($lsMasterId,5,'0')), m.lsDetailId=$lsDetailsId WHERE m.lsMasterId=$lsMasterId";
+			$last_ls_code = null;
+			$last_number = 1;
+			
+			$qry_code = "SELECT * FROM tbl_lawsuit_master ORDER BY lsMasterId DESC LIMIT 1 OFFSET 1";
+			$stmt_code = $dbo->prepare($qry_code);
+			
+			if ($stmt_code->execute()) {
+				$last_result = $stmt_code->fetch(PDO::FETCH_ASSOC);
+			
+				if ($last_result) {
+					$last_ls_code = $last_result['ls_code'];
+				} else {
+					echo "No records found.";
+				}
+			
+				$stmt_code->closeCursor();
+			} else {
+				echo "Query failed to execute.";
+			}
+			
+			if (!empty($last_ls_code)) {
+				$numericPart = preg_replace('/[^0-9]/', '', $last_ls_code);
+				$last_number = intval($numericPart) + 1;
+			}
+
+			$qry="UPDATE tbl_lawsuit_master m SET m.ls_code=CONCAT('LS-', LPAD($last_number,5,'0')), m.lsDetailId=$lsDetailsId WHERE m.lsMasterId=$lsMasterId";
 			$stmt=$dbo->prepare($qry);
 			if($stmt->execute())
 			{

@@ -133,6 +133,8 @@
 				<a href="#" class="btn-action-icon me-2" onclick="editContract(<?php echo $value['lsContractId']; ?>);"><span><i class="fe fe-edit"></i></span></a>
 				<a href="#" class="btn-action-icon" onclick="delModal(<?php echo $value['lsContractId'].",'contract'"; ?>);"><span><i class="fe fe-trash-2"></i></span></a>&nbsp;&nbsp;
 				<a href="#" class="btn-action-icon" onclick="printContracts(<?php echo $value['lsContractId'].",'".$value['ls_code']."'"; ?>);"><span><i class="fe fe-download"></i></span></a>
+				&nbsp; &nbsp; 
+				<a href="#" class="btn-action-icon" onclick="printPaymentReceipt(<?php echo $value['lsContractId']; ?>);"><span><i class="fa fa-print"></i></span></a>
 			</td>
 			
 			<td> <?php echo $serial; ?> </td>

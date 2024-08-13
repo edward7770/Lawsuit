@@ -176,7 +176,7 @@ if (isset($_POST['lsMId'])) {
 					</div>
 					<div class="mt-2" <?php if ($language === 'ar') echo 'style="margin-right: 30px;"';
 										else echo 'style="margin-left: 30px;"';  ?>>
-						<!-- <h6 class="company-name mt-3"><?php echo set_value('company_name'); ?></h6> -->
+						<h6 class="company-name mt-3"><?php echo set_value('company_name'); ?></h6>
 					</div>
 					<div class="invoice-address">
 						<!-- <h6 class="company-name mt-3"><?php echo ($result_lawyerdata[0]['empName']) ?></h6> -->
@@ -193,10 +193,6 @@ if (isset($_POST['lsMId'])) {
 						</div> -->
 						<!-- <hr/> -->
 						<div class="company-details d-flex flex-wrap">
-							<div class="gst-details col-12 d-flex ">
-								<b><?php echo set_value('vat_number'); ?></b>:<span>&nbsp;<?php if (!empty($resultLawsuitDetails[0]['vatNumber'])) echo $resultLawsuitDetails[0]['vatNumber'];
-																							else echo '-'; ?></span>
-							</div>
 							<div class="gst-details col-6 d-flex">
 								<b><?php echo set_value('lsMasterCode'); ?></b>: <span style="color: red;">&nbsp;<?php echo $resultLawsuitDetails[0]['ls_code']; ?></span>
 							</div>
@@ -226,9 +222,12 @@ if (isset($_POST['lsMId'])) {
 							<div class="gst-details col-6 mb-0 d-flex">
 								<b><?php echo set_value('opponent'); ?></b>:<span>&nbsp;<?php echo $resultLawsuitDetails[0]['oppoName']; ?></span>
 							</div>
-							<div class="gst-details col-6 d-flex">
+							<div class="gst-details col-6 mb-0 d-flex">
 								<b><?php echo set_value('referenceInvoiceNumber'); ?></b>:<span>&nbsp;<?php echo $resultLawsuitDetails[0]['lawsuitInvoiceNumber']; ?></span>
 							</div>
+							<div class="gst-details col-6 mb-0 d-flex">
+								<b><?php echo set_value('vat_number'); ?></b>:<span>&nbsp;<?php if(!empty($resultLawsuitDetails[0]['vatNumber'])) echo $resultLawsuitDetails[0]['vatNumber']; else echo '-'; ?></span>
+				    		</div>
 						</div>
 					</div>
 					<div class="invoice-table mt-2">

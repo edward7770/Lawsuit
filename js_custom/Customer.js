@@ -179,6 +179,7 @@ function edit(id)
 					$('#userName').val(this.username);
 					$('#password').val(this.password);
 					$('#endDate').val(this.endDateAgency);
+					$('#vatNumber').val(this.vatNumber),
 					////$('#agency').val();
 					$('textarea#note').val(this.notes);
 					////$('#submit').val('Update');
