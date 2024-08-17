@@ -116,7 +116,7 @@
 			$last_ls_code = null;
 			$last_number = 1;
 			
-			$qry_code = "SELECT * FROM tbl_lawsuit_master ORDER BY lsMasterId DESC LIMIT 1 OFFSET 1";
+			$qry_code = "SELECT * FROM tbl_lawsuit_master WHERE isActive=1 ORDER BY lsMasterId DESC LIMIT 1 OFFSET 1";
 			$stmt_code = $dbo->prepare($qry_code);
 			
 			if ($stmt_code->execute()) {

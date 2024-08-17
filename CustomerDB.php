@@ -160,20 +160,19 @@
 		
 		$column="";
 		if(isset($passportNoFilePath,$passportNoFileName) && !empty($passportNoFilePath) && !empty($passportNoFileName))
-			$column.=",passportNoFilePath:passportNoFilePath,passportNoFileName:passportNoFileName";
+			$column.=", passportNoFilePath=:passportNoFilePath,passportNoFileName=:passportNoFileName";
 		
 		if(isset($crNoFilePath,$crNoFileName) && !empty($crNoFilePath) && !empty($crNoFileName))
-			$column.=",crNoFilePath:crNoFilePath,crNoFileName:crNoFileName";
+			$column.=", crNoFilePath=:crNoFilePath,crNoFileName=:crNoFileName";
 		
 		if(isset($agencyFilePath,$agencyFileName) && !empty($agencyFilePath) && !empty($agencyFileName))
-			$column.=",agencyFilePath:agencyFilePath,agencyFileName:agencyFileName";
+			$column.=", agencyFilePath=:agencyFilePath,agencyFileName=:agencyFileName";
 		
 		$qry="UPDATE tbl_customers SET custTypeId=:custTypeId, 
 		customerName_en=:customerName_en,customerName_ar=:customerName_ar,
 		idPassportNo=:idPassportNo,crNo=:crNo,
-		cityId=:cityId,address=:address,postBox=:postBox,mobileNo=:mobileNo, vatNumber=:vatNumber,
-		customerEmail=:customerEmail,nationalityId=:nationalityId $column,
-		endDateAgency=:endDateAgency,notes=:notes,modifiedBy=:modifiedBy, modifiedDate=NOW()
+		cityId=:cityId,address=:address,postBox=:postBox,mobileNo=:mobileNo,vatNumber=:vatNumber,
+		customerEmail=:customerEmail,nationalityId=:nationalityId".$column.", endDateAgency=:endDateAgency,notes=:notes,modifiedBy=:modifiedBy, modifiedDate=NOW()
 		WHERE customerId=:customerId";
 		$stmt=$dbo->prepare($qry);
 		
@@ -185,10 +184,10 @@
 			$stmt->bindParam(":crNo",$postData['crNo'],PDO::PARAM_NULL);
 		else 
 			$stmt->bindParam(":crNo",$postData['crNo'],PDO::PARAM_STR);
+		$stmt->bindParam(":vatNumber",$postData['vatNumber'],PDO::PARAM_INT);
 		$stmt->bindParam(":cityId",$postData['city'],PDO::PARAM_INT);
 		$stmt->bindParam(":address",$postData['address'],PDO::PARAM_STR);
 		$stmt->bindParam(":postBox",$postData['postBox'],PDO::PARAM_STR);
-		$stmt->bindParam(":vatNumber",$postData['vatNumber'],PDO::PARAM_STR);
 		if(empty($postData['mobileNo']))
 			$stmt->bindParam(":mobileNo",$postData['mobileNo'],PDO::PARAM_NULL);
 		else 
@@ -201,20 +200,19 @@
 			$stmt->bindParam(":endDateAgency",$postData['endDate'],PDO::PARAM_STR);
 		$stmt->bindParam(":notes",$postData['note'],PDO::PARAM_STR);
 		
-		if(isset($passportNoFilePath,$passportNoFileName) && !empty($passportNoFilePath) && !empty($passportNoFileName))
-		{
-			$stmt->bindParam(":passportNoFilePath",$passportNoFilePath,PDO::PARAM_STR);
-			$stmt->bindParam(":passportNoFileName",$passportNoFileName,PDO::PARAM_STR);
+		if(isset($passportNoFilePath, $passportNoFileName) && !empty($passportNoFilePath) && !empty($passportNoFileName)) {
+			$stmt->bindParam(":passportNoFilePath", $passportNoFilePath, PDO::PARAM_STR);
+			$stmt->bindParam(":passportNoFileName", $passportNoFileName, PDO::PARAM_STR);
 		}
-		if(isset($crNoFilePath,$crNoFileName) && !empty($crNoFilePath) && !empty($crNoFileName))
-		{
-			$stmt->bindParam(":crNoFilePath",$crNoFilePath,PDO::PARAM_STR);
-			$stmt->bindParam(":crNoFileName",$crNoFileName,PDO::PARAM_STR);
+		
+		if(isset($crNoFilePath, $crNoFileName) && !empty($crNoFilePath) && !empty($crNoFileName)) {
+			$stmt->bindParam(":crNoFilePath", $crNoFilePath, PDO::PARAM_STR);
+			$stmt->bindParam(":crNoFileName", $crNoFileName, PDO::PARAM_STR);
 		}
-		if(isset($agencyFilePath,$agencyFileName) && !empty($agencyFilePath) && !empty($agencyFileName))
-		{
-			$stmt->bindParam(":agencyFileName",$agencyFileName,PDO::PARAM_STR);
-			$stmt->bindParam(":agencyFilePath",$agencyFilePath,PDO::PARAM_STR);
+		
+		if(isset($agencyFilePath, $agencyFileName) && !empty($agencyFilePath) && !empty($agencyFileName)) {
+			$stmt->bindParam(":agencyFileName", $agencyFileName, PDO::PARAM_STR);
+			$stmt->bindParam(":agencyFilePath", $agencyFilePath, PDO::PARAM_STR);
 		}
 		
 		$stmt->bindParam(":modifiedBy",$_SESSION['username'],PDO::PARAM_STR);

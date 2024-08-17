@@ -124,7 +124,6 @@ function getData()
 		url: "CustomerData.php",
 		data: {searchId:searchId},
 		success: function (data) {
-			console.log(data);
 			if (!$.trim(data) == '') {
                 data = data.replace(/^\s*|\s*$/g, '');
                 data = data.replace(/\\r\\n/gm, '');

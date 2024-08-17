@@ -11,9 +11,11 @@
 			$where=" AND o.`opponentId`<>:opponentId ";
 			
 		$qry="SELECT o.`opponentId` FROM `tbl_opponents` o WHERE o.isActive=1 $where AND 
-				(o.`oppoName`=:oppoLayerName AND o.`oppoContact`=:oppLayerContact)";
+				(o.`oppoName_ar`=:opponentName_ar AND o.`oppoName_en`=:opponentName_en AND o.`oppoContact`=:oppLayerContact)";
 		$stmt=$dbo->prepare($qry);
-		$stmt->bindParam(":oppoLayerName",$_POST['opponentName'],PDO::PARAM_STR);
+		// $stmt->bindParam(":oppoLayerName",$_POST['opponentName'],PDO::PARAM_STR);
+		$stmt->bindParam(":opponentName_ar",$_POST['opponentName_ar'],PDO::PARAM_STR);
+		$stmt->bindParam(":opponentName_en",$_POST['opponentName_en'],PDO::PARAM_STR);
 		$stmt->bindParam(":oppLayerContact",$_POST['opponentPhone'],PDO::PARAM_STR);
 		if($_POST['action']=='update')
 			$stmt->bindParam(":opponentId",$_POST['id'],PDO::PARAM_STR);
@@ -34,10 +36,11 @@
 	
 	if(isset($_POST['action']) && $_POST['action']=='add')
 	{
-		$qry="INSERT INTO `tbl_opponents` (oppoName,oppoNationality,oppoContact,oppoAddress,isActive,createdBy) 
-				VALUES (:opponentName,:opponentNationality,:opponentPhone,:opponentAddress,1,:createdBy)";
+		$qry="INSERT INTO `tbl_opponents` (oppoName_ar,oppoName_en,oppoNationality,oppoContact,oppoAddress,isActive,createdBy) 
+				VALUES (:opponentName_ar,:opponentName_en,:opponentNationality,:opponentPhone,:opponentAddress,1,:createdBy)";
 		$stmt=$dbo->prepare($qry);
-		$stmt->bindParam(":opponentName",$_POST['opponentName'],PDO::PARAM_STR);
+		$stmt->bindParam(":opponentName_ar",$_POST['opponentName_ar'],PDO::PARAM_STR);
+		$stmt->bindParam(":opponentName_en",$_POST['opponentName_en'],PDO::PARAM_STR);
 		$stmt->bindParam(":opponentNationality",$_POST['opponentNationality'],PDO::PARAM_STR);
 		$stmt->bindParam(":opponentPhone",$_POST['opponentPhone'],PDO::PARAM_STR);
 		$stmt->bindParam(":opponentAddress",$_POST['opponentAddress'],PDO::PARAM_STR);
@@ -57,7 +60,7 @@
 	}
 	if(isset($_POST['action']) && $_POST['action']=='getData' )
 	{
-		$qry="SELECT o.`opponentId`  as id, o.`oppoName`, o.`oppoAddress`, 
+		$qry="SELECT o.`opponentId`  as id, o.`oppoName_ar`, o.`oppoName_en`, o.`oppoAddress`, 
 		o.`oppoContact` ,o.`oppoNationality` FROM tbl_opponents o  WHERE o.`isActive`=1 AND o.`opponentId`=:id";
 		$stmt=$dbo->prepare($qry);
 		$stmt->bindParam(":id",$_POST['id'],PDO::PARAM_STR);
@@ -80,11 +83,13 @@
 	
 	if(isset($_POST['action']) && $_POST['action']=='update' )
 	{
-		$qry="UPDATE tbl_opponents SET oppoName=:opponentName, oppoContact=:opponentPhone, oppoAddress=:opponentAddress, 
+		$qry="UPDATE tbl_opponents SET oppoName_ar=:opponentName_ar, oppoName_en=:opponentName_en, oppoContact=:opponentPhone, oppoAddress=:opponentAddress, 
 		oppoNationality=:opponentNationality,modifiedDate=NOW(), modifiedBy=:modifiedBy
 		WHERE isActive=1 AND opponentId=:opponentId";
 		$stmt=$dbo->prepare($qry);
-		$stmt->bindParam(":opponentName",$_POST['opponentName'],PDO::PARAM_STR);
+		// $stmt->bindParam(":opponentName",$_POST['opponentName'],PDO::PARAM_STR);
+		$stmt->bindParam(":opponentName_ar",$_POST['opponentName_ar'],PDO::PARAM_STR);
+		$stmt->bindParam(":opponentName_en",$_POST['opponentName_en'],PDO::PARAM_STR);
 		$stmt->bindParam(":opponentNationality",$_POST['opponentNationality'],PDO::PARAM_STR);
 		$stmt->bindParam(":opponentPhone",$_POST['opponentPhone'],PDO::PARAM_STR);
 		$stmt->bindParam(":opponentAddress",$_POST['opponentAddress'],PDO::PARAM_STR);

@@ -136,20 +136,27 @@
 				</div>
 				<div class="modal-body p-4">
 					<div class="row">
-						<div class="col-md-4">
+						<div class="col-md-6">
 							<div class="form-group">
-								<label for="opponentName" class="form-label"><?php echo set_value("opponentName"); ?><span class="text-danger"> * </span></label>
-								<input type="text" class="form-control form-control-sm" id="opponentName" placeholder="<?php echo set_value("opponentName"); ?>" required>
+								<label for="opponentName" class="form-label"><?php echo set_value("name_ar"); ?><span class="text-danger"> * </span></label>
+								<input type="text" class="form-control form-control-sm" id="opponentName_ar" placeholder="<?php echo set_value("name_ar"); ?>" required>
 							</div>
 						</div>
-						
-						<div class="col-md-4">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="opponentName" class="form-label"><?php echo set_value("name_en"); ?><span class="text-danger"> * </span></label>
+								<input type="text" class="form-control form-control-sm" id="opponentName_en" placeholder="<?php echo set_value("name_en"); ?>" required>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label for="opponentPhone" class="form-label"><?php echo set_value("opponentPhone"); ?><span class="text-danger"> * </span></label>
 								<input type="text" class="form-control form-control-sm" id="opponentPhone" placeholder="<?php echo set_value("opponentPhone"); ?>" required>
 							</div>	
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label for="opponentNationality" class="form-label"><?php echo set_value("opponentNationality"); ?> <span class="text-danger"> </span></label>
 								<select class="form-control js-example-basic-single form-small select" id="opponentNationality" required>
@@ -200,12 +207,13 @@ $( document ).ready(function() {
 		
 function addOpponent()
 {
-	var opponentName=$('#opponentName').val();
+	var opponentName_ar=$('#opponentName_ar').val();
+	var opponentName_en=$('#opponentName_en').val();
 	var opponentPhone=$('#opponentPhone').val();
 	var opponentNationality=$('#opponentNationality').val();
 	var opponentAddress=$('#opponentAddress').val();
 	var id=$('#id').val();
-	if(opponentName=='' || opponentPhone=='')
+	if(opponentName_ar=='' || opponentPhone=='')
 	{
 		showMessage('Invalid Input');
 		return;
@@ -219,7 +227,8 @@ function addOpponent()
 		url: "OpponentDB.php",
 		data: { 
 				action:action,
-				opponentName:opponentName,
+				opponentName_ar:opponentName_ar,
+				opponentName_en:opponentName_en,
 				opponentPhone:opponentPhone,
 				opponentNationality:opponentNationality,
 				opponentAddress:opponentAddress,
@@ -300,7 +309,8 @@ function edit(id)
 				data_array = jsonObject['data'];
 				jQuery.each(data_array, function() {
 					$('#id').val(this.id);
-					$('#opponentName').val(this.oppoName);
+					$('#opponentName_ar').val(this.oppoName_ar);
+					$('#opponentName_en').val(this.oppoName_en);
 					$('#opponentPhone').val(this.oppoContact);
 					$('#opponentNationality').val(this.oppoNationality).change();
 					$('#opponentAddress').val(this.oppoAddress);

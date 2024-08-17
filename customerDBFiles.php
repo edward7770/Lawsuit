@@ -25,7 +25,7 @@
 		}
 		$filesize = $_FILES[$file]["size"];
 		 // Verify file size - 1MB maximum
-        $maxsize = 1024 * 1024 * 15;
+        $maxsize = 1024 * 1024 * 50;
 		// Check if file was uploaded without errors
 		if(isset($filename) && $_FILES[$file]["error"] == 0){
 			if($filesize > $maxsize)

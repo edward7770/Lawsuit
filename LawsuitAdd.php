@@ -37,7 +37,12 @@
 		
 	}
 	////echo set_value("add_new_customer");
-	
+	$qry_customers="SELECT customerId as id, customerName_$language as val, endDateAgency FROM tbl_customers c WHERE c.isActive=1";
+	$stmt_customers=$dbo->prepare($qry_customers);
+	if($stmt_customers->execute())
+	{
+		$result_customers = $stmt_customers->fetchAll(PDO::FETCH_ASSOC);
+	}
 	
 ?>
 
@@ -138,7 +143,15 @@
 								</div>
 							</div>
 						</form>
-						
+						<div id="customers_div" style="display: none;">
+							<?php 
+								foreach ($result_customers as $value) {
+									?>
+										<div data_endDateAgency = "<?php echo $value['endDateAgency']; ?>"><?php echo $value['val']; ?></div>
+									<?php
+								}
+							?>
+						</div>
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-table">
@@ -429,26 +442,36 @@
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="opponentName" class="form-label"><?php echo set_value("opponentName"); ?><span class="text-danger"> * </span></label>
-								<input type="text" class="form-control form-control-sm" id="opponentName" placeholder="<?php echo set_value("opponentName"); ?>" required>
+								<label for="opponentName" class="form-label"><?php echo set_value("name_ar"); ?><span class="text-danger"> * </span></label>
+								<input type="text" class="form-control form-control-sm" id="opponentName_ar" placeholder="<?php echo set_value("name_ar"); ?>" required>
 							</div>
 						</div>
-						
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="opponentName" class="form-label"><?php echo set_value("name_en"); ?><span class="text-danger"> * </span></label>
+								<input type="text" class="form-control form-control-sm" id="opponentName_en" placeholder="<?php echo set_value("name_en"); ?>" required>
+							</div>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
 								<label for="opponentPhone" class="form-label"><?php echo set_value("opponentPhone"); ?><span class="text-danger"> * </span></label>
 								<input type="text" class="form-control form-control-sm" id="opponentPhone" placeholder="<?php echo set_value("opponentPhone"); ?>" required>
 							</div>	
 						</div>
-					</div>
-					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="opponentNationality" class="form-label"><?php echo set_value("opponentNationality"); ?></label>
-								<input type="text" class="form-control form-control-sm" id="opponentNationality" placeholder="<?php echo set_value("opponentNationality"); ?>">
+								<label for="opponentNationality" class="form-label"><?php echo set_value("opponentNationality"); ?> <span class="text-danger"> </span></label>
+								<select class="form-control js-example-basic-single form-small select" id="opponentNationality" required>
+									<option value=""> <?php echo set_value("select"); ?></option>
+									<?php echo include_once('dropdown_nationality.php'); ?>
+								</select>
 							</div>
 						</div>
-						<div class="col-md-6">
+					</div>
+					<div class="row">
+						<div class="col-md-12">
 							<div class="form-group">
 								<label for="opponentAddress" class="form-label"><?php echo set_value("opponentAddress"); ?></label>
 								<input type="text" class="form-control form-control-sm" id="opponentAddress" placeholder="<?php echo set_value("opponentAddress"); ?>">
@@ -503,6 +526,50 @@
 		</div>
 	</div>
 </div><!-- /.modal -->
+
+<div class="modal custom-modal fade" id="confirm_customer_add_modal" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-md">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="form-header">
+					<p id="customerAddConfirmDescription"></p>
+				</div>
+				<div class="modal-btn delete-action">
+					<div class="row">
+						<div class="col-6">
+							<button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn" id="confirm_customer_add_btn" onclick="confirmCustomerAdd();"><?php echo set_value('yes'); ?></button>
+						</div>
+						<div class="col-6">
+							<button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn"><?php echo set_value("no"); ?></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal custom-modal fade" id="opponent_customer_add_modal" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-md">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="form-header">
+					<p id="opponentAddConfirmDescription"></p>
+				</div>
+				<div class="modal-btn delete-action">
+					<div class="row">
+						<div class="col-6">
+							<button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn" id="confirm_opponent_add_btn" onclick="confirmOpponentAdd();"><?php echo set_value('yes'); ?></button>
+						</div>
+						<div class="col-6">
+							<button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn"><?php echo set_value("no"); ?></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <?php //// include_once('MessageModalShow.php'); ?>
 

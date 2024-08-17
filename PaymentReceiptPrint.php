@@ -92,14 +92,15 @@ $serial = 1;
 $serial_contract = 1;
 
 if (isset($_POST['lsMId'])) {
-	$qry_getpaymentdata = "SELECT lsPaymentId, m.`ls_code`, s.lsStagesName_$language as lsStagesName , d.`lawsuitId`,
-			DATE_FORMAT(paymentDate,'%d-%b-%y') paymentDate, pm.name_$language as paymentMode, amount, invoiceNumber, remarks,
+	$qry_getpaymentdata = "SELECT lsPaymentId, m.`ls_code`, s.lsStagesName_$language as lsStagesName , d.`lawsuitId`, lc.`contractInvoiceNumber`, 
+			DATE_FORMAT(paymentDate,'%d-%b-%y') paymentDate, pm.name_$language as paymentMode, l.`amount`, l.`invoiceNumber`, l.`remarks`,
 			(CASE WHEN IFNULL(m.`isPaidAll`,0)=0 THEN 'Current Stage' ELSE 'Full Stages' END) 
 				paymentStatus_en,
 			(CASE WHEN IFNULL(m.`isPaidAll`,0)=0 THEN 'مرحله واحده' ELSE 'مدفوع جميع المراحل' END) 
 				paymentStatus_ar 
-			FROM tbl_lawsuit_payment l 
+			FROM tbl_lawsuit_payment l
 			LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=l.`lsMasterId`
+			LEFT JOIN `tbl_lawsuit_contract` lc ON lc.`lsContractId`=l.`contractId`
 			LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=l.`lsStageId`
 			LEFT JOIN `tbl_lawsuit_details` d ON d.`lsMasterId`=m.`lsMasterId`
 			LEFT JOIN `tbl_payment_mode` pm ON pm.`paymentModeId`=l.`paymentMode`
@@ -116,12 +117,14 @@ if (isset($_POST['lsMId'])) {
 		exit($json = $errorInfo[2]);
 	}
 
-	$qry_getcontractdata = "SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,`lsStageId`, s.lsStagesName_$language as lsStagesName,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractEn`, `contractAr`, `contractFilePath`, remarks, c.`isActive` FROM `tbl_lawsuit_contract` c 
+	$qry_getcontractdata = "SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,c.`lsStageId`, s.lsStagesName_$language as lsStagesName,c.`amount`, c.`taxValue`, c.`taxAmount`, c.`totalAmount`, `contractDate`, `contractEn`, `contractAr`, `contractFilePath`, c.`remarks`, c.`isActive` FROM `tbl_lawsuit_contract` c 
 		LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=c.`lsMasterId`
+		LEFT JOIN `tbl_lawsuit_payment` p ON p.`contractId`=c.`lsContractId`
 		LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=c.`lsStageId`
-		WHERE c.`isActive`=1 AND c.`lsMasterId`=:lsMasterId";
+		WHERE c.`isActive`=1 AND c.`lsMasterId`=:lsMasterId AND p.`lsPaymentId`=:lsPaymentId";
 	$stmt_getcontractdata = $dbo->prepare($qry_getcontractdata);
 	$stmt_getcontractdata->bindParam(":lsMasterId", $_POST['lsMId'], PDO::PARAM_INT);
+	$stmt_getcontractdata->bindParam(":lsPaymentId", $_POST['paymentId'], PDO::PARAM_INT);
 	if ($stmt_getcontractdata->execute()) {
 		$result_contactdata = $stmt_getcontractdata->fetchAll(PDO::FETCH_ASSOC);
 		$stmt_getcontractdata->closeCursor();
@@ -223,7 +226,7 @@ if (isset($_POST['lsMId'])) {
 								<b><?php echo set_value('opponent'); ?></b>:<span>&nbsp;<?php echo $resultLawsuitDetails[0]['oppoName']; ?></span>
 							</div>
 							<div class="gst-details col-6 mb-0 d-flex">
-								<b><?php echo set_value('referenceInvoiceNumber'); ?></b>:<span>&nbsp;<?php echo $resultLawsuitDetails[0]['lawsuitInvoiceNumber']; ?></span>
+								<b><?php echo set_value('referenceInvoiceNumber'); ?></b>:<span>&nbsp;<?php echo $result_paymentdata[0]['contractInvoiceNumber']; ?></span>
 							</div>
 							<div class="gst-details col-6 mb-0 d-flex">
 								<b><?php echo set_value('vat_number'); ?></b>:<span>&nbsp;<?php if(!empty($resultLawsuitDetails[0]['vatNumber'])) echo $resultLawsuitDetails[0]['vatNumber']; else echo '-'; ?></span>
@@ -241,6 +244,7 @@ if (isset($_POST['lsMId'])) {
 										<th><?php echo set_value('paymentAmount'); ?></th>
 										<th><?php echo set_value('taxValueAmount'); ?></th>
 										<th><?php echo set_value('contractAmountIncludingTax'); ?></th>
+										<th><?php echo set_value('ContractDate'); ?></th>
 										<th><?php echo set_value('remarks'); ?></th>
 									</tr>
 								</thead>
@@ -255,6 +259,7 @@ if (isset($_POST['lsMId'])) {
 											<td><?php echo setAmountDecimal($value['amount']); ?></td>
 											<td><?php echo setAmountDecimal($value['taxAmount']); ?></td>
 											<td><?php echo setAmountDecimal($value['totalAmount']); ?></td>
+											<td><?php echo $value['contractDate']; ?></td>
 											<td><?php echo $value['remarks']; ?></td>
 										</tr>
 									<?php
@@ -328,7 +333,7 @@ if (isset($_POST['lsMId'])) {
 							</table>
 						</div>
 					</div>
-					<div class="invoice-address" style="margin-top: 30px; display:block;">
+					<div class="invoice-address" style="margin-top: 30px; display: block;">
 						<p style="font-size: 24px;"><b><?php echo set_value('officeName'); ?></b></p>
 						<p class="mt-3" style="font-size: 18px;"><?php echo set_value('signature'); ?></p>
 						<p style="font-size: 18px; text-align:right;"><?php echo set_value('receivedBy'); ?></p>

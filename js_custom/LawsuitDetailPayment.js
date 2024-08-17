@@ -134,6 +134,7 @@ function add() {
   var lsStage = lsStageArray[0];
   var lsDId = lsStageArray[1];
   var id = $("#id").val();
+  var paymentContractId = $("#paymentContractId").val();
   var paidStatus = $('input[name="paidStatus"]:checked').val();
   if (paidStatus == 1) var paidStatusStage = "paidStatus";
   else if (paidStatus == 2) var paidStatusStage = "paidStatusAll";
@@ -149,6 +150,7 @@ function add() {
     !lsStage ||
     !paidStatus ||
     !paidStatusStage ||
+    !paymentContractId ||
     !lsMId ||
     !lsDId
   ) {
@@ -168,6 +170,7 @@ function add() {
       mode: mode,
       amount: amount,
       invoiceNumber: invoiceNumber,
+      contractId: paymentContractId,
       remarks: remarks,
       lsStage: lsStage,
       paidStatusStage: paidStatusStage,
@@ -176,6 +179,7 @@ function add() {
       lsDId: lsDId,
     },
     success: function (data) {
+      console.log(data);
       let response = JSON.parse(data);
       showMessage(response.message);
       var data_validate = response.message.replace(/[^\d.]/g, "");
@@ -269,11 +273,22 @@ function customer_type_modal() {
 }
 
 $("body").on("click", "#UpdatePayment", function () {
-  $("#formContract")[0].reset();
   $("#idContract").val("0");
   $("#stage").val("").change();
   ///$("#ContractTermsEn").summernote('code','');
   ////$("#ContractTermsAr").summernote('code','');
+  var lawsuit_code =  $("#invoice_number_list").html();
+  var invoiceNumber =  $("#contractInvoiceNumber").val();
+  $("#formContract")[0].reset();
+  let randomNumber = '1';
+
+  if(invoiceNumber === '') {
+    $("#contractInvoiceNumber").val(lawsuit_code.trim() + '-' + randomNumber.toString().padStart(3, '0'));
+  } else {
+    currentNumber = parseInt(invoiceNumber.split(lawsuit_code.trim() + '-')[1]) + 1;
+    $("#contractInvoiceNumber").val(lawsuit_code.trim() + '-' + currentNumber.toString().padStart(3, '0'));
+  }
+
   $("#LawsuitAmountModal").modal("toggle");
   ////getContractData();
   getContractContent();
@@ -364,11 +379,14 @@ function updateContract() {
   var taxValue = $("#taxValue").val();
   var taxValueAmount = $("#taxValueAmount").val();
   var totContAmount = $("#contractAmountIncludingTax").val();
+  var contractDate = $("#contractDate").val();
+  var contractInvoiceNumber = $("#contractInvoiceNumber").val();
   var lsDId = $("#lsDId").val();
   var lsMId = $("#lsMId").val();
   var termEn = $("#ContractTermsEn").summernote("code");
   var termAr = $("#ContractTermsAr").summernote("code");
   var stage = $("#contract_stage").val();
+
   if (
     !amountContract ||
     !taxValue ||
@@ -376,6 +394,7 @@ function updateContract() {
     !totContAmount ||
     !lsDId ||
     !lsMId ||
+    !contractDate ||
     !stage
   ) {
     showMessage("Invalid Input");
@@ -390,6 +409,8 @@ function updateContract() {
     taxValue: $("#taxValue").val(),
     taxValueAmount: $("#taxValueAmount").val(),
     totContAmount: $("#contractAmountIncludingTax").val(),
+    contractDate: contractDate,
+    contractInvoiceNumber: contractInvoiceNumber,
     //////lsDId:$('#lsDId').val(),
     lsMId: $("#lsMId").val(),
     termEn: $("#ContractTermsEn").summernote("code"),
@@ -542,6 +563,8 @@ function editContract(id) {
           $("#taxValue").val(this.taxValue);
           $("#taxValueAmount").val(this.taxValueAmount);
           $("#contractAmountIncludingTax").val(this.totalAmount);
+          $("#contractDate").val(this.contractDate);
+          $("#contractInvoiceNumber").val(this.contractInvoiceNumber);
           $("#ContractTermsEn").summernote("code", this.contractEn);
           $("#ContractTermsAr").summernote("code", this.contractAr);
           /*
@@ -826,6 +849,41 @@ function printPaymentReceipt(paymentId) {
       lsMId: lsMId,
       lsDid: lsDId,
       paymentId: paymentId,
+    },
+    success: function (data) {
+      $("#formLawsuitPrint")[0].reset();
+      // Open a new window for printing
+      var printWindow = window.open("", "_blank");
+      printWindow.document.write(
+        "<html><head><title>&nbsp;</title></head><body>"
+      );
+
+      // Write the received content to the print window
+      printWindow.document.write(data);
+
+      printWindow.document.write("</body></html>");
+      printWindow.document.close();
+
+      // Print the content after a short delay
+      setTimeout(function () {
+        printWindow.print();
+        printWindow.close();
+      }, 1000);
+    },
+  });
+}
+
+function printContractReceipt(contractId) {
+  var lsMId = $("#lsMId").val();
+  var lsDId = $("#lsDId").val();
+
+  $.ajax({
+    type: "POST",
+    url: "LawsuitContractReceiptPrint.php",
+    data: {
+      lsMId: lsMId,
+      lsDid: lsDId,
+      contractId: contractId,
     },
     success: function (data) {
       $("#formLawsuitPrint")[0].reset();

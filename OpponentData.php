@@ -5,7 +5,7 @@
 	}
 	$language=$_SESSION['lang'];
 	include_once('config/conn.php');
-	$qry="SELECT o.`opponentId`, o.`oppoName`, o.`oppoAddress`, o.`oppoContact` ,n.`nationalityName`
+	$qry="SELECT o.`opponentId`, o.`oppoName_ar`, o.`oppoName_en`, o.`oppoAddress`, o.`oppoContact` ,n.`nationalityName`
 			FROM tbl_opponents o 
 			LEFT JOIN tbl_nationality n ON n.`nationalityId`=o.`oppoNationality`
 			WHERE o.`isActive`=1";
@@ -30,7 +30,7 @@
 			<a href="#" class="btn-action-icon me-2" onclick="edit(<?php echo $value['opponentId']; ?>);"><span><i class="fe fe-edit"></i></span></a>
 			<a href="#" class="btn-action-icon" onclick="delModal(<?php echo $value['opponentId']; ?>);"><span><i class="fe fe-trash-2"></i></span></a>
 		</td>
-		<td><?php echo $value['oppoName']; ?></td>
+		<td><?php echo $value['oppoName_'.$language]; ?></td>
 		<td><?php echo $value['oppoContact']; ?></td>
 		<td><?php echo $value['nationalityName']; ?></td>
 		<td><?php echo $value['oppoAddress']; ?></td>

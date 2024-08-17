@@ -294,7 +294,7 @@
 															<?php 
 																if(isset($_POST['lsMId']) && !empty($_POST['lsMId']))
 																{
-																	$qry="SELECT lo.`opponentId`, o.`oppoName` FROM tbl_lawsuit_opponents lo 
+																	$qry="SELECT lo.`opponentId`, o.oppoName_$language as oppoName FROM tbl_lawsuit_opponents lo 
 																		LEFT JOIN `tbl_opponents` o ON o.`opponentId`=lo.`opponentId`
 																		WHERE lo.`isActive`=1 AND o.`isActive`=1 AND lo.`lsDetailsId`=:lsDetailsId";
 																	$stmt=$dbo->prepare($qry);

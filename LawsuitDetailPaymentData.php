@@ -25,7 +25,7 @@
 	
 	if(isset($_POST['getContractData'],$_POST['lsDId']))
 	{
-		$qry="SELECT d.`amountContract`, d.`taxValue`, d.`totalContractAmount` FROM `tbl_lawsuit_details` d WHERE d.`isActive`=1 AND d.`lsDetailsId`=:lsDetailsId";
+		$qry="SELECT d.`amountContract`, d.`taxValue`, d.`contractInvoiceNumber` d.`totalContractAmount` FROM `tbl_lawsuit_details` d WHERE d.`isActive`=1 AND d.`lsDetailsId`=:lsDetailsId";
 		$stmt=$dbo->prepare($qry);
 		$stmt->bindParam(":lsDetailsId",$_POST['lsDId'],PDO::PARAM_INT);
 		if($stmt->execute())
@@ -102,7 +102,7 @@
 	
 	else if(isset($_POST['lsMId'],$_POST['contractData']) && count($_POST) === 2)
 	{
-		$qry="SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,`lsStageId`, s.lsStagesName_$language as lsStagesName,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractEn`, `contractAr`, `contractFilePath`, c.`isActive` FROM `tbl_lawsuit_contract` c 
+		$qry="SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,`lsStageId`, s.lsStagesName_$language as lsStagesName,`amount`, `contractInvoiceNumber`, `taxValue`, taxAmount, `totalAmount`, DATE_FORMAT(contractDate,'%d-%b-%y') contractDate, `contractEn`, `contractAr`, `contractFilePath`, c.`isActive` FROM `tbl_lawsuit_contract` c 
 			LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=c.`lsMasterId`
 			LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=c.`lsStageId`
 			WHERE c.`isActive`=1 AND c.`lsMasterId`=:lsMasterId";
@@ -134,14 +134,16 @@
 				<a href="#" class="btn-action-icon" onclick="delModal(<?php echo $value['lsContractId'].",'contract'"; ?>);"><span><i class="fe fe-trash-2"></i></span></a>&nbsp;&nbsp;
 				<a href="#" class="btn-action-icon" onclick="printContracts(<?php echo $value['lsContractId'].",'".$value['ls_code']."'"; ?>);"><span><i class="fe fe-download"></i></span></a>
 				&nbsp; &nbsp; 
-				<a href="#" class="btn-action-icon" onclick="printPaymentReceipt(<?php echo $value['lsContractId']; ?>);"><span><i class="fa fa-print"></i></span></a>
+				<a href="#" class="btn-action-icon" onclick="printContractReceipt(<?php echo $value['lsContractId']; ?>);"><span><i class="fa fa-print"></i></span></a>
 			</td>
 			
 			<td> <?php echo $serial; ?> </td>
 			<td><?php echo $value['lsStagesName']; ?></td>
+			<td><?php echo $value['contractInvoiceNumber']; ?></td>
 			<td><?php echo setAmountDecimal($value['amount']); ?></td>
 			<td><?php echo setAmountDecimal($value['taxAmount']); ?></td>
 			<td><?php echo setAmountDecimal($value['totalAmount']); ?></td>
+			<td><?php echo $value['contractDate']; ?></td>
 			<td><?php echo $contractFile; ?></td>
 		</tr>
 		

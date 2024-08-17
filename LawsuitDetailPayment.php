@@ -245,9 +245,11 @@
 													<th><?php echo set_value('action'); ?></th>
 													<th>#</th>
 													<th><?php echo set_value('stage'); ?></th>
+													<th><?php echo set_value('invoiceNumber'); ?></th>
 													<th><?php echo set_value('paymentAmount'); ?></th>
 													<th><?php echo set_value('taxValueAmount'); ?></th>
-													<th><?php echo set_value('contractAmountIncludingTax'); ?></th>												   
+													<th><?php echo set_value('contractAmountIncludingTax'); ?></th>				
+													<th><?php echo set_value('ContractDate'); ?></th>										   
 													<th><?php echo set_value('contractFile'); ?></th>												   
 												</tr>
 											</thead>
@@ -307,13 +309,24 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-3">
 							<div class="mb-4">
 								<div class="form-group">
 									<label for="mode" class="form-label"><?php echo set_value('paymentMode'); ?> <span class="text-danger"> * </span></label>
 									<select class="form-control js-example-basic-single form-small select" id='mode' required>
 										<option value=""> <?php echo set_value("select"); ?></option>
 										<?php include('dropdown_PaymentMode.php'); ?>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="paymentContractId" class="form-label"><?php echo set_value('contractDetails'); ?> <span class="text-danger"> * </span></label>
+									<select class="form-control js-example-basic-single form-small select" id='paymentContractId' required>
+										<option value=""> <?php echo set_value("select"); ?></option>
+										<?php include('dropdown_contract.php'); ?>
 									</select>
 								</div>
 							</div>
@@ -524,7 +537,7 @@
 						
 					</div>
 					<div class="row">	
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<div class="mb-4">
 								<div class="form-group">
 									<label for="contractAmountIncludingTax" class="form-label"><?php echo set_value("contractAmountIncludingTax"); ?>%</label>
@@ -532,8 +545,24 @@
 								</div>
 							</div>
 						</div>
-						
-						<div class="col-md-4" id='divIdCopy'>
+					
+						<div class="col-md-3">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="contractDate" class="form-label"><?php echo set_value('ContractDate'); ?><span class="text-danger"> * </span></label>
+									<input type="date" class="form-control form-control-sm" id="contractDate" required onkeydown="return false;">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="mb-4">
+								<div class="form-group">
+									<label for="contractInvoiceNumber" class="form-label"><?php echo set_value('invoiceNumber'); ?></label>
+									<input type="text" class="form-control form-control-sm" id="contractInvoiceNumber" disabled placeholder="<?php echo set_value('invoiceNumber'); ?>">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2" id='divIdCopy'>
 							<div class="mb-3">
 								<div class="form-group">
 									<label for="idCopy" class="form-label"><?php echo set_value("contractFile"); ?></label>

@@ -70,8 +70,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'add') {
 	$incrementedNumber = str_pad((int)$numericPart + 1, $invoiceNoLength, '0', STR_PAD_LEFT);
 	$_SESSION['receipt_no'] = substr($_SESSION['receipt_no'], 0, -$invoiceNoLength) . $incrementedNumber;
 
-	$qry = "INSERT INTO tbl_lawsuit_payment(lsStageId,lsMasterId,lsDetailsId,paymentDate,paymentMode,amount,invoiceNumber,remarks,isActive,createdBy) 
-					VALUES(:lsStageId,:lsMasterId,:lsDetailsId,:paymentDate,:paymentMode,:amount,:invoiceNumber,:remarks,1,:createdBy)";
+	$qry = "INSERT INTO tbl_lawsuit_payment(lsStageId,lsMasterId,lsDetailsId,paymentDate,paymentMode,amount,invoiceNumber,contractId,remarks,isActive,createdBy) 
+					VALUES(:lsStageId,:lsMasterId,:lsDetailsId,:paymentDate,:paymentMode,:amount,:invoiceNumber,:contractId,:remarks,1,:createdBy)";
 
 
 	$stmt = $dbo->prepare($qry);
@@ -83,6 +83,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'add') {
 	$stmt->bindParam(":paymentDate", $_POST['date'], PDO::PARAM_STR);
 	$stmt->bindParam(":paymentMode", $_POST['mode'], PDO::PARAM_STR);
 	$stmt->bindParam(":amount", $_POST['amount'], PDO::PARAM_STR);
+	$stmt->bindParam(":contractId", $_POST['contractId'], PDO::PARAM_STR);
 	$stmt->bindParam(":invoiceNumber", $_POST['invoiceNumber'], PDO::PARAM_STR);
 	$stmt->bindParam(":remarks", $_POST['remarks'], PDO::PARAM_STR);
 	$stmt->bindParam(":createdBy", $_SESSION['username'], PDO::PARAM_STR);
@@ -195,7 +196,7 @@ if (isset($_POST['deleteLawsuit'], $_POST['lsMId'])) {
 }
 
 if (isset($_POST['action']) && $_POST['action'] == 'getContractData') {
-	$qry = "SELECT c.`lsContractId` AS id,`lsStageId`,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractEn`, `contractAr` FROM `tbl_lawsuit_contract` c 
+	$qry = "SELECT c.`lsContractId` AS id,`lsStageId`,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractDate`, `contractInvoiceNumber`, `contractEn`, `contractAr` FROM `tbl_lawsuit_contract` c 
 			WHERE c.`isActive`=1 AND c.`lsContractId`=:lsContractId";
 
 	$stmt = $dbo->prepare($qry);
@@ -211,7 +212,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'getContractData') {
 }
 
 if (isset($_POST['action']) && $_POST['action'] == 'edit') {
-	$qry = "UPDATE tbl_lawsuit_payment SET lsDetailsId=:lsDetailsId,lsStageId=:lsStageId,paymentDate=:paymentDate, paymentMode=:paymentMode, amount=:amount, invoiceNumber=:invoiceNumber, remarks=:remarks, modifiedDate=NOW(), modifiedBy=:modifiedBy
+	$qry = "UPDATE tbl_lawsuit_payment SET lsDetailsId=:lsDetailsId,lsStageId=:lsStageId,paymentDate=:paymentDate, paymentMode=:paymentMode, amount=:amount, invoiceNumber=:invoiceNumber, contractId=:contractId, remarks=:remarks, modifiedDate=NOW(), modifiedBy=:modifiedBy
 		WHERE lsPaymentId=:lsPaymentId";
 	$stmt = $dbo->prepare($qry);
 	$stmt->bindParam(":lsDetailsId", $_POST['lsDId'], PDO::PARAM_INT);
@@ -220,6 +221,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'edit') {
 	$stmt->bindParam(":paymentMode", $_POST['mode'], PDO::PARAM_STR);
 	$stmt->bindParam(":amount", $_POST['amount'], PDO::PARAM_STR);
 	$stmt->bindParam(":invoiceNumber", $_POST['invoiceNumber'], PDO::PARAM_STR);
+	$stmt->bindParam(":contractId", $_POST['contractId'], PDO::PARAM_STR);
 	$stmt->bindParam(":remarks", $_POST['remarks'], PDO::PARAM_STR);
 	$stmt->bindParam(":modifiedBy", $_SESSION['username'], PDO::PARAM_STR);
 	$stmt->bindParam(":lsPaymentId", $_POST['id'], PDO::PARAM_INT);
@@ -353,6 +355,8 @@ if (isset($_POST['ContractData'])) {
              `taxValue`,
              `taxAmount`,
              `totalAmount`,
+			 `contractDate`,
+			 `contractInvoiceNumber`,
              `contractEn`,
              `contractAr`,
              `contractFilePath`,
@@ -366,6 +370,8 @@ if (isset($_POST['ContractData'])) {
         :taxValue,
         :taxValueAmount,
         :totalAmount,
+		:contractDate,
+		:contractInvoiceNumber,
         :contractEn,
         :contractAr,
         :contractFilePath,
@@ -381,6 +387,8 @@ if (isset($_POST['ContractData'])) {
              taxValue=:taxValue,
              taxAmount=:taxValueAmount,
              totalAmount=:totalAmount,
+			 contractDate=:contractDate,
+			 contractInvoiceNumber=:contractInvoiceNumber,
              contractEn=:contractEn,
              contractAr=:contractAr,
              $column
@@ -396,6 +404,8 @@ if (isset($_POST['ContractData'])) {
 	$stmt->bindParam(":taxValue", $postData['taxValue'], PDO::PARAM_STR);
 	$stmt->bindParam(":taxValueAmount", $postData['taxValueAmount'], PDO::PARAM_STR);
 	$stmt->bindParam(":totalAmount", $postData['totContAmount'], PDO::PARAM_STR);
+	$stmt->bindParam(":contractDate", $postData['contractDate'], PDO::PARAM_STR);
+	$stmt->bindParam(":contractInvoiceNumber", $postData['contractInvoiceNumber'], PDO::PARAM_STR);
 	$stmt->bindParam(":contractEn", $postData['termEn'], PDO::PARAM_STR);
 	$stmt->bindParam(":contractAr", $postData['termAr'], PDO::PARAM_STR);
 	if (isset($_FILES['contractFile']))

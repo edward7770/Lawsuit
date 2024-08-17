@@ -4,9 +4,10 @@
 	}
 	include_once('config/conn.php');
 	$language=$_SESSION['lang'];
-	$qry="SELECT customerId as id, customerName_$language as val FROM tbl_customers c WHERE c.isActive=1";
+	$qry="SELECT customerId as id, customerName_$language as val, endDateAgency FROM tbl_customers c WHERE c.isActive=1";
 	$stmt=$dbo->prepare($qry);
 	//$stmt->bindParam(":to_date",$to_date,PDO::PARAM_STR);
+	$currentDate = new DateTime();
 	if($stmt->execute())
 	{
 		$result_country = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -19,7 +20,9 @@
 	if(isset($_POST['getSelect'])) echo '<option value="">'.$_POST['getSelect'].'</option>';
 	foreach($result_country as $val)
 	{
-		echo "<option value='".$val['id']."'>".$val['val']."</option>";
+		if(new DateTime($val['endDateAgency']) > $currentDate) {
+			echo "<option value='".$val['id']."'>".$val['val']."</option>";
+		}
 	}
 	
 ?>

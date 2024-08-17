@@ -31,61 +31,84 @@ function addMoreCustomer()
 		var duplicate_customer=false;
 		var duplicate_customerType=false;
 		var duplicate_customerAjectiveId=false;
-		
-		$('#customerTable tr').each(function (index, tr) {
-			//get td of each row and insert it into cols array
-			if(index>0)
-			{
-				$(this).find('td').each(function (colIndex, c) {
-					//cols.push(c.textContent);
-					if(colIndex==1)
-					{
-						if(customer==c.textContent) 				duplicate_customer=true;
-					}
-					if(colIndex==2)
-					{
-						if(customerType==c.textContent) 			duplicate_customerType=true;
-					}
-					if(colIndex==3)
-					{
-						if(customerAjective==c.textContent) 		duplicate_customerAjectiveId=true;
-					}
+
+		var duplicate_opponent = false;
+
+		$('#opponentTable tr').each(function (index, opponentTr) {
+			var opponent = $(opponentTr).find('td').eq(1).text().trim();
+			if(opponent == customer) {
+				duplicate_opponent = true;
+			}
+		})
+
+		if(duplicate_opponent === false) {
+			$('#customerTable tr').each(function (index, tr) {
+				//get td of each row and insert it into cols array
+				if(index>0)
+				{
+					$(this).find('td').each(function (colIndex, c) {
+						//cols.push(c.textContent);
+						if(colIndex==1)
+						{
+							if(customer==c.textContent) 				duplicate_customer=true;
+						}
+						if(colIndex==2)
+						{
+							if(customerType==c.textContent) 			duplicate_customerType=true;
+						}
+						if(colIndex==3)
+						{
+							if(customerAjective==c.textContent) 		duplicate_customerAjectiveId=true;
+						}
+						
+						if(duplicate_customer && duplicate_customerType && duplicate_customerAjectiveId)
+						{
+							duplicate_row=true;
+							/////return;
+							/////throw BreakException;
+						}
+					});
 					
-					if(duplicate_customer && duplicate_customerType && duplicate_customerAjectiveId)
-					{
-						duplicate_row=true;
-						/////return;
-						/////throw BreakException;
-					}
-				});
+				}
+			});
+			if(!duplicate_row)
+			{
+				var table = document.getElementById("customerTable");
+				var row = table.insertRow();
+				var cell_serialNO = row.insertCell();
+				var cell_customer = row.insertCell();
+				var cell_customerType = row.insertCell();
+				var cell_customerAjective = row.insertCell();
+				
+				var btn_delete=row.insertCell();
+				
+				cell_serialNO.innerHTML = serialNO
+				cell_serialNO.id = 0
+				cell_customer.innerHTML = customer
+				cell_customer.id = customerId
+				cell_customerType.innerHTML = customerType
+				cell_customerType.id = customerTypeId
+				cell_customerAjective.innerHTML = customerAjective
+				cell_customerAjective.id = customerAjectiveId
+				btn_delete.innerHTML = '<a href="#" class="btn-action-icon" onclick="DeleteRowFunctionCustomer(this)" ><span><i class="fe fe-trash-2 fa-1x red-color"></i></span></a>';
 				
 			}
-		});
-		if(!duplicate_row)
-		{
-			var table = document.getElementById("customerTable");
-			var row = table.insertRow();
-			var cell_serialNO = row.insertCell();
-			var cell_customer = row.insertCell();
-			var cell_customerType = row.insertCell();
-			var cell_customerAjective = row.insertCell();
-			
-			var btn_delete=row.insertCell();
-			
-			cell_serialNO.innerHTML = serialNO
-			cell_serialNO.id = 0
-			cell_customer.innerHTML = customer
-			cell_customer.id = customerId
-			cell_customerType.innerHTML = customerType
-			cell_customerType.id = customerTypeId
-			cell_customerAjective.innerHTML = customerAjective
-			cell_customerAjective.id = customerAjectiveId
-			btn_delete.innerHTML = '<a href="#" class="btn-action-icon" onclick="DeleteRowFunctionCustomer(this)" ><span><i class="fe fe-trash-2 fa-1x red-color"></i></span></a>';
-			
-		}
-		else 
-		{
-			showMessage("This Customer is Already exists");
+			else 
+			{
+				showMessage("This Customer is Already exists");
+				return;
+			}
+
+			$("#customer").val("");
+			$('#customer').select2({ });
+			$("#customerType").val("");
+			$('#customerType').select2({ });
+			$("#customerAjective").val("");
+			$('#customerAjective').select2({ });
+		} else {
+			$('#customerAddConfirmDescription').html(customer + "is in opponent list. are you sure want to add?");
+			$("#confirm_customer_add_modal").modal('toggle');
+
 			return;
 		}
 	}
@@ -94,13 +117,6 @@ function addMoreCustomer()
 		showMessage("please fill required fields");
 		return;
 	}
-	
-	$("#customer").val("");
-	$('#customer').select2({ });
-	$("#customerType").val("");
-	$('#customerType').select2({ });
-	$("#customerAjective").val("");
-	$('#customerAjective').select2({ });
 }
 
 window.DeleteRowFunctionCustomer = function DeleteRowFunctionCustomer(o) {
@@ -128,7 +144,8 @@ function updateSerialNumbers(tableName) {
 
 function addOpponent()
 {
-	var opponentName=$('#opponentName').val();
+	var opponentName_ar=$('#opponentName_ar').val();
+	var opponentName_en=$('#opponentName_en').val();
 	var opponentPhone=$('#opponentPhone').val();
 	var opponentNationality=$('#opponentNationality').val();
 	var opponentAddress=$('#opponentAddress').val();
@@ -139,7 +156,8 @@ function addOpponent()
 		data: 
 		{
 			action:'add',
-			opponentName:opponentName,
+			opponentName_ar:opponentName_ar,
+			opponentName_en:opponentName_en,
 			opponentPhone:opponentPhone,
 			opponentNationality:opponentNationality,
 			opponentAddress:opponentAddress,
@@ -484,6 +502,178 @@ function getCustomerType(custId)
 function addMoreOpponent()
 {
 	///debugger;
+	var opponent=$("#opponent option:selected").text().trim();
+	var opponentId=$("#opponent").val();
+	var serialNO=$("#opponentTable tr").length;
+	var duplicate_row=false;
+	if(opponentId)
+	{
+		
+		var duplicate_customer = false;
+		var customer_end_date_agency = '';
+
+		$('#customerTable tr').each(function (index, customerTr) {
+			var customer = $(customerTr).find('td').eq(1).text().trim();
+			if(customer == opponent) {
+				duplicate_customer = true;
+				$('#customers_div div').each(function (index, customerDiv) {
+					var customerDivText = $(customerDiv).text().trim();
+					if(customerDivText == customer) {
+						customer_end_date_agency = $(customerDiv).attr('data_enddateagency');
+					}
+				})
+			}
+		})
+		var duplicate_opponent=false;
+		if(!duplicate_customer) {
+			$('#opponentTable tr').each(function (index, tr) {
+				//get td of each row and insert it into cols array
+				if(index>0)
+				{
+					$(this).find('td').each(function (colIndex, c) {
+						//cols.push(c.textContent);
+						if(colIndex==1)
+						{
+							if(opponent==c.textContent) 		duplicate_opponent=true;
+						}
+						if(duplicate_opponent)
+						{
+							duplicate_row=true;
+							/////return;
+							/////throw BreakException;
+						}
+					});
+					
+				}
+			});
+			if(!duplicate_row)
+			{
+				var table = document.getElementById("opponentTable");
+				var row = table.insertRow();
+				var cell_serialNO = row.insertCell();
+				var cell_opponent = row.insertCell();
+				
+				var btn_delete=row.insertCell();
+				
+				cell_serialNO.innerHTML = serialNO
+				cell_opponent.innerHTML = opponent
+				cell_opponent.id = opponentId
+				btn_delete.innerHTML = '<a href="#" class="btn-action-icon" onclick="DeleteRowFunctionOpponent(this)" ><span><i class="fe fe-trash-2 fa-1x red-color"></i></span></a>';
+			}
+			else 
+			{
+				showMessage("This opponent is Already exists");
+				return;
+			}
+
+			$("#opponent").val("");
+			$('#opponent').select2({ });
+		} else {
+			// var confirmAdd = confirm(opponent + "is in customer list. are you sure want to add?");
+			// if (confirmAdd) {
+			// }
+
+			$('#opponentAddConfirmDescription').html(opponent + "is in customer list and his end date agency is " + customer_end_date_agency + ". are you sure want to add?");
+			$("#opponent_customer_add_modal").modal('toggle');
+
+			return;
+		}
+	}
+	else 
+	{
+		showMessage("please fill required fields");
+		return;
+	}
+}
+
+function confirmCustomerAdd() {
+	///debugger;
+	var customer=$.trim($("#customer option:selected").text());
+	var customerId=$("#customer").val();
+	var customerTypeId=$("#customerType").val();
+	var customerType=$.trim($("#customerType option:selected").text());
+	var customerAjectiveId=$("#customerAjective").val();
+	var customerAjective=$.trim($("#customerAjective option:selected").text());
+	var serialNO=$("#customerTable tr").length;
+	var duplicate_row=false;
+	if(customerId && customerTypeId && customerAjectiveId)
+	{
+		var duplicate_customer=false;
+		var duplicate_customerType=false;
+		var duplicate_customerAjectiveId=false;
+
+		$('#customerTable tr').each(function (index, tr) {
+			//get td of each row and insert it into cols array
+			if(index>0)
+			{
+				$(this).find('td').each(function (colIndex, c) {
+					//cols.push(c.textContent);
+					if(colIndex==1)
+					{
+						if(customer==c.textContent) 				duplicate_customer=true;
+					}
+					if(colIndex==2)
+					{
+						if(customerType==c.textContent) 			duplicate_customerType=true;
+					}
+					if(colIndex==3)
+					{
+						if(customerAjective==c.textContent) 		duplicate_customerAjectiveId=true;
+					}
+					
+					if(duplicate_customer && duplicate_customerType && duplicate_customerAjectiveId)
+					{
+						duplicate_row=true;
+						/////return;
+						/////throw BreakException;
+					}
+				});
+				
+			}
+		});
+		if(!duplicate_row)
+		{
+			var table = document.getElementById("customerTable");
+			var row = table.insertRow();
+			var cell_serialNO = row.insertCell();
+			var cell_customer = row.insertCell();
+			var cell_customerType = row.insertCell();
+			var cell_customerAjective = row.insertCell();
+			
+			var btn_delete=row.insertCell();
+			
+			cell_serialNO.innerHTML = serialNO
+			cell_serialNO.id = 0
+			cell_customer.innerHTML = customer
+			cell_customer.id = customerId
+			cell_customerType.innerHTML = customerType
+			cell_customerType.id = customerTypeId
+			cell_customerAjective.innerHTML = customerAjective
+			cell_customerAjective.id = customerAjectiveId
+			btn_delete.innerHTML = '<a href="#" class="btn-action-icon" onclick="DeleteRowFunctionCustomer(this)" ><span><i class="fe fe-trash-2 fa-1x red-color"></i></span></a>';
+			
+		}
+		else 
+		{
+			showMessage("This Customer is Already exists");
+			return;
+		}
+
+		$("#customer").val("");
+		$('#customer').select2({ });
+		$("#customerType").val("");
+		$('#customerType').select2({ });
+		$("#customerAjective").val("");
+		$('#customerAjective').select2({ });
+	}
+	else 
+	{
+		showMessage("please fill required fields");
+		return;
+	}
+}
+
+function confirmOpponentAdd() {
 	var opponent=$("#opponent option:selected").text();
 	var opponentId=$("#opponent").val();
 	var serialNO=$("#opponentTable tr").length;
@@ -492,7 +682,6 @@ function addMoreOpponent()
 	{
 		var duplicate_opponent=false;
 		$('#opponentTable tr').each(function (index, tr) {
-			//get td of each row and insert it into cols array
 			if(index>0)
 			{
 				$(this).find('td').each(function (colIndex, c) {
@@ -504,8 +693,6 @@ function addMoreOpponent()
 					if(duplicate_opponent)
 					{
 						duplicate_row=true;
-						/////return;
-						/////throw BreakException;
 					}
 				});
 				
@@ -540,6 +727,7 @@ function addMoreOpponent()
 	$("#opponent").val("");
 	$('#opponent').select2({ });
 }
+
 window.DeleteRowFunctionOpponent = function DeleteRowFunctionOpponent(o) {
 	var d = o.parentNode.parentNode.rowIndex;  // get row index
 	d=d+1;

@@ -129,7 +129,7 @@
 		}
 
 
-		$qry_getcontractdata="SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,`lsStageId`, s.lsStagesName_$language as lsStagesName,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractEn`, `contractAr`, `contractFilePath`, c.`isActive`, c.`remarks` FROM `tbl_lawsuit_contract` c 
+		$qry_getcontractdata="SELECT c.`lsContractId`, c.`lsMasterId`,m.`ls_code`,`lsStageId`, s.lsStagesName_$language as lsStagesName,`amount`, `taxValue`, taxAmount, `totalAmount`, `contractDate`, `contractEn`, `contractAr`, `contractFilePath`, c.`isActive`, c.`remarks` FROM `tbl_lawsuit_contract` c 
 		LEFT JOIN `tbl_lawsuit_master` m ON m.`lsMasterId`=c.`lsMasterId`
 		LEFT JOIN `tbl_lawsuit_stages` s ON s.`lsStagesId`=c.`lsStageId`
 		WHERE c.`isActive`=1 AND c.`lsMasterId`=:lsMasterId";
@@ -254,6 +254,7 @@
 										<th><?php echo set_value('paymentAmount'); ?></th>
 										<th><?php echo set_value('taxValueAmount'); ?></th>
 										<th><?php echo set_value('contractAmountIncludingTax'); ?></th>
+										<th><?php echo set_value('ContractDate'); ?></th>
 										<th><?php echo set_value('remarks'); ?></th>
 									</tr>
 								</thead>
@@ -268,6 +269,7 @@
 													<td><?php echo setAmountDecimal($value['amount']); ?></td>
 													<td><?php echo setAmountDecimal($value['taxAmount']); ?></td>
 													<td><?php echo setAmountDecimal($value['totalAmount']); ?></td>
+													<td><?php echo $value['contractDate']; ?></td>
 													<td><?php echo $value['remarks']; ?></td>
 												</tr>
 											<?php
