@@ -330,6 +330,28 @@ function getPayment() {
   });
 }
 
+function delModal(lsMId, lsDId) {
+	$('#lawsuit_delete_modal').modal('toggle');
+	$('#del_lawsuit_lsMId').val(lsMId);
+	$('#del_lawsuit_lsDId').val(lsDId);
+}
+
+function deleteLawsuit() {
+  var lsMId=$('#del_lawsuit_lsMId').val();
+  var lsDId=$('#del_lawsuit_lsDId').val();
+
+	$.ajax({
+		type:"POST",
+		url: "PaymentDB.php",
+		data: {action:'del',lsMId:lsMId, lsDId:lsDId},
+		success: function (data) {
+			getData();
+			$('#lawsuit_delete_modal').modal().hide();
+			showMessage(data);
+		}
+	});
+}
+
 function errorShow(jqXHR, exception) {
   if (jqXHR.status === 0) {
     showMessage("Not connect.\n Verify Network");

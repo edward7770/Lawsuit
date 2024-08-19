@@ -108,6 +108,13 @@ if (isset($_POST['getData'])) {
 							"<?php echo $value['ls_code']; ?>"
 						);' class="btn-action-icon"><span><i class="fa fa-print"></i></span></a>
 				<?php
+				} else {
+				?>
+					<a href='javascript:delModal(
+						"<?php echo $value['lsMasterId']; ?>",
+						"<?php echo $value['lsDetailsId']; ?>"
+					);' class="btn-action-icon"><span><i class="fe fe-trash-2"></i></span></a>
+				<?php
 				}
 				?>
 			</td>

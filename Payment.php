@@ -269,6 +269,30 @@
 	</div>
 </div>
 <!-- /Delete Items Modal -->
+<div class="modal custom-modal fade" id="lawsuit_delete_modal" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-md">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="form-header">
+					<h3><?php echo set_value('deleteLawsuit'); ?></h3>
+					<p><?php echo set_value('areYouSureWantTodelete?'); ?></p>
+					<input type="number" class="form-control form-control-sm" id="del_lawsuit_lsMId" style="display: none;">
+					<input type="number" class="form-control form-control-sm" id="del_lawsuit_lsDId" style="display: none;">
+				</div>
+				<div class="modal-btn delete-action">
+					<div class="row">
+						<div class="col-6">
+							<button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn" id="lawsuit_del_button" onclick="deleteLawsuit();"><?php echo set_value('delete'); ?></button>
+						</div>
+						<div class="col-6">
+							<button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn"><?php echo set_value("close"); ?></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <?php include_once('modals/LawsuitPaymentMasterDetailModal.php'); ?>
 

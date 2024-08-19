@@ -307,6 +307,7 @@ $("#taxValue").change(function () {
 
 function deleteLawsuit() {
   var lsMId = $("#lsMId").val();
+  var lsDId = $("#lsDId").val();
   var countPaymentRecords = 0;
   $.ajax({
     type: "POST",
@@ -314,6 +315,7 @@ function deleteLawsuit() {
     data: {
       deleteLawsuit: "1",
       lsMId: lsMId,
+      lsDId: lsDId
     },
     success: function (data) {
       console.log(data);
