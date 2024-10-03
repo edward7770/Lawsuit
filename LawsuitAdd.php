@@ -426,7 +426,7 @@
 
 
 <!-- /Customer Modal -->
-
+<input type='hidden' id='language' value="<?php echo $language; ?>" />
 <!-- sample modal content -->
 <div class="modal fade" id="opponentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	

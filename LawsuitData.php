@@ -135,7 +135,7 @@
 		
 		<td> <?php echo $value['customerName']; ?> </td>
 		<td> <?php echo $value['oppoName']; ?> </td>
-		
+		<td> <?php echo $value['location']; ?> </td>
 		<td> <?php echo $value['empName_'.$language]; ?> </td>
 		<td><?php echo $value[$typeName]; ?></td>
 		<!--<td style="background-color:<?php ///echo $value['lsColor']; ?>"><?php ///echo $value[$stateName]; ?></td> -->

@@ -294,6 +294,25 @@ $("body").on("click", "#UpdatePayment", function () {
   getContractContent();
 });
 
+$("body").on("click", "#addContractModalClose", function () {
+  $("#LawsuitAmountModal").modal("toggle");
+  $("#idContract").val("0");
+  $("#stage").val("").change();
+
+  var lawsuit_code =  $("#invoice_number_list").html();
+  var invoiceNumber =  $("#contractInvoiceNumber").val();
+  $("#formContract")[0].reset();
+  let randomNumber = '1';
+
+  if(invoiceNumber === '') {
+    $("#contractInvoiceNumber").val(lawsuit_code.trim() + '-' + randomNumber.toString().padStart(3, '0'));
+  } else {
+    currentNumber = parseInt(invoiceNumber.split(lawsuit_code.trim() + '-')[1]) - 1;
+    $("#contractInvoiceNumber").val(lawsuit_code.trim() + '-' + currentNumber.toString().padStart(3, '0'));
+  }
+
+});
+
 $("body").on("click", "#DeleteLawsuit", function () {
   deleteLawsuit();
 });

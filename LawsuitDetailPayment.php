@@ -245,7 +245,7 @@
 													<th><?php echo set_value('action'); ?></th>
 													<th>#</th>
 													<th><?php echo set_value('stage'); ?></th>
-													<th><?php echo set_value('invoiceNumber'); ?></th>
+													<th><?php echo set_value('contractInvoiceNumber'); ?></th>
 													<th><?php echo set_value('paymentAmount'); ?></th>
 													<th><?php echo set_value('taxValueAmount'); ?></th>
 													<th><?php echo set_value('contractAmountIncludingTax'); ?></th>				
@@ -492,7 +492,7 @@
 			<form id='formContract' action='javascript:updateContract();'>
 				<div class="modal-header">
 					<h4 class="modal-title"><?php echo set_value('editContractAmount'); ?></h4>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<button type="button" id="addContractModalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body p-4">
 					<div class="row">
@@ -557,7 +557,7 @@
 						<div class="col-md-2">
 							<div class="mb-4">
 								<div class="form-group">
-									<label for="contractInvoiceNumber" class="form-label"><?php echo set_value('invoiceNumber'); ?></label>
+									<label for="contractInvoiceNumber" class="form-label"><?php echo set_value('contractInvoiceNumber'); ?></label>
 									<input type="text" class="form-control form-control-sm" id="contractInvoiceNumber" disabled placeholder="<?php echo set_value('invoiceNumber'); ?>">
 								</div>
 							</div>

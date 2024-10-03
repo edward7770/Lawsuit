@@ -20,9 +20,7 @@
 	if(isset($_POST['getSelect'])) echo '<option value="">'.$_POST['getSelect'].'</option>';
 	foreach($result_country as $val)
 	{
-		if(new DateTime($val['endDateAgency']) > $currentDate) {
-			echo "<option value='".$val['id']."'>".$val['val']."</option>";
-		}
+		echo "<option value='".$val['id']."'>".$val['val']."</option>";
 	}
 	
 ?>

@@ -28,6 +28,7 @@ function addMoreCustomer()
 	var duplicate_row=false;
 	if(customerId && customerTypeId && customerAjectiveId)
 	{
+		var language = $("#language").val();
 		var duplicate_customer=false;
 		var duplicate_customerType=false;
 		var duplicate_customerAjectiveId=false;
@@ -106,7 +107,12 @@ function addMoreCustomer()
 			$("#customerAjective").val("");
 			$('#customerAjective').select2({ });
 		} else {
-			$('#customerAddConfirmDescription').html(customer + "is in opponent list. are you sure want to add?");
+			if(language == 'en') {
+				$('#customerAddConfirmDescription').html(customer + "is in opponent list. are you sure want to add?");
+			} else {
+				$('#customerAddConfirmDescription').html(customer + "متواجد في قائمة الخصوم. هل أنت متأكد أنك تريد الإضافة؟?");
+			}
+
 			$("#confirm_customer_add_modal").modal('toggle');
 
 			return;
@@ -501,6 +507,8 @@ function getCustomerType(custId)
 
 function addMoreOpponent()
 {
+	var language = $("#language").val();
+	console.log(language);
 	///debugger;
 	var opponent=$("#opponent option:selected").text().trim();
 	var opponentId=$("#opponent").val();
@@ -572,8 +580,11 @@ function addMoreOpponent()
 			// var confirmAdd = confirm(opponent + "is in customer list. are you sure want to add?");
 			// if (confirmAdd) {
 			// }
-
-			$('#opponentAddConfirmDescription').html(opponent + "is in customer list and his end date agency is " + customer_end_date_agency + ". are you sure want to add?");
+			if(language == 'en') {
+				$('#opponentAddConfirmDescription').html(opponent + " is in customer list and his end date agency is " + customer_end_date_agency + ". are you sure want to add?");
+			} else {
+				$('#opponentAddConfirmDescription').html(opponent + " is in customer list and his end date agency is " + customer_end_date_agency + ". هل أنت متأكد أنك تريد الإضافة؟?");
+			}
 			$("#opponent_customer_add_modal").modal('toggle');
 
 			return;

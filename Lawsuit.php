@@ -144,6 +144,7 @@
 									<th><?php echo set_value('lawsuitDate'); ?></th>
 									<th><?php echo set_value('customer'); ?></th>
 									<th><?php echo set_value('opponentName'); ?></th>
+									<th><?php echo set_value('lawsuitLocation'); ?></th>
 									<th><?php echo set_value('lawsuitLawyer'); ?></th>
 									<th><?php echo set_value('lawsuits_Type'); ?></th>
 									<th><?php echo set_value('state'); ?></th>
